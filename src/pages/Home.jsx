@@ -1,6 +1,8 @@
 import {  motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import About from "../components/about";
+import FeaturedProducts from "../components/FeaturedProducts";
+
 const Home = () => {
   const [index, setIndex] = useState(0);
   const items = ["  SPRITE", " WINE", " SHAKE & BEER"];
@@ -51,6 +53,7 @@ const Home = () => {
       </div>
     </div>
     <About />
+    <FeaturedProducts />
     </div>
   );
 };
