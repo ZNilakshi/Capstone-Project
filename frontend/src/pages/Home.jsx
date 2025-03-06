@@ -2,7 +2,7 @@ import {  motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import About from "../components/about";
 import FeaturedProducts from "../components/FeaturedProducts";
-import ShooByBrand from "../components/ShooByBrand";
+import ShopByBrand from "../components/ShopByBrand";
 
 const Home = () => {
   const [index, setIndex] = useState(0);
@@ -55,7 +55,7 @@ const Home = () => {
     </div>
     <About />
     <FeaturedProducts />
-    <ShooByBrand/>
+    <ShopByBrand/>
     </div>
   );
 };
