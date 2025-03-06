@@ -2,22 +2,20 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 
 const products = [
-    { id: 1, name: "Beaulieu Vineyard",  price: "$50.00", points:"93" ,image: "/bottle1.png" },
-    { id: 2, name: "Beaulieu Vineyard",  price: "$50.00",points:"93", image: "/bottle2.png" },
-    { id: 3, name: "Beaulieu Vineyard",  price: "$50.00", points:"93", image: "/bottle3.png" },
-     ];
+    { id: 1, name: "Classic Shake", price: "$5.00", points: "98", image: "/bottle1.png" },
+    { id: 2, name: "Chocolate Shake", price: "$6.00", points: "95", image: "/bottle2.png" },
+    { id: 3, name: "Vanilla Shake", price: "$5.50", points: "67", image: "/bottle3.png" },
+   ];
 
-  
 const FilterableProductList = () => {
   const [activeFilter, setActiveFilter] = useState(null);
   const [hoveredIndex, setHoveredIndex] = useState(null);
-  const [priceRange, setPriceRange] = useState(50);
+  const [priceRange, setPriceRange] = useState(5);
 
   const filters = [
-    { name: "WINE TYPE", options: ["Fortified Wine", "Red Wine", "Rose"] },
-    { name: "VARIETAL", options: ["Cabernet Sauvignon", "Merlot", "Pinot Noir"] },
-    { name: "VINTAGE", options: ["2020", "2019", "2018"] },
-    { name: "PRICE RANGE", options: ["$10 - $30", "$30 - $50", "$50 - $100"], isRange: true },
+    { name: "SHAKE TYPE", options: ["Chocolate", "Vanilla", "Strawberry"] },
+    { name: "BEER TYPE", options: ["Lager", "Stout", "IPA"] },
+    { name: "PRICE RANGE", options: [], isRange: true },
   ];
 
   return (
@@ -51,9 +49,9 @@ const FilterableProductList = () => {
                     <input 
                       type="range" 
                       className="w-full" 
-                      min="10" 
-                      max="100" 
-                      step="1" 
+                      min="4" 
+                      max="10" 
+                      step="0.5" 
                       value={priceRange} 
                       onChange={(e) => setPriceRange(e.target.value)} 
                     />
@@ -86,9 +84,8 @@ const FilterableProductList = () => {
             <span className="absolute top-2 right-2 border border-orange-400 px-3 py-3 text-xs font-bold bg-white">
             {product.points} POINTS
             </span>
-            <img src={product.image} alt="Bottle" className="w-41 mx-auto" />
+            <img src={product.image} alt={product.name} className="w-41 mx-auto" />
             <h3 className="font-bold mt-2">{product.name}</h3>
-
             <p className="font-semibold text-lg mt-1">{product.price}</p>
           </div>
           <motion.div
@@ -97,13 +94,13 @@ const FilterableProductList = () => {
           >
             <h3 className="font-bold">{product.name}</h3>
             <p className="text-gray-700">
-              <span className="font-semibold">Bottle</span> <br /> {product.price}
+              <span className="font-semibold">Price</span> <br /> {product.price}
             </p>
             <div className="flex items-center mt-2">
               <button className="border border-gray-400 px-2">-</button>
               <span className="px-2">1</span>
               <button className="border border-gray-400 px-2">+</button>
-              <span className="ml-2">BOTTLE</span>
+              <span className="ml-2">Qty</span>
             </div>
             <button className="mt-2 w-full bg-orange-500 text-white py-2 rounded">
               ADD TO CART
