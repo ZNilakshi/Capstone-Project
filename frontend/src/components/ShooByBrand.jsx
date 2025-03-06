@@ -15,43 +15,63 @@ const ShooByBrand = () => {
            
             
             
-            <div className="flex flex-wrap justify-center gap-8 md:gap-16 mb-4">
-                <button
-                    className="bg-orange-500 text-black px-8 md:px-5 py-3 md:py-4 font-semibold border border-black hover:bg-white hover:text-orange-500 transition"
-                    onClick={() => navigate("/spirit")}
-                >
-                    SPIRIT
-                    <div className="flex justify-center">
+            <div className="flex flex-wrap justify-center gap-4 md:gap-8 mb-4">
+                <button onClick={() => navigate("/rockland")}>
+                   <div className="flex justify-center">
                          <img
-                         src="/sprit.jpg"
-                         alt="sprit"
-                         className="w-40 max-w-2xl h-60 object-cover"
+                         src="/Rockland-Logo.png"
+                         alt="Rockland-Logo"
+                         className="w-50 max-w-2xl h-50 object-cover"
                          />
                     </div>
                 </button>
-                <button
-                    className=" bg-orange-500 text-black px-4 md:px-5 py-3 md:py-4 font-semibold border border-black hover:bg-white hover:text-orange-500 transition"
-                    onClick={() => navigate("/shake-and-beer")}
-                >
-                    SHAKE AND BEER
-                    <div className="flex justify-center">
+
+                <button onClick={() => navigate("/idl")}>
+                   <div className="flex justify-center">
                          <img
-                         src="/beer.jpg"
-                         alt="beer"
-                         className="w-40 max-w-2xl h-60 object-cover"
+                         src="/idl-logo.png"
+                         alt="idl-logo"
+                         className="w-55 max-w-2xl h-50 object-cover"
                          />
                     </div>
                 </button>
-                <button
-                    className="bg-orange-500 text-black px-8 md:px-5 py-3 md:py-4 font-semibold border border-black hover:bg-white hover:text-orange-500 transition"
-                    onClick={() => navigate("/WineStore")}
-                >
-                    WINE
-                    <div className="flex justify-center">
+
+                <button onClick={() => navigate("/dcsl")}>
+                   <div className="flex justify-center">
                          <img
-                         src="/wine.jpg"
-                         alt="wine"
-                         className="w-40 max-w-2xl h-60 object-cover"
+                         src="/DCSL_Logo.png"
+                         alt="DCSL_Logo"
+                         className="w-60 max-w-2xl h-50 object-cover"
+                         />
+                    </div>
+                </button>
+
+                <button onClick={() => navigate("/mendis")}>
+                   <div className="flex justify-center">
+                         <img
+                         src="/mendis_logo.png"
+                         alt="WM-Mendis"
+                         className="w-45 max-w-2xl h-20 object-cover"
+                         />
+                    </div>
+                </button>
+
+                <button onClick={() => navigate("/lion")}>
+                   <div className="flex justify-center">
+                         <img
+                         src="/lion-logo.png"
+                         alt="lion"
+                         className="w-50 max-w-2xl h-20 object-cover"
+                         />
+                    </div>
+                </button>
+
+                <button onClick={() => navigate("/heineken")}>
+                   <div className="flex justify-center">
+                         <img
+                         src="/heineken-logo.png"
+                         alt="heineken-logo"
+                         className="w-40 max-w-2xl h-30 object-cover"
                          />
                     </div>
                 </button>
