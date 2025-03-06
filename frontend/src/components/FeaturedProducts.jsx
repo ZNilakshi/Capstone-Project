@@ -17,11 +17,11 @@ const FeaturedProducts = () => {
             
             <div className="flex flex-wrap justify-center gap-8 md:gap-16 mb-4">
                 <button
-                    className="bg-orange-500 text-black px-8 md:px-5 py-3 md:py-4 font-semibold border border-black hover:bg-white hover:text-orange-500 transition"
+                    className="bg-orange-500 text-black px-8 md:px-4 py-3 md:py-4 font-semibold border border-black hover:bg-white hover:text-orange-500 transition"
                     onClick={() => navigate("/spirit")}
                 >
                     SPIRIT
-                    <div className="flex justify-center">
+                    <div className="flex justify-center mt-2">
                          <img
                          src="/sprit.jpg"
                          alt="sprit"
@@ -30,11 +30,11 @@ const FeaturedProducts = () => {
                     </div>
                 </button>
                 <button
-                    className=" bg-orange-500 text-black px-4 md:px-5 py-3 md:py-4 font-semibold border border-black hover:bg-white hover:text-orange-500 transition"
+                    className=" bg-orange-500 text-black px-4 md:px-4 py-3 md:py-4 font-semibold border border-black hover:bg-white hover:text-orange-500 transition"
                     onClick={() => navigate("/shake-and-beer")}
                 >
                     SHAKE AND BEER
-                    <div className="flex justify-center">
+                    <div className="flex justify-center mt-2">
                          <img
                          src="/beer.jpg"
                          alt="beer"
@@ -43,16 +43,16 @@ const FeaturedProducts = () => {
                     </div>
                 </button>
                 <button
-                    className="bg-orange-500 text-black px-8 md:px-5 py-3 md:py-4 font-semibold border border-black hover:bg-white hover:text-orange-500 transition"
+                    className="bg-orange-500 text-black px-8 md:px-4 py-3 md:py-4 font-semibold border border-black hover:bg-white hover:text-orange-500 transition"
                     onClick={() => navigate("/WineStore")}
                 >
                     WINE
-                    <div className="flex justify-center">
-                         <img
-                         src="/wine.jpg"
-                         alt="wine"
-                         className="w-40 max-w-2xl h-60 object-cover"
-                         />
+                    <div className="flex justify-center mt-2">
+                        <img
+                        src="/wine.jpg"
+                        alt="wine"
+                        className="w-40 max-w-2xl h-60 object-cover"
+                        />
                     </div>
                 </button>
             </div>
