@@ -56,7 +56,7 @@ const FeaturedProducts = () => {
                     </div>
                 </button>
             </div>
-         </div>
+             </div>
     );
 };
 
