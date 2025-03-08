@@ -50,7 +50,7 @@ const ShopByBrand = () => {
                    <div className="flex justify-center">
                          <img
                          src="/mendis_logo.png"
-                         alt="WM-Mendis"
+                         alt="Mendis"
                          className="w-45 max-w-2xl h-20 object-cover"
                          />
                     </div>
