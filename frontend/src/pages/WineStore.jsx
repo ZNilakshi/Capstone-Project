@@ -1,110 +1,163 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 
-const wines = [
-    { id: 1, name: "Château Margaux", price: 50.00, points: "4.8", image: "/bottle1.png", type: "Red Wine", varietal: "Cabernet Sauvignon", vintage: "2020" },
-    { id: 2, name: "Merlot Reserve", price: 35.00, points: "4.6", image: "/bottle2.png", type: "Red Wine", varietal: "Merlot", vintage: "2019" },
-    { id: 3, name: "Pinot Noir Prestige", price: 25.00, points: "4.7", image: "/bottle3.png", type: "Rose", varietal: "Pinot Noir", vintage: "2018" },
+const products = [
+  { id: 1, name: "Château Margaux", price: 950, brand: "ROCKLANDS", size: "1L", points: "4.8", abv: "5%", image: "/bottle1.png", type: "Red Wine", varietal: "Cabernet Sauvignon", vintage: "2020" },
+  { id: 2, name: "Merlot Reserve", price: 3200, brand: "ROCKLANDS", size: "1L", points: "4.6", abv: "5%", image: "/bottle2.png", type: "Red Wine", varietal: "Merlot", vintage: "2019" },
+  { id: 3, name: "Pinot Noir Prestige", price: 9050, brand: "ROCKLANDS", size: "1L", points: "4.7", abv: "5%", image: "/bottle3.png", type: "Rose", varietal: "Pinot Noir", vintage: "2018" },
+  { id: 4, name: "Fortified Sweet Wine", price: 2500, brand: "ROCKLANDS", size: "1L", points: "4.5", abv: "5%", image: "/bottle4.png", type: "Fortified Wine", varietal: "Port", vintage: "2017" },
 ];
 
-const FilterableWineList = () => {
-  const [activeFilter, setActiveFilter] = useState(null);
+const FilterableProductList = () => {
+  const [priceRange, setPriceRange] = useState(9050);
+  const [selectedBrand, setSelectedBrand] = useState("Any Brand");
+  const [selectedSize, setSelectedSize] = useState("Any Size");
+  const [selectedAbv, setSelectedAbv] = useState("Any ABV");
   const [hoveredIndex, setHoveredIndex] = useState(null);
-  const [priceRange, setPriceRange] = useState(100);
-  const [selectedTypes, setSelectedTypes] = useState([]);
-  const [selectedVarietals, setSelectedVarietals] = useState([]);
-  const [selectedVintage, setSelectedVintage] = useState([]);
 
-  const filters = [
-    { name: "WINE TYPE", options: ["Fortified Wine", "Red Wine", "Rose"] },
-    { name: "VARIETAL", options: ["Cabernet Sauvignon", "Merlot", "Pinot Noir"] },
-    { name: "VINTAGE", options: ["2020", "2019", "2018"] },
-    { name: "PRICE RANGE", options: [], isRange: true },
-  ];
+  const brands = ["ANY BRAND", "ROCKLANDS", "DLL", "DCSL", "MENDIS", "LION", "HEINEKEN"];
+  const sizes = ["ANY SIZE", "750ML", "1L", "500ML"];
+  const abvLevels = ["ANY ABV", "5%", "6%", "7%", "10%"];
 
-  const toggleFilter = (option, setFilterState) => {
-    setFilterState((prev) =>
-      prev.includes(option) ? prev.filter((t) => t !== option) : [...prev, option]
-    );
-  };
-
-  const filteredWines = wines.filter(
-    (wine) =>
-      wine.price <= priceRange &&
-      (selectedTypes.length === 0 || selectedTypes.includes(wine.type)) &&
-      (selectedVarietals.length === 0 || selectedVarietals.includes(wine.varietal)) &&
-      (selectedVintage.length === 0 || selectedVintage.includes(wine.vintage))
+  const filteredProducts = products.filter(
+    (product) =>
+      product.price <= priceRange &&
+      (selectedBrand === "Any Brand" || product.brand === selectedBrand) &&
+      (selectedSize === "Any Size" || product.size === selectedSize) &&
+      (selectedAbv === "Any ABV" || product.abv === selectedAbv)
   );
 
   return (
-    <div className="flex flex-col md:flex-row p-4 mt-24 gap-4">
-      <div className="w-full md:w-1/5 border-r pr-4">
-        <h2 className="font-bold text-lg mb-4">FILTER</h2>
-        {filters.map((filter, index) => (
-          <div key={index} className="border-b py-3">
-            <button
-              onClick={() => setActiveFilter(activeFilter === index ? null : index)}
-              className="w-full text-left font-semibold flex items-center justify-between"
-            >
-              {filter.name}
-              <motion.span animate={{ rotate: activeFilter === index ? 90 : 0 }} className="ml-2 text-2xl font-bold">›</motion.span>
-            </button>
-            {activeFilter === index && (
-              <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} transition={{ duration: 0.3 }} className="overflow-hidden p-2 text-sm text-gray-700">
-                {filter.isRange ? (
-                  <div>
-                    <input type="range" className="w-full" min="10" max="100" step="5" value={priceRange} onChange={(e) => setPriceRange(parseFloat(e.target.value))} />
-                    <div className="text-center mt-2 font-semibold">Rs.{priceRange.toFixed(2)}</div>
-                  </div>
-                ) : (
-                  filter.options.map((option, idx) => (
-                    <label key={idx} className="block items-center space-x-2">
-                      <input type="checkbox" className="mr-2" checked={
-                        filter.name === "WINE TYPE" ? selectedTypes.includes(option) :
-                        filter.name === "VARIETAL" ? selectedVarietals.includes(option) :
-                        selectedVintage.includes(option)
-                      }
-                      onChange={() =>
-                        filter.name === "WINE TYPE" ? toggleFilter(option, setSelectedTypes) :
-                        filter.name === "VARIETAL" ? toggleFilter(option, setSelectedVarietals) :
-                        toggleFilter(option, setSelectedVintage)
-                      }
-                      />
-                      <span>{option}</span>
-                    </label>
-                  ))
-                )}
-              </motion.div>
-            )}
-          </div>
-        ))}
+    <div className="flex flex-col md:flex-row p-6 mt-20 gap-6 bg-black text-white">
+      {/* Sidebar Filter */}
+      <div className="w-full md:w-1/4 p-6 rounded-lg bg-[#2A1205] border  border-orange-500">
+        <h2 className="font-bold text-xl mb-4 uppercase text-white tracking-wide">Filter by Price</h2>
+
+        {/* Price Slider */}
+        <div className="relative flex flex-col items-center w-full">
+          <input
+            type="range"
+            className="w-full cursor-pointer"
+            min="950"
+            max="9050"
+            step="50"
+            value={priceRange}
+            onChange={(e) => setPriceRange(parseInt(e.target.value))}
+            style={{
+              WebkitAppearance: "none",
+              appearance: "none",
+              height: "6px",
+              borderRadius: "5px",
+              background: `linear-gradient(to right, red 0%, red ${
+                ((priceRange - 950) / (9050 - 950)) * 100
+              }%, #ccc ${((priceRange - 950) / (9050 - 950)) * 100}%, #ccc 100%)`,
+              outline: "none",
+            }}
+          />
+        </div>
+
+        {/* Price Display */}
+        <p className="text-center mt-2 font-semibold">Price: LKR 950 — LKR {priceRange}</p>
+
+        {/* Dropdowns */}
+        <h2 className="mt-6 font-bold text-lg mb-2 uppercase text-white">Filter by Brand</h2>
+        <select
+          className="w-full p-3 bg-white text-black rounded"
+          value={selectedBrand}
+          onChange={(e) => setSelectedBrand(e.target.value)}
+        >
+          {brands.map((brand, idx) => (
+            <option key={idx} value={brand}>
+              {brand}
+            </option>
+          ))}
+        </select>
+
+        <h2 className="mt-4 font-bold text-lg mb-2 uppercase text-white">Filter by Size</h2>
+        <select
+          className="w-full p-3 bg-white text-black rounded"
+          value={selectedSize}
+          onChange={(e) => setSelectedSize(e.target.value)}
+        >
+          {sizes.map((size, idx) => (
+            <option key={idx} value={size}>
+              {size}
+            </option>
+          ))}
+        </select>
+
+        <h2 className="mt-4 font-bold text-lg mb-2 uppercase text-white">Filter by ABV</h2>
+        <select
+          className="w-full p-3 bg-white text-black rounded"
+          value={selectedAbv}
+          onChange={(e) => setSelectedAbv(e.target.value)}
+        >
+          {abvLevels.map((abv, idx) => (
+            <option key={idx} value={abv}>
+              {abv}
+            </option>
+          ))}
+        </select>
       </div>
-      
-      <div className="w-full md:w-4/5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        {filteredWines.map((wine, index) => (
-          <div key={wine.id} className="relative border border-gray-300 p-6 shadow-md bg-white flex flex-col items-center text-center rounded-lg" onMouseEnter={() => setHoveredIndex(index)} onMouseLeave={() => setHoveredIndex(null)}>
-            <div className="relative w-full p-2">
-              <span className="absolute top-2 right-2 border border-orange-400 px-3 py-3 text-xs font-bold bg-white">{wine.points} POINTS</span>
-              <img src={wine.image} alt={wine.name} className="w-41 mx-auto" />
-              <h3 className="font-bold mt-2">{wine.name}</h3>
-              <p className="font-semibold text-lg mt-1">Rs.{wine.price.toFixed(2)}</p>
-            </div>
-            <motion.div animate={{ opacity: hoveredIndex === index ? 1 : 0 }} className="absolute bottom-0 bg-white border border-gray-400 p-4 shadow-lg w-full flex flex-col items-center text-center rounded-lg transition-opacity duration-300">
-              <h3 className="font-bold">{wine.name}</h3>
-              <p className="text-gray-700"><span className="font-semibold">Price</span> <br /> Rs.{wine.price.toFixed(2)}</p>
-              <div className="flex items-center mt-2">
-                <button className="border border-gray-400 px-2">-</button>
-                <span className="px-2">1</span>
-                <button className="border border-gray-400 px-2">+</button>
-                <span className="ml-2">Qty</span>
+
+      {/* Product Section */}
+      <div className="w-full md:w-4/5 bg-black">
+      <h1 className="text-center text-4xl font-bold text-gray-300 mb-6">WINE</h1>
+
+        <div className="w-full flex flex-col md:flex-row items-center bg-orange-500 text-white rounded-lg mb-6 p-6 relative z-10">
+  {/* Left Side - Image */}
+  <div className="w-full md:w-1/3 flex justify-center">
+    <img src="/wine.jpg" alt="Beer Selection" className="w-60 h-auto rounded-lg shadow-lg" />
+  </div>
+
+  {/* Right Side - Details */}
+  <div className="w-full md:w-2/3 text-center md:text-left p-4">
+    <h2 className="text-lg font-bold uppercase">Our wine selection is as diverse as it is delightful. From craft brews to classic favorites, we offer a spectrum that caters to every palate. Whether you prefer a crisp lager, a robust stout, or something in between, our curated collection promises to elevate your beer experience. Discover the perfect brew to suit any occasion and indulge in the art of great taste at De Silva Wine Store!</h2>
+   
+  </div>
+</div>
+
+
+        {/* Product Display Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          {filteredProducts.map((product, index) => (
+            <div
+              key={product.id}
+              className="relative border border-gray-300 p-6 shadow-md bg-white flex flex-col items-center text-center rounded-lg"
+              onMouseEnter={() => setHoveredIndex(index)}
+              onMouseLeave={() => setHoveredIndex(null)}
+            >
+              <div className="relative w-full p-2">
+                <span className="absolute top-2 right-2 border border-orange-400 px-3 py-1 text-xs font-bold bg-white z-10 text-orange-500">
+                  {product.points} POINTS
+                </span>
+
+                <img src={product.image} alt={product.name} className="w-41 mx-auto" />
+                <h3 className="font-bold mt-2 text-black">{product.name}</h3>
+                <p className="font-semibold text-lg mt-1 text-black">Rs.{product.price.toFixed(2)}</p>
               </div>
-              <button className="mt-2 w-full bg-orange-500 text-white py-2 rounded">ADD TO CART</button>
-            </motion.div>
-          </div>
-        ))}
+              <motion.div
+                animate={{ opacity: hoveredIndex === index ? 1 : 0 }}
+                className="absolute bottom-0 bg-white border border-gray-400 p-4 shadow-lg w-full flex flex-col items-center text-center rounded-lg transition-opacity duration-300 z-20"
+              >
+                <h3 className="font-bold text-black">{product.name}</h3>
+                <p className="text-gray-700">
+                  <span className="font-semibold">Price</span> <br /> Rs.{product.price.toFixed(2)}
+                </p>
+                  <div className="flex items-center mt-2 space-x-2 bg-gray-100 p-2 rounded">
+                  <button className="border border-gray-400 px-2 py-1 bg-gray-200 hover:bg-gray-300 text-black rounded">-</button>
+                  <span className="px-4 text-black font-semibold">1</span>
+                  <button className="border border-gray-400 px-2 py-1 bg-gray-200 hover:bg-gray-300 text-black rounded">+</button>
+                  <span className="ml-2 text-black">Qty</span>
+                </div>
+                  <button className="mt-2 w-full bg-orange-500 text-white py-2 rounded">ADD TO CART</button>
+              </motion.div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
 };
 
-export default FilterableWineList;
+export default FilterableProductList;

@@ -18,9 +18,9 @@ const FeaturedProducts = () => {
             <div className="flex flex-wrap justify-center gap-8 md:gap-16 mb-4">
                 <button
                     className="bg-orange-500 text-black px-8 md:px-4 py-3 md:py-4 font-semibold border border-black hover:bg-white hover:text-orange-500 transition"
-                    onClick={() => navigate("/spirit")}
+                    onClick={() => navigate("/sprite")}
                 >
-                    SPIRIT
+                    SPRIRIT
                     <div className="flex justify-center mt-2">
                          <img
                          src="/sprit.jpg"
@@ -31,7 +31,7 @@ const FeaturedProducts = () => {
                 </button>
                 <button
                     className=" bg-orange-500 text-black px-4 md:px-4 py-3 md:py-4 font-semibold border border-black hover:bg-white hover:text-orange-500 transition"
-                    onClick={() => navigate("/shake-and-beer")}
+                    onClick={() => navigate("/ShakeBeer")}
                 >
                     SHAKE AND BEER
                     <div className="flex justify-center mt-2">
