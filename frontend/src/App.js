@@ -7,6 +7,7 @@ import WineStore from "./pages/WineStore";
 import './App.css';
 import Sprite from "./pages/Sprite";
 import ShakeBeer from "./pages/ShakeBeer";
+import Admin from "./pages/Admin";
 
 function App() {
   
@@ -19,6 +20,8 @@ function App() {
         <Route path="/WineStore" element={<WineStore/>} />
         <Route path="/Sprite" element={<Sprite/>} />
         <Route path="/ShakeBeer" element={<ShakeBeer/>} />
+        <Route path="/Admin" element={<Admin/>} />
+     
       </Routes>
       <Footer />
     </Router>
