@@ -14,7 +14,7 @@ const AdminProductPanel = () => {
   const [editingIndex, setEditingIndex] = useState(null);
   const [view, setView] = useState("profile");
 
-  // Dropdown options
+  
   const brands = ["BRAND", "ROCKLANDS", "DLL", "DCSL", "MENDIS", "LION", "HEINEKEN"];
   const sizes = ["SIZE", "750ML", "1L", "500ML"];
   const abvLevels = ["ABV", "5%", "6%", "7%", "10%"];
