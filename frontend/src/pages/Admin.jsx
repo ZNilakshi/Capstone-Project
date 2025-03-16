@@ -123,56 +123,66 @@ const AdminProductPanel = () => {
       </div>
 
       <div className="relative">
-        <label className="absolute -top-2 left-3 bg-white px-1 text-orange-400 text-sm">Brand</label>
-        <select
-          value={brand}
-          onChange={(e) => setBrand(e.target.value)}
-          className="w-full p-3 border-2 border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
-        >
-          {brands.map((brand, index) => (
-            <option key={index} value={brand}>{brand}</option>
-          ))}
-        </select>
-      </div>
+  <label className="absolute -top-3 left-3 bg-white px-1 text-orange-400 text-sm">
+    Brand
+  </label>
+  <select
+    value={brand}
+    onChange={(e) => setBrand(e.target.value)}
+    className="w-full py-3 px-3 border-2 border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 appearance-none"
+  >
+    {brands.map((brand, index) => (
+      <option key={index} value={brand}>{brand}</option>
+    ))}
+  </select>
+</div>
 
-      <div className="relative">
-        <label className="absolute -top-2 left-3 bg-white px-1 text-orange-400 text-sm">Size</label>
-        <select
-          value={size}
-          onChange={(e) => setSize(e.target.value)}
-          className="w-full p-3 border-2 border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
-        >
-          {sizes.map((size, index) => (
-            <option key={index} value={size}>{size}</option>
-          ))}
-        </select>
-      </div>
 
-      <div className="relative">
-        <label className="absolute -top-2 left-3 bg-white px-1 text-orange-400 text-sm">ABV</label>
-        <select
-          value={abv}
-          onChange={(e) => setAbv(e.target.value)}
-          className="w-full p-3 border-2 border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
-        >
-          {abvLevels.map((abv, index) => (
-            <option key={index} value={abv}>{abv}</option>
-          ))}
-        </select>
-      </div>
+<div className="relative">
+  <label className="absolute -top-3 left-3 bg-white px-1 text-orange-400 text-sm">
+    Size
+  </label>
+  <select
+    value={size}
+    onChange={(e) => setSize(e.target.value)}
+    className="w-full py-4 px-3 border-2 border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 appearance-none"
+  >
+    {sizes.map((size, index) => (
+      <option key={index} value={size}>{size}</option>
+    ))}
+  </select>
+</div>
 
-      <div className="relative">
-        <label className="absolute -top-2 left-3 bg-white px-1 text-orange-400 text-sm">Category</label>
-        <select
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          className="w-full p-3 border-2 border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
-        >
-          {categories.map((category, index) => (
-            <option key={index} value={category}>{category}</option>
-          ))}
-        </select>
-      </div>
+<div className="relative">
+  <label className="absolute -top-3 left-3 bg-white px-1 text-orange-400 text-sm">
+    ABV
+  </label>
+  <select
+    value={abv}
+    onChange={(e) => setAbv(e.target.value)}
+    className="w-full py-4 px-3 border-2 border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 appearance-none"
+  >
+    {abvLevels.map((abv, index) => (
+      <option key={index} value={abv}>{abv}</option>
+    ))}
+  </select>
+</div>
+
+<div className="relative">
+  <label className="absolute -top-3 left-3 bg-white px-1 text-orange-400 text-sm">
+    Category
+  </label>
+  <select
+    value={category}
+    onChange={(e) => setCategory(e.target.value)}
+    className="w-full py-4 px-3 border-2 border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 appearance-none"
+  >
+    {categories.map((category, index) => (
+      <option key={index} value={category}>{category}</option>
+    ))}
+  </select>
+</div>
+
 
       <div className="relative">
         <label className="absolute -top-2 left-3 bg-white px-1 text-orange-400 text-sm">Upload Image</label>
@@ -199,20 +209,23 @@ const AdminProductPanel = () => {
       <div className="grid grid-cols-2 gap-4">
         
         <div className="relative">
-        <label className="absolute -top-2 left-3 bg-white px-1 text-orange-400 text-sm">Select Product</label>
-        <select
-          value={editingIndex !== null ? editingIndex : ""}
-          onChange={(e) => setEditingIndex(Number(e.target.value))}
-          className="w-full p-3 border rounded-lg"
-        >
-          <option value="" disabled>Select Product</option>
-          {products.map((product, index) => (
-            <option key={index} value={index}>
-              {product.name}
-            </option>
-          ))}
-        </select>
-      </div>
+  <label className="absolute -top-3 left-3 bg-white px-1 text-orange-400 text-sm">
+    Select Product
+  </label>
+  <select
+    value={editingIndex !== null ? editingIndex : ""}
+    onChange={(e) => setEditingIndex(Number(e.target.value))}
+    className="w-full py-4 px-3 border-2 border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 appearance-none"
+  >
+    <option value="" disabled>Select Product</option>
+    {products.map((product, index) => (
+      <option key={index} value={index}>
+        {product.name}
+      </option>
+    ))}
+  </select>
+</div>
+
          <div className="relative">
         <label className="absolute -top-2 left-3 bg-white px-1 text-orange-400 text-sm">New Stock</label>
         <input
@@ -220,7 +233,7 @@ const AdminProductPanel = () => {
           value={quantity}
           onChange={(e) => setQuantity(e.target.value)}
           placeholder="Add New Stock"
-          className="w-full p-3 border-2 border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
+          className="w-full py-4 px-3 border-2 border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
         />
       </div>
         <button
