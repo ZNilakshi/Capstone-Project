@@ -112,7 +112,7 @@ const FilterableProductList = () => {
 
   {/* Right Side - Details */}
   <div className="w-full md:w-2/3 text-center md:text-left p-4">
-    <h2 className="text-lg font-bold uppercase">Our sprite selection is as diverse as it is delightful. From craft brews to classic favorites, we offer a spectrum that caters to every palate. Whether you prefer a crisp lager, a robust stout, or something in between, our curated collection promises to elevate your beer experience. Discover the perfect brew to suit any occasion and indulge in the art of great taste at De Silva Wine Store!</h2>
+    <h2 className="text-lg font-bold uppercase text-center">Our sprite selection is as diverse as it is delightful. From craft brews to classic favorites, we offer a spectrum that caters to every palate. Whether you prefer a crisp lager, a robust stout, or something in between, our curated collection promises to elevate your beer experience. Discover the perfect brew to suit any occasion and indulge in the art of great taste at De Silva Wine Store!</h2>
    
   </div>
 </div>
