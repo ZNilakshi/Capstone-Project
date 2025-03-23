@@ -102,7 +102,7 @@ const FilterableProductList = () => {
 
       {/* Product Section */}
       <div className="w-full md:w-4/5 bg-black">
-      <h1 className="text-center text-4xl font-bold text-gray-300 mb-6">SPITE</h1>
+      <h1 className="text-center text-4xl font-bold text-gray-300 mb-6">SPRITE</h1>
 
         <div className="w-full flex flex-col md:flex-row items-center bg-orange-500 text-white rounded-lg mb-6 p-6 relative z-10">
   {/* Left Side - Image */}
