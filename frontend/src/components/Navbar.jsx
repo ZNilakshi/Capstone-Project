@@ -9,9 +9,9 @@ const Navbar = () => {
   return (
     <nav className="bg-black text-white py-4 px-6 fixed top-0 left-0 w-full z-50 shadow-md">
       <div className="container mx-auto flex justify-between items-center">
-        
+
         {/* Logo */}
-        <h1 
+        <h1
           className="text-orange-500 font-bold text-lg tracking-wide cursor-pointer"
           onClick={() => navigate("/")}
         >
@@ -38,18 +38,19 @@ const Navbar = () => {
         {/* Icons & User Dropdown */}
         <div className="hidden md:flex space-x-10 text-lg items-center">
           <FaShoppingCart className="cursor-pointer hover:text-orange-500" onClick={() => navigate("/cart")} />
-          
+
           <div className="relative group">
             <FaUser className="cursor-pointer hover:text-orange-500" />
             <div className="absolute right-0 mt-2 w-32 bg-white text-black rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
-              <button 
-                className="block px-4 py-2 w-full text-left hover:bg-gray-200" 
-                onClick={() => navigate("/login")}
+              <button
+                className="block px-4 py-2 w-full text-left hover:bg-gray-200"
+                onClick={() => navigate("/auth")
+                }
               >
                 Login
               </button>
-              <button 
-                className="block px-4 py-2 w-full text-left hover:bg-gray-200" 
+              <button
+                className="block px-4 py-2 w-full text-left hover:bg-gray-200"
                 onClick={() => navigate("/register")}
               >
                 Register
@@ -92,14 +93,14 @@ const Navbar = () => {
             <div className="relative group">
               <FaUser className="cursor-pointer hover:text-orange-500" />
               <div className="absolute right-0 mt-2 w-32 bg-white text-black rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
-                <button 
-                  className="block px-4 py-2 w-full text-left hover:bg-gray-200" 
+                <button
+                  className="block px-4 py-2 w-full text-left hover:bg-gray-200"
                   onClick={() => { navigate("/login"); setIsMenuOpen(false); }}
                 >
                   Login
                 </button>
-                <button 
-                  className="block px-4 py-2 w-full text-left hover:bg-gray-200" 
+                <button
+                  className="block px-4 py-2 w-full text-left hover:bg-gray-200"
                   onClick={() => { navigate("/register"); setIsMenuOpen(false); }}
                 >
                   Register
