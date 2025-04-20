@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { FaUserCircle, FaBoxOpen, FaWarehouse,  FaTrash, FaEdit } from "react-icons/fa";
+import { useState, useEffect } from "react";
+import { FaUserCircle, FaBoxOpen, FaWarehouse, FaTrash, FaEdit } from "react-icons/fa";
 
 const AdminProductPanel = () => {
   const [products, setProducts] = useState([]);
@@ -13,8 +13,16 @@ const AdminProductPanel = () => {
   const [photo, setPhoto] = useState(null);
   const [editingIndex, setEditingIndex] = useState(null);
   const [view, setView] = useState("profile");
+  const [adminDetails, setAdminDetails] = useState(null);
 
-  
+
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem("user"));
+    if (userData) {
+      setAdminDetails(userData);
+    }
+  }, []);
+
   const brands = ["BRAND", "ROCKLANDS", "DLL", "DCSL", "MENDIS", "LION", "HEINEKEN"];
   const sizes = ["SIZE", "750ML", "1L", "500ML"];
   const abvLevels = ["ABV", "5%", "6%", "7%", "10%"];
@@ -48,12 +56,10 @@ const AdminProductPanel = () => {
     setPhoto(null);
   };
 
-  // Delete product
   const removeProduct = (index) => {
     setProducts(products.filter((_, i) => i !== index));
   };
 
-  // Edit product
   const editProduct = (index) => {
     const product = products[index];
     setName(product.name);
@@ -67,22 +73,96 @@ const AdminProductPanel = () => {
     setEditingIndex(index);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    window.location.href = "/auth";
+  };
+
   return (
     <div className="p-8 bg-gray-100 min-h-screen mt-20 flex gap-8">
-      {/* Left Panel */}
+    
       <div className="w-1/3 bg-white p-6 rounded-xl shadow-lg flex flex-col gap-6">
-        <button onClick={() => setView("profile")} className="p-4 bg-gray-200 rounded-lg text-center font-bold text-xl flex items-center justify-center gap-2">
+        <button 
+          onClick={() => setView("profile")} 
+          className={`p-4 rounded-lg text-center font-bold text-xl flex items-center justify-center gap-2 ${
+            view === "profile" ? "bg-orange-500 text-white" : "bg-gray-200"
+          }`}
+        >
           <FaUserCircle /> Admin Profile
         </button>
-        <button onClick={() => setView("addProduct")} className="p-4 bg-gray-200 rounded-lg text-center font-bold text-xl flex items-center justify-center gap-2">
+        <button 
+          onClick={() => setView("addProduct")} 
+          className={`p-4 rounded-lg text-center font-bold text-xl flex items-center justify-center gap-2 ${
+            view === "addProduct" ? "bg-orange-500 text-white" : "bg-gray-200"
+          }`}
+        >
           <FaBoxOpen /> Add Product
         </button>
-        <button onClick={() => setView("addStock")} className="p-4 bg-gray-200 rounded-lg text-center font-bold text-xl flex items-center justify-center gap-2">
+        <button 
+          onClick={() => setView("addStock")} 
+          className={`p-4 rounded-lg text-center font-bold text-xl flex items-center justify-center gap-2 ${
+            view === "addStock" ? "bg-orange-500 text-white" : "bg-gray-200"
+          }`}
+        >
           <FaWarehouse /> Add Stock
+        </button>
+        <button 
+          onClick={handleLogout}
+          className="p-4 bg-red-500 text-white rounded-lg text-center font-bold text-xl"
+        >
+          Logout
         </button>
       </div>
 
-      {/* Right Panel */}
+  
+      <div className="w-2/3 flex flex-col gap-6">
+        {view === "profile" && adminDetails && (
+          <div className="bg-white p-6 rounded-xl shadow-lg">
+            <h2 className="text-2xl font-bold mb-6">Admin Profile</h2>
+            
+            <div className="flex items-start gap-8 mb-8">
+              <div className="w-32 h-32 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden">
+                <FaUserCircle className="text-gray-400 text-8xl" />
+              </div>
+              
+              <div className="flex-1">
+                <h3 className="text-xl font-semibold mb-2">
+                  {adminDetails.firstName} {adminDetails.lastName}
+                </h3>
+                <p className="text-gray-600 mb-1">
+                  <span className="font-medium">Username:</span> {adminDetails.username}
+                </p>
+                <p className="text-gray-600 mb-1">
+                  <span className="font-medium">Email:</span> {adminDetails.email}
+                </p>
+                <p className="text-gray-600">
+                  <span className="font-medium">Role:</span> {adminDetails.roles?.join(", ")}
+                </p>
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-6">
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <h4 className="font-semibold text-lg mb-3">Account Information</h4>
+                <div className="space-y-2">
+                  <p><span className="font-medium">Account Created:</span> {new Date(adminDetails.createdAt).toLocaleDateString()}</p>
+                  <p><span className="font-medium">Last Login:</span> {new Date().toLocaleString()}</p>
+                </div>
+              </div>
+              
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <h4 className="font-semibold text-lg mb-3">Admin Statistics</h4>
+                <div className="space-y-2">
+                  <p><span className="font-medium">Total Products:</span> {products.length}</p>
+                  <p><span className="font-medium">Total Stock Items:</span> {products.reduce((sum, product) => sum + parseInt(product.quantity || 0), 0)}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+      
       <div className="w-2/3 flex flex-col gap-6">
       {view === "addProduct" && (
   <div className="bg-white p-6 rounded-xl shadow-lg">
@@ -257,8 +337,6 @@ const AdminProductPanel = () => {
     )}
   </div>
 )}
-
-
       
 {/* Product List */}
 {products.length > 0 && view !== "profile" && (
@@ -333,9 +411,7 @@ const AdminProductPanel = () => {
   </div>
 )}
 
-
-
-
+      </div>
       </div>
     </div>
   );
