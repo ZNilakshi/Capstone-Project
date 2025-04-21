@@ -16,8 +16,7 @@ const AdminProductPanel = () => {
   const [editingIndex, setEditingIndex] = useState(null);
   const [view, setView] = useState("profile");
   const [adminDetails, setAdminDetails] = useState(null);
-  const [photoUploading, setPhotoUploading] = useState(false);
-
+ 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -45,33 +44,51 @@ const AdminProductPanel = () => {
 
   const handlePhotoUpload = async (e) => {
     const file = e.target.files[0];
-    if (!file) {
-      console.error("No file selected");
-      return;
-    }
-  
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("upload_preset", "ml_default"); // ✅ this should be available by default
-  
+    if (!file) return;
+    
     try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", "ml_default");
+      
       const res = await axios.post(
         "https://api.cloudinary.com/v1_1/djuwrvdxe/image/upload",
         formData
       );
+      
+      console.log("Upload successful:", res.data); // Add this
       setPhoto(res.data.secure_url);
-      console.log("Image uploaded:", res.data.secure_url);
     } catch (err) {
-      console.error("Error uploading to Cloudinary:", err.response?.data || err.message);
+      console.error("Upload error:", err.response?.data || err.message);
     }
   };
   
   
 
   const addProduct = async () => {
-    if (!name || !price || !quantity) return;
+    if (!name || !price || !quantity) {
+      alert("Please fill in all required fields");
+      return;
+    }
   
-    const productData = { name, price, brand, size, abv, category, quantity, photo };
+   
+    if (!photo) {
+      alert("Please upload a product image");
+      return;
+    }
+  
+    const productData = { 
+      name, 
+      price: Number(price), 
+      brand: brand === "BRAND" ? "" : brand,
+      size: size === "SIZE" ? "" : size,
+      abv: abv === "ABV" ? "" : abv,
+      category: category === "CATEGORY" ? "" : category,
+      quantity: Number(quantity), 
+      photo 
+    };
+  
+    console.log("Sending to backend:", productData); 
   
     try {
       const response = await fetch("http://localhost:5000/api/products/add", {
@@ -85,26 +102,28 @@ const AdminProductPanel = () => {
       const result = await response.json();
       if (response.ok) {
         setProducts([...products, result.product]);
-        alert("Product saved to database!");
+        alert("Product saved successfully!");
+        resetForm();
       } else {
-        alert(result.message || "Failed to save product.");
+        alert(result.message || "Failed to save product");
       }
     } catch (error) {
-      console.error(error);
-      alert("Something went wrong while saving the product.");
+      console.error("Save error:", error);
+      alert("Network error - please try again");
     }
+  };
   
-    // Clear form
+  // Add this helper function
+  const resetForm = () => {
     setName("");
     setPrice("");
     setQuantity("");
-    setBrand("");
-    setSize("");
-    setAbv("");
-    setCategory("");
+    setBrand("BRAND");
+    setSize("SIZE");
+    setAbv("ABV");
+    setCategory("CATEGORY");
     setPhoto(null);
   };
-  
 
   const removeProduct = (index) => {
     setProducts(products.filter((_, i) => i !== index));

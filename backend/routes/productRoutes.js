@@ -2,15 +2,18 @@ const express = require("express");
 const router = express.Router();
 const Product = require("../models/Product"); // Create this model
 
-// Save a product
 router.post("/add", async (req, res) => {
   try {
+    console.log("Received product data:", req.body); // Add this line
     const newProduct = new Product(req.body);
     await newProduct.save();
     res.status(201).json({ message: "Product added successfully", product: newProduct });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Failed to add product" });
+    console.error("Error saving product:", error); // More detailed error
+    res.status(500).json({ 
+      message: "Failed to add product",
+      error: error.message 
+    });
   }
 });
 // Get all products
