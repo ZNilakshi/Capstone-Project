@@ -34,9 +34,9 @@ const AuthForm = () => {
 
             if (isSignIn) {
                 alert("Login successful!");
-                // Store token and user info if needed
-                // localStorage.setItem("token", res.data.token);
-            } else {
+                localStorage.setItem("user", JSON.stringify(res.data.user)); // store user info
+    window.location.href = "/"; // redirect to home
+    } else {
                 alert("Registration successful! You can now log in.");
                 setIsSignIn(true);
             }

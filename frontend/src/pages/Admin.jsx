@@ -1,5 +1,7 @@
+
 import { useState, useEffect } from "react";
 import { FaUserCircle, FaBoxOpen, FaWarehouse, FaTrash, FaEdit } from "react-icons/fa";
+import axios from "axios";
 
 const AdminProductPanel = () => {
   const [products, setProducts] = useState([]);
@@ -14,8 +16,21 @@ const AdminProductPanel = () => {
   const [editingIndex, setEditingIndex] = useState(null);
   const [view, setView] = useState("profile");
   const [adminDetails, setAdminDetails] = useState(null);
+  const [photoUploading, setPhotoUploading] = useState(false);
 
-
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/api/products");
+        setProducts(response.data);
+      } catch (err) {
+        console.error("Failed to fetch products", err);
+      }
+    };
+  
+    fetchProducts();
+  }, []);
+  
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("user"));
     if (userData) {
@@ -28,24 +43,58 @@ const AdminProductPanel = () => {
   const abvLevels = ["ABV", "5%", "6%", "7%", "10%"];
   const categories = ["CATEGORY", "Shake & Beer", "Wine", "Sprite"];
 
-  const handlePhotoUpload = (e) => {
+  const handlePhotoUpload = async (e) => {
     const file = e.target.files[0];
-    if (file) setPhoto(URL.createObjectURL(file));
-  };
-
-  const addProduct = () => {
-    if (!name || !price || !quantity) return;
-    const newProduct = { name, price, brand, size, abv, category, quantity, photo };
-
-    if (editingIndex !== null) {
-      const updatedProducts = [...products];
-      updatedProducts[editingIndex] = newProduct;
-      setProducts(updatedProducts);
-      setEditingIndex(null);
-    } else {
-      setProducts([...products, newProduct]);
+    if (!file) {
+      console.error("No file selected");
+      return;
     }
+  
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "ml_default"); // ✅ this should be available by default
+  
+    try {
+      const res = await axios.post(
+        "https://api.cloudinary.com/v1_1/djuwrvdxe/image/upload",
+        formData
+      );
+      setPhoto(res.data.secure_url);
+      console.log("Image uploaded:", res.data.secure_url);
+    } catch (err) {
+      console.error("Error uploading to Cloudinary:", err.response?.data || err.message);
+    }
+  };
+  
+  
 
+  const addProduct = async () => {
+    if (!name || !price || !quantity) return;
+  
+    const productData = { name, price, brand, size, abv, category, quantity, photo };
+  
+    try {
+      const response = await fetch("http://localhost:5000/api/products/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(productData),
+      });
+  
+      const result = await response.json();
+      if (response.ok) {
+        setProducts([...products, result.product]);
+        alert("Product saved to database!");
+      } else {
+        alert(result.message || "Failed to save product.");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Something went wrong while saving the product.");
+    }
+  
+    // Clear form
     setName("");
     setPrice("");
     setQuantity("");
@@ -55,6 +104,7 @@ const AdminProductPanel = () => {
     setCategory("");
     setPhoto(null);
   };
+  
 
   const removeProduct = (index) => {
     setProducts(products.filter((_, i) => i !== index));
@@ -78,7 +128,27 @@ const AdminProductPanel = () => {
     localStorage.removeItem("user");
     window.location.href = "/auth";
   };
-
+  const updateStock = async () => {
+    if (editingIndex !== null && quantity) {
+      const updated = [...products];
+      updated[editingIndex].quantity =
+        parseInt(updated[editingIndex].quantity) + parseInt(quantity);
+  
+      try {
+        const res = await axios.put(`http://localhost:5000/api/products/${updated[editingIndex]._id}`, {
+          quantity: updated[editingIndex].quantity,
+        });
+        if (res.status === 200) {
+          setProducts(updated);
+          setQuantity("");
+          setEditingIndex(null);
+        }
+      } catch (err) {
+        console.error("Error updating stock", err);
+      }
+    }
+  };
+  
   return (
     <div className="p-8 bg-gray-100 min-h-screen mt-20 flex gap-8">
     
