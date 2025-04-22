@@ -68,5 +68,19 @@ router.put('/:id/stock', async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
+
 });
+
+// In your product routes file
+router.get("/category/:category", async (req, res) => {
+  try {
+    const products = await Product.find({ category: req.params.category });
+    res.status(200).json(products);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Failed to get products by category" });
+  }
+});
+
+
 module.exports = router;
