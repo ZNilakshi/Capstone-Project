@@ -8,7 +8,7 @@ const productSchema = new mongoose.Schema({
   abv: String,
   category: String,
   quantity: Number,
-  photo: String, // store URL or base64 string
+  photo: String, 
 }, { timestamps: true });
 
 module.exports = mongoose.model("Product", productSchema);

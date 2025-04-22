@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const Product = require("../models/Product"); // Create this model
+const Product = require("../models/product"); 
 
 router.post("/add", async (req, res) => {
   try {
@@ -26,20 +26,47 @@ router.get("/", async (req, res) => {
       res.status(500).json({ message: "Failed to get products" });
     }
   });
-  // Update product quantity
+
+
+// Update product 
 router.put("/:id", async (req, res) => {
-    try {
-      const { quantity } = req.body;
-      const product = await Product.findByIdAndUpdate(
-        req.params.id,
-        { quantity },
-        { new: true }
-      );
-      res.status(200).json(product);
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ message: "Failed to update stock" });
+  try {
+    const updatedProduct = await Product.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+    res.status(200).json(updatedProduct);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to update product" });
+  }
+});
+
+// Delete product
+router.delete("/:id", async (req, res) => {
+  try {
+    await Product.findByIdAndDelete(req.params.id);
+    res.status(200).json({ message: "Product deleted successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to delete product" });
+  }
+});
+
+router.put('/:id/stock', async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' });
     }
-  });
-  
+
+    product.quantity += parseInt(req.body.quantity);
+    await product.save();
+
+    res.json(product);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
 module.exports = router;
