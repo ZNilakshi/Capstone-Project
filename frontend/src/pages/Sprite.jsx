@@ -1,23 +1,35 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import axios from "axios";
 
-const products = [
-  { id: 1, name: "Château Margaux", price: 950, brand: "ROCKLANDS", size: "1L", points: "4.8", abv: "5%", image: "/bottle1.png", type: "Red Wine", varietal: "Cabernet Sauvignon", vintage: "2020" },
-  { id: 2, name: "Merlot Reserve", price: 3200, brand: "ROCKLANDS", size: "1L", points: "4.6", abv: "5%", image: "/bottle2.png", type: "Red Wine", varietal: "Merlot", vintage: "2019" },
-  { id: 3, name: "Pinot Noir Prestige", price: 9050, brand: "ROCKLANDS", size: "1L", points: "4.7", abv: "5%", image: "/bottle3.png", type: "Rose", varietal: "Pinot Noir", vintage: "2018" },
-  { id: 4, name: "Fortified Sweet Wine", price: 2500, brand: "ROCKLANDS", size: "1L", points: "4.5", abv: "5%", image: "/bottle4.png", type: "Fortified Wine", varietal: "Port", vintage: "2017" },
-];
-
-const FilterableProductList = () => {
+const FilterableProductList = ({ }) => {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [priceRange, setPriceRange] = useState(9050);
   const [selectedBrand, setSelectedBrand] = useState("Any Brand");
   const [selectedSize, setSelectedSize] = useState("Any Size");
   const [selectedAbv, setSelectedAbv] = useState("Any ABV");
   const [hoveredIndex, setHoveredIndex] = useState(null);
+  
 
-  const brands = ["ANY BRAND", "ROCKLANDS", "DLL", "DCSL", "MENDIS", "LION", "HEINEKEN"];
-  const sizes = ["ANY SIZE", "750ML", "1L", "500ML"];
-  const abvLevels = ["ANY ABV", "5%", "6%", "7%", "10%"];
+  const brands = ["Any Brand", "ROCKLANDS", "DLL", "DCSL", "MENDIS", "LION", "HEINEKEN"];
+  const sizes = ["Any Size", "750ML", "1L", "500ML"];
+  const abvLevels = ["Any ABV", "5%", "6%", "7%", "10%"];
+  
+  useEffect(() => {
+    const fetchWines = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/api/products/category/Sprite");
+        setProducts(response.data);
+      } catch (err) {
+        console.error("Failed to fetch wines", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchWines();
+  }, []);
 
   const filteredProducts = products.filter(
     (product) =>
@@ -27,10 +39,15 @@ const FilterableProductList = () => {
       (selectedAbv === "Any ABV" || product.abv === selectedAbv)
   );
 
+
+
+
+  if (loading) return <div className="text-center py-20 text-white">Loading wines...</div>;
+
   return (
-    <div className="flex flex-col md:flex-row p-6 mt-20 gap-6 bg-black text-white">
+    <div className="flex flex-col md:flex-row p-6 mt-20 gap-6 bg-black text-white min-h-screen">
       {/* Sidebar Filter */}
-      <div className="w-full md:w-1/4 p-6 rounded-lg bg-[#2A1205] border  border-orange-500">
+      <div className="w-full md:w-1/4 p-6 rounded-lg bg-[#2A1205] border border-orange-500">
         <h2 className="font-bold text-xl mb-4 uppercase text-white tracking-wide">Filter by Price</h2>
 
         {/* Price Slider */}
@@ -98,44 +115,58 @@ const FilterableProductList = () => {
             </option>
           ))}
         </select>
+
+       
       </div>
 
-      {/* Product Section */}
+      {/* Main Content */}
       <div className="w-full md:w-4/5 bg-black">
-      <h1 className="text-center text-4xl font-bold text-gray-300 mb-6">SPRITE</h1>
+        <h1 className="text-center text-4xl font-bold text-gray-300 mb-6">WINE</h1>
 
+        {/* Hero Section */}
         <div className="w-full flex flex-col md:flex-row items-center bg-orange-500 text-white rounded-lg mb-6 p-6 relative z-10">
-  {/* Left Side - Image */}
-  <div className="w-full md:w-1/3 flex justify-center">
-    <img src="/sprit.jpg" alt="Beer Selection" className="w-60 h-auto rounded-lg shadow-lg" />
-  </div>
+          <div className="w-full md:w-1/3 flex justify-center">
+            <img src="/wine.jpg" alt="Wine Selection" className="w-60 h-auto rounded-lg shadow-lg" />
+          </div>
+          <div className="w-full md:w-2/3 text-center md:text-left p-4">
+            <h2 className="text-lg font-bold uppercase text-center">
+              Our wine selection is as diverse as it is delightful. From rich reds to crisp whites, 
+              we offer a spectrum that caters to every palate. Whether you prefer a bold Cabernet, 
+              a smooth Merlot, or something in between, our curated collection promises to elevate 
+              your wine experience. Discover the perfect bottle to suit any occasion and indulge 
+              in the art of great taste at De Silva Wine Store!
+            </h2>
+          </div>
+        </div>
 
-  {/* Right Side - Details */}
-  <div className="w-full md:w-2/3 text-center md:text-left p-4">
-    <h2 className="text-lg font-bold uppercase text-center">Our sprite selection is as diverse as it is delightful. From craft brews to classic favorites, we offer a spectrum that caters to every palate. Whether you prefer a crisp lager, a robust stout, or something in between, our curated collection promises to elevate your beer experience. Discover the perfect brew to suit any occasion and indulge in the art of great taste at De Silva Wine Store!</h2>
-   
-  </div>
-</div>
-
+      
 
         {/* Product Display Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {filteredProducts.map((product, index) => (
             <div
-              key={product.id}
+              key={product._id || product.id}
               className="relative border border-gray-300 p-6 shadow-md bg-white flex flex-col items-center text-center rounded-lg"
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
             >
+              
+
               <div className="relative w-full p-2">
                 <span className="absolute top-2 right-2 border border-orange-400 px-3 py-1 text-xs font-bold bg-white z-10 text-orange-500">
-                  {product.points} POINTS
+                  {product.points || "4.5"} POINTS
                 </span>
 
-                <img src={product.image} alt={product.name} className="w-41 mx-auto" />
+                <img 
+                  src={product.image || product.photo || "/default-wine.png"} 
+                  alt={product.name} 
+                  className="w-41 mx-auto h-48 object-contain"
+                />
                 <h3 className="font-bold mt-2 text-black">{product.name}</h3>
                 <p className="font-semibold text-lg mt-1 text-black">Rs.{product.price.toFixed(2)}</p>
+                     {product.vintage && <p className="text-sm text-gray-600">Vintage: {product.vintage}</p>}
               </div>
+              
               <motion.div
                 animate={{ opacity: hoveredIndex === index ? 1 : 0 }}
                 className="absolute bottom-0 bg-white border border-gray-400 p-4 shadow-lg w-full flex flex-col items-center text-center rounded-lg transition-opacity duration-300 z-20"
@@ -144,13 +175,13 @@ const FilterableProductList = () => {
                 <p className="text-gray-700">
                   <span className="font-semibold">Price</span> <br /> Rs.{product.price.toFixed(2)}
                 </p>
-                  <div className="flex items-center mt-2 space-x-2 bg-gray-100 p-2 rounded">
+                <div className="flex items-center mt-2 space-x-2 bg-gray-100 p-2 rounded">
                   <button className="border border-gray-400 px-2 py-1 bg-gray-200 hover:bg-gray-300 text-black rounded">-</button>
                   <span className="px-4 text-black font-semibold">1</span>
                   <button className="border border-gray-400 px-2 py-1 bg-gray-200 hover:bg-gray-300 text-black rounded">+</button>
                   <span className="ml-2 text-black">Qty</span>
                 </div>
-                  <button className="mt-2 w-full bg-orange-500 text-white py-2 rounded">ADD TO CART</button>
+                <button className="mt-2 w-full bg-orange-500 text-white py-2 rounded">ADD TO CART</button>
               </motion.div>
             </div>
           ))}
