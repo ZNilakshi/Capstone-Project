@@ -22,6 +22,7 @@ function App() {
         <Route path="/ShakeBeer" element={<ShakeBeer />} />
         <Route path="/Admin" element={<Admin />} />
         <Route path="/auth" element={<AuthForm />} />
+        <Route path="/ourstory" element={<OurStory />} />
       </Routes>
       <Footer />
     </Router>
