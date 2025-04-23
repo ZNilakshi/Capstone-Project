@@ -18,10 +18,11 @@ const Navbar = () => {
           LOGO
         </h1>
 
+
         {/* Desktop Menu */}
         <ul className="hidden md:flex space-x-6 text-lg font-semibold">
           <li className="hover:text-orange-500 cursor-pointer" onClick={() => navigate("/")}>HOME</li>
-          <li className="hover:text-orange-500 cursor-pointer" onClick={() => navigate("/about")}>ABOUT</li>
+          <li className="hover:text-orange-500 cursor-pointer" onClick={() => navigate("/ourstory")}>ABOUT</li>
           <li className="hover:text-orange-500 cursor-pointer" onClick={() => navigate("/contact")}>CONTACT</li>
         </ul>
 
@@ -51,7 +52,7 @@ const Navbar = () => {
               </button>
               <button
                 className="block px-4 py-2 w-full text-left hover:bg-gray-200"
-                onClick={() => navigate("/register")}
+                onClick={() => navigate("/auth")}
               >
                 Register
               </button>

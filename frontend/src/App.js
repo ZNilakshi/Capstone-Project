@@ -9,6 +9,7 @@ import Sprite from "./pages/Sprite";
 import ShakeBeer from "./pages/ShakeBeer";
 import Admin from "./pages/Admin";
 import AuthForm from "./pages/AuthForm";
+import OurStory from "./pages/OurStory";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/ShakeBeer" element={<ShakeBeer />} />
         <Route path="/Admin" element={<Admin />} />
         <Route path="/auth" element={<AuthForm />} />
+        <Route path="/ourstory" element={<OurStory />} />
       </Routes>
       <Footer />
     </Router>
