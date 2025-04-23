@@ -9,6 +9,7 @@ import Sprite from "./pages/Sprite";
 import ShakeBeer from "./pages/ShakeBeer";
 import Admin from "./pages/Admin";
 import AuthForm from "./pages/AuthForm";
+import OurStory from "./pages/OurStory";
 
 function App() {
   return (

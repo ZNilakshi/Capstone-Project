@@ -35,8 +35,8 @@ const AuthForm = () => {
             if (isSignIn) {
                 alert("Login successful!");
                 localStorage.setItem("user", JSON.stringify(res.data.user)); // store user info
-    window.location.href = "/"; // redirect to home
-    } else {
+                window.location.href = "/"; // redirect to home
+            } else {
                 alert("Registration successful! You can now log in.");
                 setIsSignIn(true);
             }
@@ -49,7 +49,7 @@ const AuthForm = () => {
     return (
         <div
             className="min-h-screen bg-cover bg-center flex items-center justify-center"
-            style={{ backgroundImage: "url('/bg.jpg')" }}
+            style={{ backgroundImage: "url('/auth-bg.png')" }}
         >
             <div className="bg-[#2c0f0f]/90 p-8 rounded-2xl w-full max-w-md text-white shadow-2xl backdrop-blur transition-all duration-300 h-[540px] flex flex-col">
                 <div className="flex justify-between border-b border-orange-500 mb-6">
