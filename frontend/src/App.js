@@ -10,6 +10,7 @@ import ShakeBeer from "./pages/ShakeBeer";
 import Admin from "./pages/Admin";
 import AuthForm from "./pages/AuthForm";
 import OurStory from "./pages/OurStory";
+import UserProfile from "./pages/UserProfile";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <Route path="/Admin" element={<Admin />} />
         <Route path="/auth" element={<AuthForm />} />
         <Route path="/ourstory" element={<OurStory />} />
+        <Route path="/userprofile" element={<UserProfile />} />
       </Routes>
       <Footer />
     </Router>

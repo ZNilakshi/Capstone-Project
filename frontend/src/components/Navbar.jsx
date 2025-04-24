@@ -1,5 +1,11 @@
 import { useState, useEffect } from "react";
-import { FaSearch, FaUser, FaShoppingCart, FaBars, FaTimes } from "react-icons/fa";
+import {
+  FaSearch,
+  FaUser,
+  FaShoppingCart,
+  FaBars,
+  FaTimes,
+} from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
@@ -24,22 +30,40 @@ const Navbar = () => {
     if (user?.role === "admin") {
       navigate("/admin");
     } else {
-      navigate("/user-profile");
+      navigate("/userprofile");
     }
   };
 
   return (
     <nav className="bg-black text-white py-4 px-6 fixed top-0 left-0 w-full z-50 shadow-md">
       <div className="container mx-auto flex justify-between items-center">
-        <h1 className="text-orange-500 font-bold text-lg tracking-wide cursor-pointer" onClick={() => navigate("/")}>
+        <h1
+          className="text-orange-500 font-bold text-lg tracking-wide cursor-pointer"
+          onClick={() => navigate("/")}
+        >
           LOGO
         </h1>
 
         {/* Desktop Menu */}
         <ul className="hidden md:flex space-x-6 text-lg font-semibold">
-          <li className="hover:text-orange-500 cursor-pointer" onClick={() => navigate("/")}>HOME</li>
-          <li className="hover:text-orange-500 cursor-pointer" onClick={() => navigate("/OurStory")}>ABOUT</li>
-          <li className="hover:text-orange-500 cursor-pointer" onClick={() => navigate("/contact")}>CONTACT</li>
+          <li
+            className="hover:text-orange-500 cursor-pointer"
+            onClick={() => navigate("/")}
+          >
+            HOME
+          </li>
+          <li
+            className="hover:text-orange-500 cursor-pointer"
+            onClick={() => navigate("/OurStory")}
+          >
+            ABOUT
+          </li>
+          <li
+            className="hover:text-orange-500 cursor-pointer"
+            onClick={() => navigate("/contact")}
+          >
+            CONTACT
+          </li>
         </ul>
 
         {/* Search */}
@@ -54,26 +78,41 @@ const Navbar = () => {
 
         {/* User Controls */}
         <div className="hidden md:flex space-x-10 text-lg items-center">
-          <FaShoppingCart className="cursor-pointer hover:text-orange-500" onClick={() => navigate("/cart")} />
+          <FaShoppingCart
+            className="cursor-pointer hover:text-orange-500"
+            onClick={() => navigate("/cart")}
+          />
 
           <div className="relative group">
             <FaUser className="cursor-pointer hover:text-orange-500" />
             <div className="absolute right-0 mt-2 w-32 bg-white text-black rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
               {user ? (
                 <>
-                  <button className="block px-4 py-2 w-full text-left hover:bg-gray-200" onClick={handleProfileClick}>
+                  <button
+                    className="block px-4 py-2 w-full text-left hover:bg-gray-200"
+                    onClick={handleProfileClick}
+                  >
                     Profile
                   </button>
-                  <button className="block px-4 py-2 w-full text-left hover:bg-gray-200" onClick={handleLogout}>
+                  <button
+                    className="block px-4 py-2 w-full text-left hover:bg-gray-200"
+                    onClick={handleLogout}
+                  >
                     Logout
                   </button>
                 </>
               ) : (
                 <>
-                  <button className="block px-4 py-2 w-full text-left hover:bg-gray-200" onClick={() => navigate("/auth")}>
+                  <button
+                    className="block px-4 py-2 w-full text-left hover:bg-gray-200"
+                    onClick={() => navigate("/auth")}
+                  >
                     Login
                   </button>
-                  <button className="block px-4 py-2 w-full text-left hover:bg-gray-200" onClick={() => navigate("/auth")}>
+                  <button
+                    className="block px-4 py-2 w-full text-left hover:bg-gray-200"
+                    onClick={() => navigate("/auth")}
+                  >
                     Register
                   </button>
                 </>
@@ -83,7 +122,10 @@ const Navbar = () => {
         </div>
 
         {/* Mobile Menu Button */}
-        <button className="md:hidden text-2xl focus:outline-none" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+        <button
+          className="md:hidden text-2xl focus:outline-none"
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+        >
           {isMenuOpen ? <FaTimes /> : <FaBars />}
         </button>
       </div>
@@ -92,9 +134,33 @@ const Navbar = () => {
       {isMenuOpen && (
         <div className="md:hidden bg-black text-white text-center absolute top-14 left-0 w-full shadow-md">
           <ul className="py-4 space-y-4">
-            <li onClick={() => { navigate("/"); setIsMenuOpen(false); }} className="hover:text-orange-500 cursor-pointer">HOME</li>
-            <li onClick={() => { navigate("/about"); setIsMenuOpen(false); }} className="hover:text-orange-500 cursor-pointer">ABOUT</li>
-            <li onClick={() => { navigate("/contact"); setIsMenuOpen(false); }} className="hover:text-orange-500 cursor-pointer">CONTACT</li>
+            <li
+              onClick={() => {
+                navigate("/");
+                setIsMenuOpen(false);
+              }}
+              className="hover:text-orange-500 cursor-pointer"
+            >
+              HOME
+            </li>
+            <li
+              onClick={() => {
+                navigate("/about");
+                setIsMenuOpen(false);
+              }}
+              className="hover:text-orange-500 cursor-pointer"
+            >
+              ABOUT
+            </li>
+            <li
+              onClick={() => {
+                navigate("/contact");
+                setIsMenuOpen(false);
+              }}
+              className="hover:text-orange-500 cursor-pointer"
+            >
+              CONTACT
+            </li>
           </ul>
 
           <div className="relative w-3/4 mx-auto mb-4">
@@ -107,25 +173,55 @@ const Navbar = () => {
           </div>
 
           <div className="flex justify-center space-x-6 text-lg pb-4">
-            <FaShoppingCart className="cursor-pointer hover:text-orange-500" onClick={() => { navigate("/cart"); setIsMenuOpen(false); }} />
+            <FaShoppingCart
+              className="cursor-pointer hover:text-orange-500"
+              onClick={() => {
+                navigate("/cart");
+                setIsMenuOpen(false);
+              }}
+            />
             <div className="relative group">
               <FaUser className="cursor-pointer hover:text-orange-500" />
               <div className="absolute right-0 mt-2 w-32 bg-white text-black rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
                 {user ? (
                   <>
-                    <button className="block px-4 py-2 w-full text-left hover:bg-gray-200" onClick={() => { handleProfileClick(); setIsMenuOpen(false); }}>
+                    <button
+                      className="block px-4 py-2 w-full text-left hover:bg-gray-200"
+                      onClick={() => {
+                        handleProfileClick();
+                        setIsMenuOpen(false);
+                      }}
+                    >
                       Profile
                     </button>
-                    <button className="block px-4 py-2 w-full text-left hover:bg-gray-200" onClick={() => { handleLogout(); setIsMenuOpen(false); }}>
+                    <button
+                      className="block px-4 py-2 w-full text-left hover:bg-gray-200"
+                      onClick={() => {
+                        handleLogout();
+                        setIsMenuOpen(false);
+                      }}
+                    >
                       Logout
                     </button>
                   </>
                 ) : (
                   <>
-                    <button className="block px-4 py-2 w-full text-left hover:bg-gray-200" onClick={() => { navigate("/auth"); setIsMenuOpen(false); }}>
+                    <button
+                      className="block px-4 py-2 w-full text-left hover:bg-gray-200"
+                      onClick={() => {
+                        navigate("/auth");
+                        setIsMenuOpen(false);
+                      }}
+                    >
                       Login
                     </button>
-                    <button className="block px-4 py-2 w-full text-left hover:bg-gray-200" onClick={() => { navigate("/register"); setIsMenuOpen(false); }}>
+                    <button
+                      className="block px-4 py-2 w-full text-left hover:bg-gray-200"
+                      onClick={() => {
+                        navigate("/register");
+                        setIsMenuOpen(false);
+                      }}
+                    >
                       Register
                     </button>
                   </>
