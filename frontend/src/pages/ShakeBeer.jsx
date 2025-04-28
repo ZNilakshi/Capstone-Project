@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
+import { useCart } from "../context/CartContext";
 
 const FilterableProductList = () => {
   const [products, setProducts] = useState([]);
@@ -10,6 +11,8 @@ const FilterableProductList = () => {
   const [selectedSize, setSelectedSize] = useState("Any Size");
   const [selectedAbv, setSelectedAbv] = useState("Any ABV");
   const [hoveredIndex, setHoveredIndex] = useState(null);
+ 
+  const { addToCart } = useCart();
   
 
   const brands = ["Any Brand", "ROCKLANDS", "DLL", "DCSL", "MENDIS", "LION", "HEINEKEN"];
@@ -235,7 +238,12 @@ const FilterableProductList = () => {
                     <button className="border border-gray-400 px-2 py-1 bg-gray-200 hover:bg-gray-300 text-black rounded">+</button>
                     <span className="ml-2 text-black">Qty</span>
                   </div>
-                  <button className="mt-2 w-full bg-orange-500 text-white py-2 rounded">ADD TO CART</button>
+                  <button 
+                    className="mt-2 w-full bg-orange-500 text-white py-2 rounded"
+                    onClick={() => addToCart(product._id, 1)}
+                  >
+                    ADD TO CART
+                  </button>
                 </motion.div>
               </div>
             ))}
