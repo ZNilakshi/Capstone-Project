@@ -11,10 +11,13 @@ import Admin from "./pages/Admin";
 import AuthForm from "./pages/AuthForm";
 import OurStory from "./pages/OurStory";
 import UserProfile from "./pages/UserProfile";
+import { CartProvider } from "./context/CartContext";
+import Cart from "./pages/Cart";
 
 function App() {
   return (
     <Router>
+      <CartProvider>
       <Navbar />
       <AgeVerification />
       <Routes>
@@ -26,8 +29,10 @@ function App() {
         <Route path="/auth" element={<AuthForm />} />
         <Route path="/ourstory" element={<OurStory />} />
         <Route path="/userprofile" element={<UserProfile />} />
+        <Route path="/cart" element={<Cart />} />
       </Routes>
       <Footer />
+      </CartProvider>
     </Router>
   );
 }
