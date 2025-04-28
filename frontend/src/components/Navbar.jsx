@@ -7,11 +7,13 @@ import {
   FaTimes,
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { useCart } from "../context/CartContext";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
+  const { cart } = useCart();
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -78,10 +80,17 @@ const Navbar = () => {
 
         {/* User Controls */}
         <div className="hidden md:flex space-x-10 text-lg items-center">
-          <FaShoppingCart
-            className="cursor-pointer hover:text-orange-500"
-            onClick={() => navigate("/cart")}
-          />
+          <div className="relative">
+            <FaShoppingCart
+              className="cursor-pointer hover:text-orange-500"
+              onClick={() => navigate("/cart")}
+            />
+            {cart?.items?.length > 0 && (
+              <span className="absolute -top-2 -right-2 bg-orange-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                {cart.items.reduce((sum, item) => sum + item.quantity, 0)}
+              </span>
+            )}
+          </div>
 
           <div className="relative group">
             <FaUser className="cursor-pointer hover:text-orange-500" />
