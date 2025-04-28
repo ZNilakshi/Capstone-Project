@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
 
-const FilterableProductList = ({ }) => {
+const FilterableProductList = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [priceRange, setPriceRange] = useState(9050);

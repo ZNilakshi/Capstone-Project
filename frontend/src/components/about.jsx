@@ -14,11 +14,9 @@ const About = () => {
       </div>
 
 
-      <div className="w-full pr-6 mr-6 md:w-1/2 md:pl-12 mt-6 md:mt-0 text-center md:text-left">
-        <p className="text-white text-3xl md:text-4xl font-semibold italic px-6 py-4 leading-relaxed tracking-wide text-center md:text-left bg-black/50 rounded-2xl shadow-lg">
-          <center>Cheers to quality, tradition, and unforgettable moments.</center>
-        </p>
-      </div>
+      <p className="text-white text-3xl md:text-4xl font-semibold italic px-6 py-4 leading-relaxed tracking-wide text-center bg-black/50 rounded-2xl shadow-lg">
+  Cheers to quality, tradition, and unforgettable moments.
+</p>
 
 
 

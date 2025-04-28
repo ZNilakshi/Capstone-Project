@@ -20,7 +20,7 @@ const FeaturedProducts = () => {
                     className="bg-orange-500 text-black px-8 md:px-4 py-3 md:py-4 font-semibold border border-black hover:bg-white hover:text-orange-500 transition"
                     onClick={() => navigate("/sprite")}
                 >
-                    SPRIRIT
+                    SPIRIT
                     <div className="flex justify-center mt-2">
                          <img
                          src="/sprit.jpg"
