@@ -18,3 +18,6 @@ app.use("/api/products", productRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+const cartRoutes = require("./routes/cartRoutes");
+app.use("/api/cart", cartRoutes);
