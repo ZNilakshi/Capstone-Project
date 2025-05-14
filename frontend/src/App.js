@@ -13,25 +13,27 @@ import OurStory from "./pages/OurStory";
 import UserProfile from "./pages/UserProfile";
 import { CartProvider } from "./context/CartContext";
 import Cart from "./pages/Cart";
+import Contact from "./pages/Contact";
 
 function App() {
   return (
     <Router>
       <CartProvider>
-      <Navbar />
-      <AgeVerification />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/WineStore" element={<WineStore />} />
-        <Route path="/Sprite" element={<Sprite />} />
-        <Route path="/ShakeBeer" element={<ShakeBeer />} />
-        <Route path="/Admin" element={<Admin />} />
-        <Route path="/auth" element={<AuthForm />} />
-        <Route path="/ourstory" element={<OurStory />} />
-        <Route path="/userprofile" element={<UserProfile />} />
-        <Route path="/cart" element={<Cart />} />
-      </Routes>
-      <Footer />
+        <Navbar />
+        <AgeVerification />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/WineStore" element={<WineStore />} />
+          <Route path="/Sprite" element={<Sprite />} />
+          <Route path="/ShakeBeer" element={<ShakeBeer />} />
+          <Route path="/Admin" element={<Admin />} />
+          <Route path="/auth" element={<AuthForm />} />
+          <Route path="/ourstory" element={<OurStory />} />
+          <Route path="/userprofile" element={<UserProfile />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/contact" element={<Contact />} />
+        </Routes>
+        <Footer />
       </CartProvider>
     </Router>
   );
