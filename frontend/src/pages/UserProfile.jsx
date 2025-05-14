@@ -105,28 +105,28 @@ const UserProfile = () => {
               name="firstName"
               defaultValue={user.firstName || ""}
               placeholder="FIRST NAME"
-              className="p-3 border border-gray-300 rounded-md"
+              className="p-3 border border-gray-300 rounded-md text-gray-500"
             />
             <input
               type="text"
               name="lastName"
               defaultValue={user.lastName || ""}
               placeholder="LAST NAME"
-              className="p-3 border border-gray-300 rounded-md"
+              className="p-3 border border-gray-300 rounded-md text-gray-500"
             />
             <input
               type="email"
               name="email"
               defaultValue={user.email || ""}
               placeholder="EMAIL"
-              className="p-3 border border-gray-300 rounded-md"
+              className="p-3 border border-gray-300 rounded-md text-gray-500"
             />
             <input
               type="tel"
               name="phone"
               defaultValue={user.phone || ""}
               placeholder="PHONE NUMBER"
-              className="p-3 border border-gray-300 rounded-md"
+              className="p-3 border border-gray-300 rounded-md text-gray-500"
             />
             <button
               type="submit"
