@@ -8,12 +8,12 @@ const Cart = () => {
 
   if (!cart || !cart.items || cart.items.length === 0) {
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4 mt-16">
-        <h1 className="text-3xl font-bold mb-4">YOUR CART IS EMPTY</h1>
+      <div className="min-h-screen bg-black flex flex-col items-center justify-center p-4 mt-16">
+        <h1 className="text-orange-400 text-3xl font-bold mb-4">YOUR CART IS EMPTY</h1>
         <p className="mb-6 text-gray-600">Looks like you haven't added any items yet.</p>
         <button
           onClick={() => navigate("/")}
-          className="bg-gray-800 text-white px-6 py-3 rounded-lg font-bold hover:bg-gray-700 transition"
+          className="bg-orange-500 text-white px-6 py-3 rounded-lg font-bold hover:bg-orange-500 transition"
         >
           CONTINUE SHOPPING
         </button>
