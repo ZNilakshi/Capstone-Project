@@ -1,9 +1,9 @@
 // const Footer = () => {
 //     return <footer className="bg-black text-white text-center py-4">Footer Content</footer>;
 //   };
-  
+
 //   export default Footer;
-  
+
 
 import React from "react";
 import { FaFacebookF, FaInstagram, FaYoutube } from "react-icons/fa";
@@ -14,17 +14,20 @@ const Footer = () => {
       {/* Horizontal Line */}
       <hr className="border-gray-600 mb-6" />
       <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 text-center md:text-left">
-        
+
         {/* Our Branches */}
         <div>
           <h3 className="text-lg font-semibold mb-2">OUR BRANCHES</h3>
+          <ul className="space-y-1">
+            <li className="hover:text-orange-500 cursor-pointer">Welimada</li>
+            <li className="hover:text-orange-500 cursor-pointer">Badulla</li>
+          </ul>
         </div>
 
         {/* Contact Us */}
         <div>
-          <h3 className="text-lg font-semibold mb-2">CONTACT US</h3>
-          <p>Email</p>
-          <p>Phone Number</p>
+          <h3 className="text-lg font-semibold mb-2">FOLLOW US</h3>
+
           <div className="flex justify-center md:justify-start space-x-3 mt-2">
             <FaFacebookF className="text-xl cursor-pointer hover:text-orange-500" />
             <FaInstagram className="text-xl cursor-pointer hover:text-orange-500" />
@@ -52,12 +55,12 @@ const Footer = () => {
 
         {/* Place an Order */}
         <div>
-          <h3 className="text-lg font-semibold mb-2">PLACE AN ORDER</h3>
+          <h3 className="text-lg font-semibold mb-2"> DE SILVA WINE STORE </h3>
           <ul className="space-y-1">
-            <li className="hover:text-orange-500 cursor-pointer">Place an Order</li>
-            <li className="hover:text-orange-500 cursor-pointer">Returns and Refunds</li>
-            <li className="hover:text-orange-500 cursor-pointer">Privacy Policy</li>
-            <li className="hover:text-orange-500 cursor-pointer">Terms and Conditions</li>
+            <li className="hover:text-orange-500 cursor-pointer">Home</li>
+            <li className="hover:text-orange-500 cursor-pointer">Contact</li>
+            <li className="hover:text-orange-500 cursor-pointer">About</li>
+            <li className="hover:text-orange-500 cursor-pointer">Add to cart</li>
           </ul>
         </div>
       </div>

@@ -8,12 +8,12 @@ const Cart = () => {
 
   if (!cart || !cart.items || cart.items.length === 0) {
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4 mt-16">
-        <h1 className="text-3xl font-bold mb-4">YOUR CART IS EMPTY</h1>
+      <div className="min-h-screen bg-black flex flex-col items-center justify-center p-4 mt-16">
+        <h1 className="text-orange-400 text-3xl font-bold mb-4">YOUR CART IS EMPTY</h1>
         <p className="mb-6 text-gray-600">Looks like you haven't added any items yet.</p>
         <button
           onClick={() => navigate("/")}
-          className="bg-gray-800 text-white px-6 py-3 rounded-lg font-bold hover:bg-gray-700 transition"
+          className="bg-orange-500 text-white px-6 py-3 rounded-lg font-bold hover:bg-orange-500 transition"
         >
           CONTINUE SHOPPING
         </button>
@@ -28,10 +28,10 @@ const Cart = () => {
   }, 0);
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 mt-16">
+    <div className="min-h-screen bg-black text-gray-100 px-6 pt-28 pb-16">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold uppercase mb-8 text-center">CART</h1>
-        
+        <h1 className="text-5xl font-extrabold text-orange-500 mb-4   uppercase  text-center">CART</h1>
+
         {/* Cart Items Table */}
         <div className="bg-white shadow rounded-lg overflow-hidden">
           {/* Table Header */}
@@ -42,7 +42,7 @@ const Cart = () => {
             <div className="col-span-3 text-center">Quantity</div>
             <div className="col-span-2 text-right">Subtotal</div>
           </div>
-          
+
           {/* Cart Items */}
           {cart.items.map((item) => {
             const price = item?.product?.price || 0;
@@ -50,8 +50,8 @@ const Cart = () => {
             const subtotal = price * quantity;
 
             return (
-              <div 
-                key={item.product?._id || Math.random()} 
+              <div
+                key={item.product?._id || Math.random()}
                 className="grid grid-cols-12 p-4 border-b border-gray-200 hover:bg-gray-50 transition-colors"
               >
                 {/* Delete Button Column - Moved to first column */}
@@ -63,7 +63,7 @@ const Cart = () => {
                     <FaTrash />
                   </button>
                 </div>
-                
+
                 {/* Product Column */}
                 <div className="col-span-11 md:col-span-4 flex items-center mb-4 md:mb-0">
                   <img
@@ -76,12 +76,12 @@ const Cart = () => {
                     <p className="text-gray-500 text-sm">{item.product?.brand || ''}</p>
                   </div>
                 </div>
-                
+
                 {/* Price Column */}
                 <div className="col-span-4 md:col-span-2 flex items-center md:justify-center">
-                  <span className="font-bold">Rs.{price.toFixed(2)}</span>
+                  <span className="text-gray-400 font-normal">Rs.{price.toFixed(2)}</span>
                 </div>
-                
+
                 {/* Quantity Column */}
                 <div className="col-span-4 md:col-span-3 flex items-center justify-center">
                   <div className="flex items-center border border-gray-300 rounded">
@@ -97,7 +97,7 @@ const Cart = () => {
                     >
                       <FaMinus size={12} />
                     </button>
-                    <span className="px-4 py-1 border-x border-gray-300 font-medium">
+                    <span className="text-gray-400 font-normal px-4 py-1 border-x border-gray-300 ">
                       {quantity}
                     </span>
                     <button
@@ -108,10 +108,10 @@ const Cart = () => {
                     </button>
                   </div>
                 </div>
-                
+
                 {/* Subtotal Column */}
                 <div className="col-span-4 md:col-span-2 flex items-center justify-end">
-                  <span className="font-bold">
+                  <span className="text-gray-400 font-bold">
                     Rs.{subtotal.toFixed(2)}
                   </span>
                 </div>
@@ -119,28 +119,28 @@ const Cart = () => {
             );
           })}
         </div>
-        
+
         {/* Cart Total Section */}
         <div className="mt-8 bg-white shadow rounded-lg p-6">
-          <h2 className="text-xl font-bold mb-6">CART TOTAL</h2>
-          
+          <h2 className="text-gray-400 text-xl font-bold mb-6">CART TOTAL</h2>
+
           <div className="border-t border-gray-200 pt-6">
-            <div className="flex justify-between py-2">
+            <div className="text-gray-400 flex justify-between py-2">
               <span className="font-medium">Subtotal</span>
               <span className="font-bold">Rs.{subtotal.toFixed(2)}</span>
             </div>
-            <div className="flex justify-between py-2 border-t border-gray-200">
+            <div className="text-gray-400 flex justify-between py-2 border-t border-gray-200">
               <span className="font-medium">Shipping</span>
               <span className="font-bold">FREE</span>
             </div>
-            <div className="flex justify-between py-4 border-t border-gray-200 font-bold text-lg">
+            <div className="text-gray-400 flex justify-between py-4 border-t border-gray-200 font-bold text-lg">
               <span>Total</span>
               <span>Rs.{subtotal.toFixed(2)}</span>
             </div>
-            
+
             <button
               onClick={() => alert("Proceeding to checkout!")}
-              className="w-full bg-gray-800 text-white py-3 rounded-lg font-bold hover:bg-gray-700 transition mt-4"
+              className="w-full bg-orange-500 text-white py-3 rounded-lg font-bold hover:bg-orange-400 transition mt-4"
             >
               PROCEED TO CHECKOUT
             </button>
@@ -151,7 +151,7 @@ const Cart = () => {
         <div className="flex justify-between mt-6">
           <button
             onClick={() => navigate("/")}
-            className="bg-gray-200 text-gray-800 px-6 py-3 rounded-lg font-bold hover:bg-gray-300 transition"
+            className="bg-gray-200 text-gray-800 px-6 py-3 rounded-lg font-bold hover:bg-orange-500 transition hover:text-gray-100"
           >
             CONTINUE SHOPPING
           </button>
