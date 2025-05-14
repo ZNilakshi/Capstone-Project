@@ -28,6 +28,17 @@ router.get("/", async (req, res) => {
   });
 
 
+  router.get("/brand/:brand", async (req, res) => {
+    try {
+      const brandName = new RegExp(`^${req.params.brand}$`, 'i');
+      const products = await Product.find({ brand: brandName });
+      res.status(200).json(products);
+    } catch (error) {
+      console.error("Error getting products by brand:", error);
+      res.status(500).json({ message: "Failed to get products by brand" });
+    }
+  });
+
 // Update product 
 router.put("/:id", async (req, res) => {
   try {

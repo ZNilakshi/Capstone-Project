@@ -14,6 +14,7 @@ import UserProfile from "./pages/UserProfile";
 import { CartProvider } from "./context/CartContext";
 import Cart from "./pages/Cart";
 import Contact from "./pages/Contact";
+import BrandPage from "./pages/BrandPage";
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
           <Route path="/userprofile" element={<UserProfile />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/brand/:brandName" element={<BrandPage />} />
         </Routes>
         <Footer />
       </CartProvider>
