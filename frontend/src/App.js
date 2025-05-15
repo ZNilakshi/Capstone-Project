@@ -15,7 +15,7 @@ import { CartProvider } from "./context/CartContext";
 import Cart from "./pages/Cart";
 import Contact from "./pages/Contact";
 import BrandPage from "./pages/BrandPage";
-
+import SearchResults from "./pages/SearchResults";
 function App() {
   return (
     <Router>
@@ -34,6 +34,7 @@ function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/brand/:brandName" element={<BrandPage />} />
+          <Route path="/search" element={<SearchResults />} />
         </Routes>
         <Footer />
       </CartProvider>
