@@ -23,7 +23,7 @@ const FilterableProductList = () => {
       try {
        
         const encodedCategory = encodeURIComponent("Shake & Beer");
-        const response = await axios.get(`http://localhost:5000/api/products/category/${encodedCategory}`);
+        const response = await axios.get(`https://capstone-project-production-df71.up.railway.app/api/products/category/${encodedCategory}`);
         
        
         setProducts(response.data);
