@@ -58,11 +58,11 @@ const UserProfile = () => {
   }
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen min-h-screen bg-black text-gray-100 px-6 pt-28 pb-12">
       {/* Main Content (3/4 of screen width) */}
       <main className="flex items-center justify-center w-3/4 h-full p-8">
         <div className="w-full max-w-lg">
-          <h2 className="mt-8 mb-6 text-xl font-semibold text-left">
+          <h2 className="text-4xl font-extrabold text-orange-500 mb-6 text-center">
             MY ACCOUNT
           </h2>
 
@@ -92,7 +92,7 @@ const UserProfile = () => {
             />
             <label
               htmlFor="fileInput"
-              className="inline-block px-4 py-2 text-white bg-gray-700 rounded-md cursor-pointer"
+              className="inline-block px-4 py-2 bg-orange-500 text-white rounded-md cursor-pointer"
             >
               UPLOAD
             </label>
@@ -105,32 +105,32 @@ const UserProfile = () => {
               name="firstName"
               defaultValue={user.firstName || ""}
               placeholder="FIRST NAME"
-              className="p-3 border border-gray-300 rounded-md"
+              className="p-3 border border-gray-300 rounded-md text-gray-500"
             />
             <input
               type="text"
               name="lastName"
               defaultValue={user.lastName || ""}
               placeholder="LAST NAME"
-              className="p-3 border border-gray-300 rounded-md"
+              className="p-3 border border-gray-300 rounded-md text-gray-500"
             />
             <input
               type="email"
               name="email"
               defaultValue={user.email || ""}
               placeholder="EMAIL"
-              className="p-3 border border-gray-300 rounded-md"
+              className="p-3 border border-gray-300 rounded-md text-gray-500"
             />
             <input
               type="tel"
               name="phone"
               defaultValue={user.phone || ""}
               placeholder="PHONE NUMBER"
-              className="p-3 border border-gray-300 rounded-md"
+              className="p-3 border border-gray-300 rounded-md text-gray-500"
             />
             <button
               type="submit"
-              className="px-4 py-2 text-white bg-gray-700 rounded-md"
+              className="px-4 py-2 bg-orange-500 text-white rounded-md"
             >
               SAVE
             </button>
