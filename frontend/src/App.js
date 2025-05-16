@@ -13,6 +13,7 @@ import OurStory from "./pages/OurStory";
 import UserProfile from "./pages/UserProfile";
 import { CartProvider } from "./context/CartContext";
 import Cart from "./pages/Cart";
+import Checkout from "./pages/Checkout";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
         <Route path="/ourstory" element={<OurStory />} />
         <Route path="/userprofile" element={<UserProfile />} />
         <Route path="/cart" element={<Cart />} />
+          <Route path="/checkout" element={<Checkout />} />
       </Routes>
       <Footer />
       </CartProvider>
