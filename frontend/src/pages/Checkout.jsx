@@ -96,10 +96,17 @@ const Checkout = () => {
           </div>
           
           {/* Payment Form */}
-          <div className="lg:w-1/2 bg-white shadow rounded-lg p-6">
+        <div className="lg:w-1/2 bg-white shadow rounded-lg p-6">
             <h2 className="text-xl font-bold mb-6 border-b pb-2">PAYMENT METHODS</h2>
-            <p className="text-gray-600 mb-6">YOUR PAYMENT INFORMATION IS SAFE WITH US</p>
             
+            <div className="flex items-center bg-green-50 border border-green-200 rounded-lg p-3">
+  <div className="flex items-center justify-center bg-white rounded-full w-6 h-6 mr-2">
+    <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+    </svg>
+  </div>
+  <span className="text-sm text-green-700">Your Payment Information is Safe With Us.</span>
+</div>
             <div className="space-y-6">
               {!showCardForm ? (
                 <button 
@@ -112,9 +119,17 @@ const Checkout = () => {
                 <>
                   <div className="flex items-center justify-center gap-2">
                     <div className="h-8 w-12 bg-blue-50 flex items-center justify-center rounded">
-                      <span className="text-blue-800 font-bold">VISA</span>
+                      <img
+              src="https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png"
+              alt="Visa"
+              className="h-5 mx-1"
+            />
                     </div>
-                    <span className="text-gray-700">CARD</span>
+                   <img
+              src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg"
+              alt="MasterCard"
+              className="h-5 mx-1"
+            />
                   </div>
                   
                   <form onSubmit={handleSubmit} className="space-y-4">

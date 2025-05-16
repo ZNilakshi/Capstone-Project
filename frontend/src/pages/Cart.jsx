@@ -8,12 +8,12 @@ const Cart = () => {
 
   if (!cart || !cart.items || cart.items.length === 0) {
     return (
-      <div className="min-h-screen bg-black flex flex-col items-center justify-center p-4 mt-16">
-        <h1 className="text-orange-400 text-3xl font-bold mb-4">YOUR CART IS EMPTY</h1>
-        <p className="mb-6 text-gray-600">Looks like you haven't added any items yet.</p>
+      <div className="min-h-screen bg-white flex flex-col items-center justify-center p-4 mt-16">
+        <h1 className="text-black text-3xl font-bold mb-4">YOUR CART IS EMPTY</h1>
+        <p className="mb-6 text-xl text-gray-600">Looks like you haven't added any items yet.</p>
         <button
           onClick={() => navigate("/")}
-          className="bg-orange-500 text-white px-6 py-3 rounded-lg font-bold hover:bg-orange-500 transition"
+          className="bg-gray-800 text-white px-6 py-3 rounded-lg font-bold hover:bg-orange-600 transition"
         >
           CONTINUE SHOPPING
         </button>
@@ -28,15 +28,15 @@ const Cart = () => {
   }, 0);
 
   return (
-    <div className="min-h-screen bg-black text-gray-100 px-6 pt-28 pb-16">
+    <div className="min-h-screen bg-white text-gray-100 px-6 pt-28 pb-16">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold uppercase mb-8 text-center">CART</h1>
+        <h1 className="text-3xl font-bold text-black uppercase mb-8 text-center">CART</h1>
         
         {/* Cart Items Table */}
         <div className="bg-white shadow rounded-lg overflow-hidden">
           {/* Table Header */}
-          <div className="hidden md:grid grid-cols-12 bg-gray-100 p-4 font-bold uppercase text-sm text-gray-600">
-            <div className="col-span-1"></div> {/* Empty column for delete icon */}
+          <div className="hidden md:grid grid-cols-12 bg-gray-300 p-4 font-bold uppercase text-sm text-black">
+            <div className="col-span-1"></div>
             <div className="col-span-4">Product</div>
             <div className="col-span-2 text-center">Price</div>
             <div className="col-span-3 text-center">Quantity</div>
@@ -54,11 +54,11 @@ const Cart = () => {
                 key={item.product?._id || Math.random()}
                 className="grid grid-cols-12 p-4 border-b border-gray-200 hover:bg-gray-50 transition-colors"
               >
-                {/* Delete Button Column - Moved to first column */}
+                {/* Delete Button Column */}
                 <div className="col-span-1 flex items-center">
                   <button
                     onClick={() => removeFromCart(item.product?._id)}
-                    className="text-red-500 hover:text-red-700"
+                    className="text-gray-400 hover:text-gray-500"
                   >
                     <FaTrash />
                   </button>
@@ -72,14 +72,14 @@ const Cart = () => {
                     className="w-20 h-20 object-contain mr-4"
                   />
                   <div>
-                    <h3 className="font-semibold">{item.product?.name || 'Unknown Product'}</h3>
-                    <p className="text-gray-500 text-sm">{item.product?.brand || ''}</p>
+                    <h3 className="text-black font-semibold">{item.product?.name || 'Unknown Product'}</h3>
+                    <p className="text-black text-sm">{item.product?.brand || ''}</p>
                   </div>
                 </div>
 
                 {/* Price Column */}
                 <div className="col-span-4 md:col-span-2 flex items-center md:justify-center">
-                  <span className="text-gray-400 font-normal">Rs.{price.toFixed(2)}</span>
+                  <span className="text-black font-normal">Rs.{price.toFixed(2)}</span>
                 </div>
 
                 {/* Quantity Column */}
@@ -93,16 +93,16 @@ const Cart = () => {
                           removeFromCart(item.product?._id);
                         }
                       }}
-                      className="px-3 py-1 text-gray-600 hover:bg-gray-100"
+                      className="px-3 py-1 text-gray-800 hover:bg-gray-300"
                     >
                       <FaMinus size={12} />
                     </button>
-                    <span className="text-gray-400 font-normal px-4 py-1 border-x border-gray-300 ">
+                    <span className="text-gray-800 font-normal px-4 py-1 border-x border-gray-300">
                       {quantity}
                     </span>
                     <button
                       onClick={() => updateQuantity(item.product?._id, quantity + 1)}
-                      className="px-3 py-1 text-gray-600 hover:bg-gray-100"
+                      className="px-3 py-1 text-gray-600 hover:bg-gray-300"
                     >
                       <FaPlus size={12} />
                     </button>
@@ -111,7 +111,7 @@ const Cart = () => {
 
                 {/* Subtotal Column */}
                 <div className="col-span-4 md:col-span-2 flex items-center justify-end">
-                  <span className="text-gray-400 font-bold">
+                  <span className="text-gray-800 font-bold">
                     Rs.{subtotal.toFixed(2)}
                   </span>
                 </div>
@@ -122,26 +122,25 @@ const Cart = () => {
 
         {/* Cart Total Section */}
         <div className="mt-8 bg-white shadow rounded-lg p-6">
-          <h2 className="text-gray-400 text-xl font-bold mb-6">CART TOTAL</h2>
+          <h2 className="text-gray-800 text-xl font-bold mb-6">CART TOTAL</h2>
 
-          <div className="border-t border-gray-200 pt-6">
-            <div className="text-gray-400 flex justify-between py-2">
+          <div className="border-t border-gray-300 pt-6">
+            <div className="text-gray-800 flex justify-between py-2">
               <span className="font-medium">Subtotal</span>
               <span className="font-bold">Rs.{subtotal.toFixed(2)}</span>
             </div>
-            <div className="text-gray-400 flex justify-between py-2 border-t border-gray-200">
+            <div className="text-gray-800 flex justify-between py-2 border-t border-gray-200">
               <span className="font-medium">Shipping</span>
               <span className="font-bold">FREE</span>
             </div>
-            <div className="text-gray-400 flex justify-between py-4 border-t border-gray-200 font-bold text-lg">
+            <div className="text-gray-800 flex justify-between py-4 border-t border-gray-200 font-bold text-lg">
               <span>Total</span>
               <span>Rs.{subtotal.toFixed(2)}</span>
             </div>
             
             <button
-              onClick={() => alert("Proceeding to checkout!")}
-              className="w-full bg-gray-800 text-white py-3 rounded-lg font-bold hover:bg-gray-700 transition mt-4"
-            >
+              onClick={() => navigate("/checkout")}
+              className="w-full bg-gray-800 text-white py-3 rounded-lg font-bold hover:bg-gray-700 transition mt-4">
               PROCEED TO CHECKOUT
             </button>
           </div>
@@ -151,13 +150,13 @@ const Cart = () => {
         <div className="flex justify-between mt-6">
           <button
             onClick={() => navigate("/")}
-            className="bg-gray-200 text-gray-800 px-6 py-3 rounded-lg font-bold hover:bg-orange-500 transition hover:text-gray-100"
+            className="bg-gray-200 text-gray-800 px-6 py-3 rounded-lg font-bold hover:bg-orange-500 hover:text-white transition"
           >
             CONTINUE SHOPPING
           </button>
           <button
             onClick={clearCart}
-            className="bg-red-500 text-white px-6 py-3 rounded-lg font-bold hover:bg-red-600 transition"
+            className="bg-orange-500 text-white px-6 py-3 rounded-lg font-bold hover:bg-red-600 transition"
           >
             CLEAR CART
           </button>
