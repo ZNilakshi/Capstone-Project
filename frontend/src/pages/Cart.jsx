@@ -30,7 +30,7 @@ const Cart = () => {
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 mt-16">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold uppercase mb-8 text-center">CART</h1>
+        <h1 className="text-3xl font-bold uppercase mb-8 text-left">CART</h1>
         
         {/* Cart Items Table */}
         <div className="bg-white shadow rounded-lg overflow-hidden">
@@ -138,12 +138,12 @@ const Cart = () => {
               <span>Rs.{subtotal.toFixed(2)}</span>
             </div>
             
-            <button
-              onClick={() => alert("Proceeding to checkout!")}
-              className="w-full bg-gray-800 text-white py-3 rounded-lg font-bold hover:bg-gray-700 transition mt-4"
-            >
-              PROCEED TO CHECKOUT
-            </button>
+           <button
+  onClick={() => navigate("/checkout")}
+  className="w-full bg-gray-800 text-white py-3 rounded-lg font-bold hover:bg-gray-700 transition mt-4"
+>
+  PROCEED TO CHECKOUT
+</button>
           </div>
         </div>
 
