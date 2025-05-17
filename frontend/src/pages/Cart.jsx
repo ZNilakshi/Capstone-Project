@@ -140,7 +140,7 @@ const Cart = () => {
             
             <button
               onClick={() => navigate("/checkout")}
-              className="w-full bg-gray-800 text-white py-3 rounded-lg font-bold hover:bg-gray-700 transition mt-4">
+              className="w-full bg-orange-500 text-white py-3 rounded-lg font-bold hover:bg-gray-700 transition mt-4">
               PROCEED TO CHECKOUT
             </button>
           </div>
@@ -156,7 +156,7 @@ const Cart = () => {
           </button>
           <button
             onClick={clearCart}
-            className="bg-orange-500 text-white px-6 py-3 rounded-lg font-bold hover:bg-red-600 transition"
+            className="bg-gray-800 text-white px-6 py-3 rounded-lg font-bold hover:bg-red-600 transition"
           >
             CLEAR CART
           </button>
