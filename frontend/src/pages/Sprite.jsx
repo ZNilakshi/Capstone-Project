@@ -24,7 +24,7 @@ const FilterableProductList = () => {
   useEffect(() => {
     const fetchWines = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/products/category/Sprite");
+        const response = await axios.get("https://capstone-project-production-df71.up.railway.app/api/products/category/Sprite");
         setProducts(response.data);
         // Initialize quantities
         const initialQuantities = {};
