@@ -7,6 +7,7 @@
 
 import React from "react";
 import { FaFacebookF, FaInstagram, FaYoutube } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
@@ -29,10 +30,31 @@ const Footer = () => {
           <h3 className="text-lg font-semibold mb-2">FOLLOW US</h3>
 
           <div className="flex justify-center md:justify-start space-x-3 mt-2">
-            <FaFacebookF className="text-xl cursor-pointer hover:text-orange-500" />
-            <FaInstagram className="text-xl cursor-pointer hover:text-orange-500" />
-            <FaYoutube className="text-xl cursor-pointer hover:text-orange-500" />
+            <a
+              href="/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <FaFacebookF className="text-xl cursor-pointer hover:text-orange-500" />
+            </a>
+
+            <a
+              href="/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <FaInstagram className="text-xl cursor-pointer hover:text-orange-500" />
+            </a>
+
+            <a
+              href="/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <FaYoutube className="text-xl cursor-pointer hover:text-orange-500" />
+            </a>
           </div>
+
         </div>
 
         {/* Payment Method */}
@@ -57,10 +79,29 @@ const Footer = () => {
         <div>
           <h3 className="text-lg font-semibold mb-2"> DE SILVA WINE STORE </h3>
           <ul className="space-y-1">
-            <li className="hover:text-orange-500 cursor-pointer">Home</li>
-            <li className="hover:text-orange-500 cursor-pointer">Contact</li>
-            <li className="hover:text-orange-500 cursor-pointer">About</li>
-            <li className="hover:text-orange-500 cursor-pointer">Add to cart</li>
+            <ul className="space-y-1">
+              <li>
+                <Link to="/" className="hover:text-orange-500">
+                  Home
+                </Link>
+              </li>
+              <li>
+                <Link to="/contact" className="hover:text-orange-500">
+                  Contact
+                </Link>
+              </li>
+              <li>
+                <Link to="/ourstory" className="hover:text-orange-500">
+                  About
+                </Link>
+              </li>
+              <li>
+                <Link to="/privacy-policy" className="hover:text-orange-500">
+                  Privacy Policy
+                </Link>
+              </li>
+            </ul>
+
           </ul>
         </div>
       </div>
