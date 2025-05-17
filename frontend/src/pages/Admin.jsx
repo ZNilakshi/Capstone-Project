@@ -24,7 +24,7 @@ const AdminProductPanel = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/products");
+        const response = await axios.get("https://capstone-project-production-df71.up.railway.app/api/products");
         setProducts(response.data);
       } catch (err) {
         console.error("Failed to fetch products", err);
@@ -79,7 +79,7 @@ const AdminProductPanel = () => {
       setIsUpdatingStock(true);
 
       const response = await axios.put(
-        `http://localhost:5000/api/products/${selectedProductId}/stock`,
+        `https://capstone-project-production-df71.up.railway.app/api/products/${selectedProductId}/stock`,
         { quantity: parseInt(stockToAdd) }
       );
 
@@ -138,7 +138,7 @@ const AdminProductPanel = () => {
       if (editingIndex !== null) {
         // Update existing product
         response = await axios.put(
-          `http://localhost:5000/api/products/${products[editingIndex]._id}`,
+          `https://capstone-project-production-df71.up.railway.app/api/products/${products[editingIndex]._id}`,
           productData
         );
 
@@ -149,7 +149,7 @@ const AdminProductPanel = () => {
       } else {
         // Add new product
         response = await axios.post(
-          "http://localhost:5000/api/products/add",
+          "https://capstone-project-production-df71.up.railway.app/api/products/add",
           productData
         );
         setProducts([...products, response.data.product]);
@@ -184,7 +184,7 @@ const AdminProductPanel = () => {
 
     try {
       await axios.delete(
-        `http://localhost:5000/api/products/${products[index]._id}`
+        `https://capstone-project-production-df71.up.railway.app/api/products/${products[index]._id}`
       );
 
       setProducts(products.filter((_, i) => i !== index));

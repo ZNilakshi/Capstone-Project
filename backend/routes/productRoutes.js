@@ -28,6 +28,17 @@ router.get("/", async (req, res) => {
   });
 
 
+  router.get("/brand/:brand", async (req, res) => {
+    try {
+      const brandName = new RegExp(`^${req.params.brand}$`, 'i');
+      const products = await Product.find({ brand: brandName });
+      res.status(200).json(products);
+    } catch (error) {
+      console.error("Error getting products by brand:", error);
+      res.status(500).json({ message: "Failed to get products by brand" });
+    }
+  });
+
 // Update product 
 router.put("/:id", async (req, res) => {
   try {
@@ -71,7 +82,7 @@ router.put('/:id/stock', async (req, res) => {
 
 });
 
-// In your product routes file
+// product routes file
 router.get("/category/:category", async (req, res) => {
   try {
     const products = await Product.find({ category: req.params.category });
@@ -82,5 +93,53 @@ router.get("/category/:category", async (req, res) => {
   }
 });
 
+router.get("/search", async (req, res) => {
+  try {
+    const query = req.query.q;
+    if (!query || query.trim() === "") {
+      return res.status(400).json({ 
+        message: "Search query is required",
+        suggestions: []
+      });
+    }
 
+    // Search in name, brand, category, and description
+    const products = await Product.find({
+      $or: [
+        { name: { $regex: query, $options: "i" } },
+        { brand: { $regex: query, $options: "i" } },
+        { category: { $regex: query, $options: "i" } },
+        { description: { $regex: query, $options: "i" } }
+      ],
+    }).limit(50); // Limit results to prevent overload
+
+    if (products.length === 0) {
+      // If no results, find similar terms
+      const similarProducts = await Product.find({
+        $or: [
+          { name: { $regex: query.split(" ")[0], $options: "i" } },
+          { brand: { $regex: query.split(" ")[0], $options: "i" } }
+        ]
+      }).limit(5);
+      
+      return res.status(200).json({
+        message: "No exact matches found",
+        products: similarProducts,
+        suggestions: [
+          "Try different keywords",
+          "Check your spelling",
+          "Search for a more general term"
+        ]
+      });
+    }
+
+    res.status(200).json(products);
+  } catch (error) {
+    console.error("Search error:", error);
+    res.status(500).json({ 
+      message: "Failed to perform search",
+      error: error.message 
+    });
+  }
+});
 module.exports = router;

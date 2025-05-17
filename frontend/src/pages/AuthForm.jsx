@@ -22,8 +22,8 @@ const AuthForm = () => {
 
         try {
             const url = isSignIn
-                ? "http://localhost:5000/api/auth/login"
-                : "http://localhost:5000/api/auth/register";
+                ? "https://capstone-project-production-df71.up.railway.app/api/auth/login"
+                : "https://capstone-project-production-df71.up.railway.app/api/auth/register";
 
             const payload = isSignIn
                 ? { username: formData.username, password: formData.password }

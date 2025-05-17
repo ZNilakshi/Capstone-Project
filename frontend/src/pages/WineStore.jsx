@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
 import { useCart } from "../context/CartContext";
+import { FaMinus, FaPlus, FaCheck } from "react-icons/fa";
 
 const FilterableProductList = () => {
   const [products, setProducts] = useState([]);
@@ -11,9 +12,10 @@ const FilterableProductList = () => {
   const [selectedSize, setSelectedSize] = useState("Any Size");
   const [selectedAbv, setSelectedAbv] = useState("Any ABV");
   const [hoveredIndex, setHoveredIndex] = useState(null);
+  const [quantities, setQuantities] = useState({});
+  const [addedItems, setAddedItems] = useState({});
 
   const { addToCart } = useCart();
-  
 
   const brands = ["Any Brand", "ROCKLANDS", "DLL", "DCSL", "MENDIS", "LION", "HEINEKEN"];
   const sizes = ["Any Size", "750ML", "1L", "500ML"];
@@ -22,8 +24,14 @@ const FilterableProductList = () => {
   useEffect(() => {
     const fetchWines = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/products/category/Wine");
+        const response = await axios.get("https://capstone-project-production-df71.up.railway.app/api/products/category/Wine");
         setProducts(response.data);
+        // Initialize quantities
+        const initialQuantities = {};
+        response.data.forEach(product => {
+          initialQuantities[product._id] = 1;
+        });
+        setQuantities(initialQuantities);
       } catch (err) {
         console.error("Failed to fetch wines", err);
       } finally {
@@ -33,6 +41,29 @@ const FilterableProductList = () => {
     
     fetchWines();
   }, []);
+
+  const handleQuantityChange = (productId, newQuantity) => {
+    if (newQuantity < 1) return;
+    setQuantities(prev => ({
+      ...prev,
+      [productId]: newQuantity
+    }));
+  };
+
+  const handleAddToCart = (productId) => {
+    addToCart(productId, quantities[productId]);
+    setAddedItems(prev => ({
+      ...prev,
+      [productId]: true
+    }));
+    // Reset the "Added" state after 2 seconds
+    setTimeout(() => {
+      setAddedItems(prev => ({
+        ...prev,
+        [productId]: false
+      }));
+    }, 2000);
+  };
 
   const filteredProducts = products.filter(
     (product) =>
@@ -150,8 +181,7 @@ const FilterableProductList = () => {
       </div>
 
       {/* Main Content */}
-     
-        <div className="flex-1">
+      <div className="flex-1">
         {/* Hero Section */}
         <div className="w-full rounded-xl overflow-hidden mb-8 relative">
           <div className="absolute inset-0 bg-gradient-to-r from-black to-transparent z-10"></div>
@@ -194,8 +224,8 @@ const FilterableProductList = () => {
             )}
           </div>
         </div>
+
         {/* Product Display Grid */}
-        
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {filteredProducts.map((product, index) => (
             <div
@@ -216,7 +246,7 @@ const FilterableProductList = () => {
                 />
                 <h3 className="font-bold mt-2 text-black">{product.name}</h3>
                 <p className="font-semibold text-lg mt-1 text-black">Rs.{product.price.toFixed(2)}</p>
-                     {product.vintage && <p className="text-sm text-gray-600">Vintage: {product.vintage}</p>}
+                {product.vintage && <p className="text-sm text-gray-600">Vintage: {product.vintage}</p>}
               </div>
               
               <motion.div
@@ -228,16 +258,39 @@ const FilterableProductList = () => {
                   <span className="font-semibold">Price</span> <br /> Rs.{product.price.toFixed(2)}
                 </p>
                 <div className="flex items-center mt-2 space-x-2 bg-gray-100 p-2 rounded">
-                  <button className="border border-gray-400 px-2 py-1 bg-gray-200 hover:bg-gray-300 text-black rounded">-</button>
-                  <span className="px-4 text-black font-semibold">1</span>
-                  <button className="border border-gray-400 px-2 py-1 bg-gray-200 hover:bg-gray-300 text-black rounded">+</button>
+                  <button
+                    onClick={() => handleQuantityChange(product._id, quantities[product._id] - 1)}
+                    className="px-3 py-1 text-gray-800 hover:bg-gray-300 rounded"
+                  >
+                    <FaMinus size={12} />
+                  </button>
+                  <span className="text-gray-800 font-normal px-4 py-1 border-x border-gray-300">
+                    {quantities[product._id]}
+                  </span>
+                  <button
+                    onClick={() => handleQuantityChange(product._id, quantities[product._id] + 1)}
+                    className="px-3 py-1 text-gray-600 hover:bg-gray-300 rounded"
+                  >
+                    <FaPlus size={12} />
+                  </button>
                   <span className="ml-2 text-black">Qty</span>
                 </div>
                 <button 
-                  className="mt-2 w-full bg-orange-500 text-white py-2 rounded"
-                  onClick={() => addToCart(product._id, 1)}
+                  className={`mt-2 w-full py-2 rounded flex items-center justify-center gap-2 ${
+                    addedItems[product._id] 
+                      ? 'bg-gray-500 text-white' 
+                      : 'bg-orange-500 text-white hover:bg-orange-600'
+                  }`}
+                  onClick={() => handleAddToCart(product._id)}
+                  disabled={addedItems[product._id]}
                 >
-                  ADD TO CART
+                  {addedItems[product._id] ? (
+                    <>
+                      <FaCheck /> Added
+                    </>
+                  ) : (
+                    "ADD TO CART"
+                  )}
                 </button>
               </motion.div>
             </div>

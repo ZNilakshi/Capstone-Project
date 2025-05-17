@@ -19,7 +19,7 @@ export const CartProvider = ({ children }) => {
         return;
       }
 
-      const response = await axios.get("http://localhost:5000/api/cart", {
+      const response = await axios.get("https://capstone-project-production-df71.up.railway.app/api/cart", {
         headers: { Authorization: `Bearer ${token}` }
       });
       setCart(response.data);
@@ -43,7 +43,7 @@ export const CartProvider = ({ children }) => {
       }
 
       const response = await axios.post(
-        "http://localhost:5000/api/cart/add",
+        "https://capstone-project-production-df71.up.railway.app/api/cart/add",
         { productId, quantity },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -65,7 +65,7 @@ export const CartProvider = ({ children }) => {
       }
 
       const response = await axios.put(
-        `http://localhost:5000/api/cart/update/${productId}`,
+        `https://capstone-project-production-df71.up.railway.app/api/cart/update/${productId}`,
         { quantity },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -84,7 +84,7 @@ export const CartProvider = ({ children }) => {
       }
 
       const response = await axios.delete(
-        `http://localhost:5000/api/cart/remove/${productId}`,
+        `https://capstone-project-production-df71.up.railway.app/api/cart/remove/${productId}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setCart(response.data);
@@ -102,7 +102,7 @@ export const CartProvider = ({ children }) => {
       }
 
       const response = await axios.delete(
-        "http://localhost:5000/api/cart/clear",
+        "https://capstone-project-production-df71.up.railway.app/api/cart/clear",
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setCart(response.data);

@@ -16,6 +16,7 @@ import Cart from "./pages/Cart";
 import Contact from "./pages/Contact";
 import PrivacyPolicy from "./pages/privacy-policy";
 import ScrollToTop from "./components/ScrollToTop"; // Import the ScrollToTop component
+import Checkout from "./pages/Checkout";
 
 function App() {
   return (
@@ -36,6 +37,21 @@ function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        </Routes>
+        <Footer />
+        <Navbar />
+        <AgeVerification />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/WineStore" element={<WineStore />} />
+          <Route path="/Sprite" element={<Sprite />} />
+          <Route path="/ShakeBeer" element={<ShakeBeer />} />
+          <Route path="/Admin" element={<Admin />} />
+          <Route path="/auth" element={<AuthForm />} />
+          <Route path="/ourstory" element={<OurStory />} />
+          <Route path="/userprofile" element={<UserProfile />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/checkout" element={<Checkout />} />
         </Routes>
         <Footer />
       </CartProvider>
