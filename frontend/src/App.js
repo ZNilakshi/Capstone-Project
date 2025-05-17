@@ -14,10 +14,13 @@ import UserProfile from "./pages/UserProfile";
 import { CartProvider } from "./context/CartContext";
 import Cart from "./pages/Cart";
 import Contact from "./pages/Contact";
+import PrivacyPolicy from "./pages/privacy-policy";
+import ScrollToTop from "./components/ScrollToTop"; // Import the ScrollToTop component
 
 function App() {
   return (
     <Router>
+      <ScrollToTop /> {/* This ensures scroll-to-top on every route change */}
       <CartProvider>
         <Navbar />
         <AgeVerification />
@@ -32,6 +35,7 @@ function App() {
           <Route path="/userprofile" element={<UserProfile />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         </Routes>
         <Footer />
       </CartProvider>
