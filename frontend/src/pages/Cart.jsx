@@ -8,12 +8,12 @@ const Cart = () => {
 
   if (!cart || !cart.items || cart.items.length === 0) {
     return (
-      <div className="min-h-screen bg-white flex flex-col items-center justify-center p-4 mt-16">
-        <h1 className="text-black text-3xl font-bold mb-4">YOUR CART IS EMPTY</h1>
-        <p className="mb-6 text-xl text-gray-600">Looks like you haven't added any items yet.</p>
+      <div className="min-h-screen bg-black flex flex-col items-center justify-center p-4 mt-16">
+        <h1 className="text-orange-500 text-3xl font-bold mb-4">YOUR CART IS EMPTY</h1>
+        <p className="mb-6 text-xl text-gray-400">Looks like you haven't added any items yet.</p>
         <button
           onClick={() => navigate("/")}
-          className="bg-gray-800 text-white px-6 py-3 rounded-lg font-bold hover:bg-orange-600 transition"
+          className="bg-orange-600  text-white px-6 py-3 rounded-lg font-bold hover:bg-orange-400 transition"
         >
           CONTINUE SHOPPING
         </button>
@@ -31,7 +31,7 @@ const Cart = () => {
     <div className="min-h-screen bg-white text-gray-100 px-6 pt-28 pb-16">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-3xl font-bold text-black uppercase mb-8 text-center">CART</h1>
-        
+
         {/* Cart Items Table */}
         <div className="bg-white shadow rounded-lg overflow-hidden">
           {/* Table Header */}
@@ -137,7 +137,7 @@ const Cart = () => {
               <span>Total</span>
               <span>Rs.{subtotal.toFixed(2)}</span>
             </div>
-            
+
             <button
               onClick={() => navigate("/checkout")}
               className="w-full bg-orange-500 text-white py-3 rounded-lg font-bold hover:bg-gray-700 transition mt-4">
