@@ -37,7 +37,7 @@ const Footer = () => {
 
         {/* Payment Method */}
         <div>
-          <h3 className="text-lg font-semibold mb-2">PAYMENT METHOD</h3>
+          <h3 className="text-lg font-semibold mb-2">PAYMENT METHODS</h3>
           <button className="bg-gray-700 px-4 py-2 mt-2 flex items-center justify-center w-full sm:w-auto">
             <span className="text-white mr-2">PAY HERE</span>
             <img
