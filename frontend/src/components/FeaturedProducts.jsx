@@ -41,15 +41,15 @@ const FeaturedProducts = () => {
         ✨ Featured Products
       </h2>
 
-      {/* Scrollable container on small screens, grid on md+ */}
-      <div className="flex gap-4 px-2 py-2 overflow-x-auto no-scrollbar md:overflow-visible md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-4">
+      {/* Cards Container */}
+      <div className="flex gap-2 overflow-x-auto scroll-smooth snap-x snap-mandatory md:grid md:grid-cols-2 lg:grid-cols-3 justify-items-center">
         {products.map((product, index) => (
           <div
             key={index}
             onClick={() => navigate(product.path)}
-            className="relative min-w-[280px] md:min-w-0 transition-transform duration-300 border border-orange-500 shadow-lg cursor-pointer group bg-white/5 rounded-3xl backdrop-blur-lg hover:shadow-orange-300/40 hover:-translate-y-2"
+            className="snap-center shrink-0 relative w-[280px] md:w-[280px] lg:w-[300px] transition-transform duration-300 border border-orange-500 shadow-lg cursor-pointer group bg-white/5 rounded-3xl backdrop-blur-lg hover:shadow-orange-300/40 hover:-translate-y-2"
           >
-            {/* Top Image */}
+            {/* Image */}
             <div className="overflow-hidden rounded-t-3xl">
               <img
                 src={product.image}
