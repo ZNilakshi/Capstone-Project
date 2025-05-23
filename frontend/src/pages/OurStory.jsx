@@ -53,20 +53,37 @@ function OurStory() {
                 <section className="flex flex-col gap-10 md:flex-row">
 
                     {/* About the Owner */}
-                    <div className="flex flex-col items-center flex-1 p-8 text-center shadow-xl bg-zinc-900 rounded-2xl md:items-start md:text-left">
-                        <div className="flex justify-center w-full mb-6 md:justify-start">
-                            <img
-                                src="/owner.jpg" // need to replace with the actual  image
-                                alt="Owner - Mr. De Silva"
-                                className="object-cover border-4 border-orange-400 rounded-full shadow-md w-44 h-44"
-                            />
-                        </div>
-                        <h2 className="mb-4 text-3xl font-semibold text-orange-400">About the Owner</h2>
-                        <p className="text-lg leading-relaxed text-gray-300">
-                            Founded by Mr. De Silva, a visionary entrepreneur with over 20 years in the beverage industry.
-                            He’s known for his deep commitment to quality, community, and outstanding service.
-                        </p>
-                    </div>
+<div className="flex flex-col items-center flex-1 p-8 text-center shadow-xl bg-zinc-900 rounded-2xl md:text-left">
+    <h2 className="mb-6 text-3xl font-semibold text-orange-400">About the Founders</h2>
+    
+    <div className="flex flex-col items-center justify-between gap-8 md:flex-row">
+        {/* Founder 1 */}
+        <div className="flex flex-col items-center space-y-2">
+            <img
+                src="/owner1.jpg" // replace with actual image path for P. T. M. de Silva
+                alt="Founder - P. T. M. de Silva"
+                className="object-cover w-40 h-40 border-4 border-orange-400 rounded-full shadow-md"
+            />
+            <p className="text-lg font-semibold text-white">P. T. M. De Silva</p>
+        </div>
+
+        {/* Founder 2 */}
+        <div className="flex flex-col items-center space-y-2">
+            <img
+                src="/owner2.jpg" // replace with actual image path for P. W. R. Dharmakeerthi
+                alt="Founder - P. W. R. Dharmakeerthi"
+                className="object-cover w-40 h-40 border-4 border-orange-400 rounded-full shadow-md"
+            />
+            <p className="text-lg font-semibold text-white">P. W. R. Dharmakeerthi</p>
+        </div>
+    </div>
+
+    <p className="mt-6 text-lg leading-relaxed text-gray-300">
+        De Silva Wine Stores was founded by P. T. M. De Silva and P. W. R. Dharmakeerthi, a visionary entrepreneur with over 20 years of experience in the beverage industry. Together, they have built a reputation for excellence, community focus, and quality service.
+    </p>
+</div>
+
+                    
 
 
                     {/* Our History */}
