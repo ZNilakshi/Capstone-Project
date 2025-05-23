@@ -2,7 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 
 const timelineItems = [
-    { year: "2003", text: "De Silva Wine Store is established in Welimada." },
+    { year: "2007", text: "De Silva Wine Store is established in Welimada." },
     { year: "2010", text: "Second branch opened in Bandarawela." },
     { year: "2018", text: "Expanded product range and services." },
     { year: "2023", text: "Opened new branch in Badulla." },
@@ -28,29 +28,29 @@ const branches = [
 
 function OurStory() {
     return (
-        <div className="min-h-screen bg-black text-gray-100 px-6 pt-28 pb-12">
+        <div className="min-h-screen px-6 pb-12 text-gray-100 bg-black pt-28">
             <div className="max-w-6xl mx-auto space-y-20">
 
                 {/* Header */}
                 <div className="text-center">
-                    <h1 className="text-5xl font-extrabold text-orange-500 mb-4">Our Story</h1>
+                    <h1 className="mb-4 text-5xl font-extrabold text-orange-500">Our Story</h1>
                     <p className="text-lg text-gray-300">Welcome to De Silva Wine Store – Welimada</p>
                 </div>
 
                 {/* Owner & History in one row */}
-                <section className="flex flex-col md:flex-row gap-10">
+                <section className="flex flex-col gap-10 md:flex-row">
 
                     {/* About the Owner */}
-                    <div className="bg-zinc-900 p-8 rounded-2xl shadow-xl flex-1 flex flex-col items-center text-center md:items-start md:text-left">
-                        <div className="w-full flex justify-center md:justify-start mb-6">
+                    <div className="flex flex-col items-center flex-1 p-8 text-center shadow-xl bg-zinc-900 rounded-2xl md:items-start md:text-left">
+                        <div className="flex justify-center w-full mb-6 md:justify-start">
                             <img
                                 src="/owner.jpg" // need to replace with the actual  image
                                 alt="Owner - Mr. De Silva"
-                                className="w-44 h-44 rounded-full object-cover border-4 border-orange-400 shadow-md"
+                                className="object-cover border-4 border-orange-400 rounded-full shadow-md w-44 h-44"
                             />
                         </div>
-                        <h2 className="text-3xl font-semibold text-orange-400 mb-4">About the Owner</h2>
-                        <p className="text-gray-300 text-lg leading-relaxed">
+                        <h2 className="mb-4 text-3xl font-semibold text-orange-400">About the Owner</h2>
+                        <p className="text-lg leading-relaxed text-gray-300">
                             Founded by Mr. De Silva, a visionary entrepreneur with over 20 years in the beverage industry.
                             He’s known for his deep commitment to quality, community, and outstanding service.
                         </p>
@@ -58,9 +58,9 @@ function OurStory() {
 
 
                     {/* Our History */}
-                    <div className="bg-zinc-900 p-8 rounded-2xl shadow-xl flex-1">
-                        <h2 className="text-3xl font-semibold text-orange-400 mb-6 text-center md:text-left">Our History</h2>
-                        <div className="space-y-6 pl-4 border-l-4 border-orange-500">
+                    <div className="flex-1 p-8 shadow-xl bg-zinc-900 rounded-2xl">
+                        <h2 className="mb-6 text-3xl font-semibold text-center text-orange-400 md:text-left">Our History</h2>
+                        <div className="pl-4 space-y-6 border-l-4 border-orange-500">
                             {timelineItems.map((item, index) => (
                                 <motion.div
                                     key={index}
@@ -80,13 +80,13 @@ function OurStory() {
 
                 {/* Our Branches */}
                 <section className="space-y-12">
-                    <h2 className="text-3xl font-semibold text-orange-400 text-center mb-10">Our Branches</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+                    <h2 className="mb-10 text-3xl font-semibold text-center text-orange-400">Our Branches</h2>
+                    <div className="grid grid-cols-1 gap-10 md:grid-cols-3">
                         {branches.map((branch, index) => (
-                            <div key={index} className="bg-zinc-800 p-6 rounded-2xl shadow-lg space-y-4">
+                            <div key={index} className="p-6 space-y-4 shadow-lg bg-zinc-800 rounded-2xl">
                                 <h3 className="text-2xl font-bold text-white">{branch.name}</h3>
                                 <p className="text-gray-400 text-md">{branch.description}</p>
-                                <div className="w-full aspect-square overflow-hidden rounded-xl border-2 border-orange-300">
+                                <div className="w-full overflow-hidden border-2 border-orange-300 aspect-square rounded-xl">
                                     <iframe
                                         className="w-full h-full"
                                         src={branch.mapUrl}
