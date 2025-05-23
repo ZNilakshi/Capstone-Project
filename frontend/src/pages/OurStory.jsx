@@ -11,7 +11,7 @@ const timelineItems = [
 
 const branches = [
     {
-        name: "De Silva Wine Store - Welimada (Main Branch)",
+        name: "De Silva Wine Store - Welimada",
         address: "No. 23, Uva Road, Welimada, Sri Lanka.",
         contact: "055-222-3344",
         description: "Retail sale of foreign liquor.",
