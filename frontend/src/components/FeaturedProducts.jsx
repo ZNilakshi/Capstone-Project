@@ -1,63 +1,85 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
+const products = [
+  {
+    name: "Spirit",
+    image: "/sprit.jpg",
+    path: "/sprite",
+    tag: "🔥 Bestseller",
+    description: "Refined and bold. Discover a collection of premium spirits to elevate your evenings.",
+  },
+  {
+    name: "Shake & Beer",
+    image: "/beer.jpg",
+    path: "/ShakeBeer",
+    tag: "🍺 Chill Vibes",
+    description: "Crisp and refreshing. The perfect choice for relaxed moments and friendly hangouts.",
+  },
+  {
+    name: "Wine",
+    image: "/wine.jpg",
+    path: "/WineStore",
+    tag: "🍷 Classic Taste",
+    description: "Sophistication in every sip. Explore the finest selection of red, white, and sparkling wines.",
+  },
+];
+
 const FeaturedProducts = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    return (
-        <div className="bg-black text-white px-4 py-6">
+  return (
+    <section className="relative px-4 py-20 overflow-hidden text-white sm:px-10 lg:px-20 bg-gradient-to-b from-black via-zinc-900 to-black">
+      {/* Background Decoration */}
+      <div className="absolute inset-0 -z-10">
+        <div className="absolute w-[80vw] h-[80vw] bg-gradient-to-tr from-orange-500 to-pink-500 rounded-full opacity-10 blur-3xl -top-20 -left-40" />
+        <div className="absolute w-[60vw] h-[60vw] bg-gradient-to-bl from-purple-500 to-orange-400 rounded-full opacity-10 blur-2xl bottom-0 right-0" />
+      </div>
 
-        <section className="flex flex-col md:flex-row items-center justify-center    bg-black">
-            <div className="w-full  pr-6 mr-6 md:w-1/2 md:pl-12 mt-6 md:mt-0 text-center ">
-             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">FEATURED PRODUCTS</h2>
+      {/* Title */}
+      <h2 className="mb-16 text-4xl font-extrabold tracking-tight text-center text-orange-400 md:text-5xl drop-shadow-xl">
+        ✨ Featured Products
+      </h2>
+
+      {/* Scrollable container on small screens, grid on md+ */}
+      <div className="flex gap-4 px-2 py-2 overflow-x-auto no-scrollbar md:overflow-visible md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-4">
+        {products.map((product, index) => (
+          <div
+            key={index}
+            onClick={() => navigate(product.path)}
+            className="relative min-w-[280px] md:min-w-0 transition-transform duration-300 border border-orange-500 shadow-lg cursor-pointer group bg-white/5 rounded-3xl backdrop-blur-lg hover:shadow-orange-300/40 hover:-translate-y-2"
+          >
+            {/* Top Image */}
+            <div className="overflow-hidden rounded-t-3xl">
+              <img
+                src={product.image}
+                alt={product.name}
+                className="object-cover w-full h-56 transition-transform duration-300 group-hover:scale-105"
+              />
             </div>
-        </section>
-           
-            
-            
-            <div className="flex flex-wrap justify-center gap-8 md:gap-16 mb-4">
-                <button
-                    className="bg-orange-500 text-black px-8 md:px-4 py-3 md:py-4 font-semibold border border-black hover:bg-white hover:text-orange-500 transition"
-                    onClick={() => navigate("/sprite")}
-                >
-                    SPIRIT
-                    <div className="flex justify-center mt-2">
-                         <img
-                         src="/sprit.jpg"
-                         alt="sprit"
-                         className="w-40 max-w-2xl h-60 object-cover"
-                         />
-                    </div>
-                </button>
-                <button
-                    className=" bg-orange-500 text-black px-4 md:px-4 py-3 md:py-4 font-semibold border border-black hover:bg-white hover:text-orange-500 transition"
-                    onClick={() => navigate("/ShakeBeer")}
-                >
-                    SHAKE AND BEER
-                    <div className="flex justify-center mt-2">
-                         <img
-                         src="/beer.jpg"
-                         alt="beer"
-                         className="w-40 max-w-2xl h-60 object-cover"
-                         />
-                    </div>
-                </button>
-                <button
-                    className="bg-orange-500 text-black px-8 md:px-4 py-3 md:py-4 font-semibold border border-black hover:bg-white hover:text-orange-500 transition"
-                    onClick={() => navigate("/WineStore")}
-                >
-                    WINE
-                    <div className="flex justify-center mt-2">
-                        <img
-                        src="/wine.jpg"
-                        alt="wine"
-                        className="w-40 max-w-2xl h-60 object-cover"
-                        />
-                    </div>
-                </button>
+
+            {/* Tag */}
+            <span className="absolute px-4 py-1 text-xs font-semibold text-black bg-orange-500 rounded-full shadow-md top-4 left-4">
+              {product.tag}
+            </span>
+
+            {/* Content */}
+            <div className="p-6 space-y-4 text-center">
+              <h3 className="text-2xl font-bold text-orange-200 transition group-hover:text-white">
+                {product.name}
+              </h3>
+              <p className="text-sm leading-relaxed text-gray-300">
+                {product.description}
+              </p>
+              <button className="px-6 py-2 mt-4 font-semibold text-black transition-all bg-orange-500 rounded-full hover:bg-white hover:text-orange-500">
+                Explore Now →
+              </button>
             </div>
-             </div>
-    );
+          </div>
+        ))}
+      </div>
+    </section>
+  );
 };
 
 export default FeaturedProducts;
