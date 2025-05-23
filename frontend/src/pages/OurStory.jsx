@@ -2,10 +2,11 @@ import React from "react";
 import { motion } from "framer-motion";
 
 const timelineItems = [
+    { year: "2005", text: "Dinan restaurant is established in Badulla." },
     { year: "2007", text: "De Silva Wine Store is established in Welimada." },
-    { year: "2010", text: "Second branch opened in Bandarawela." },
-    { year: "2018", text: "Expanded product range and services." },
-    { year: "2023", text: "Opened new branch in Badulla." },
+    { year: "2020", text: "Welimada pub is established in Welimada." },
+    { year: "2024", text: "De Silva Wine Store is established in Kesbewa." },
+    { year: "2024", text: "De Silva Wine Store is established in Arawwala." },
 ];
 
 const branches = [
