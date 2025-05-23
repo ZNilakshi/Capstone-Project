@@ -85,10 +85,11 @@ const FeaturedProducts = () => {
 
       {/* Header */}
       <header className="mb-16 text-center">
-        <h1 className="text-5xl font-bold uppercase tracking-[0.3em] text-orange-400">
-          Featured Products
-        </h1>
-      </header>
+  <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold uppercase tracking-[0.3em] text-orange-400">
+    Featured Products
+  </h1>
+</header>
+
 
       {/* Card Container with arrows */}
       <div className="relative">
@@ -155,7 +156,7 @@ const FeaturedProducts = () => {
         {/* Scrollable Cards Container */}
         <div
           ref={containerRef}
-          className="flex gap-6 overflow-x-auto  scroll-smooth snap-x snap-mandatory md:grid md:grid-cols-3 md:gap-8 md:overflow-visible md:snap-none scrollbar-thin scrollbar-thumb-orange-500 scrollbar-track-transparent"
+          className="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory md:grid md:grid-cols-3 md:gap-8 md:overflow-visible md:snap-none scrollbar-thin scrollbar-thumb-orange-500 scrollbar-track-transparent"
         >
           {products.map((product, index) => (
             <div

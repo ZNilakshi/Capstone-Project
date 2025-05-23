@@ -16,7 +16,7 @@ const ShopByBrand = () => {
     return (
         <div className="min-h-screen px-6 py-20 font-sans text-white bg-gradient-to-br from-gray-950 via-black to-gray-900">
             <header className="mb-16 text-center">
-                <h1 className="text-5xl font-bold uppercase tracking-[0.3em] text-orange-400">
+                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold uppercase tracking-[0.3em] text-orange-400">
                     Shop by Brand
                 </h1>
                 <p className="mt-4 text-lg tracking-wider text-gray-400">
