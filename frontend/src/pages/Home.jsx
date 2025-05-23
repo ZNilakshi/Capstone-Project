@@ -28,22 +28,22 @@ const Home = () => {
   return (
     <div>
       <div
-        className="relative h-screen bg-cover bg-center flex items-center justify-center text-center"
+        className="relative flex items-center justify-center h-screen text-center bg-center bg-cover"
         style={{ backgroundImage: "url('/back.jpeg')" }}
       >
-        <div className="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center text-center px-6">
+        <div className="absolute inset-0 flex items-center justify-center px-6 text-center bg-black bg-opacity-60">
           <div className="text-white">
             {username && (
-              <h2 className="text-lg md:text-2xl mb-2 text-orange-400">
+              <h2 className="mb-2 text-lg text-orange-400 md:text-2xl">
                 Welcome, {username}!
               </h2>
             )}
 
-            <h1 className="text-5xl md:text-5xl font-bold mb-4">
+            <h1 className="mb-4 text-5xl font-bold md:text-5xl">
               GET YOUR FAVORITE
               <motion.span
                 key={index}
-                className="text-md md:text-6xl mb-6 text-orange-500 block"
+                className="block mb-6 text-orange-500 text-md md:text-6xl"
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 10 }}
@@ -53,20 +53,21 @@ const Home = () => {
               </motion.span>
             </h1>
 
-            <p className="text-2xl md:text-4xl font-medium mb-4">
+            <p className="mb-4 text-2xl font-medium md:text-4xl">
               Your One-Stop Shop
             </p>
 
-            <p className="text-xl md:text-xl mb-6">
+            <p className="mb-6 text-xl md:text-xl">
               <span className="text-orange-500">EXCLUSIVE DEALS</span> &{" "}
               <span className="text-orange-500">TOP BRANDS</span>
             </p>
           </div>
         </div>
       </div>
-
-      <About />
+      
       <FeaturedProducts />
+      <About />
+      
       <ShopByBrand />
     </div>
   );
