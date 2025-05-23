@@ -4,21 +4,21 @@ import { useNavigate } from "react-router-dom";
 const products = [
   {
     name: "Spirit",
-    image: "/sprit.jpg",
+    image: "/sprit2.jpg",
     path: "/sprite",
     tag: "🔥 Bestseller",
     description: "Refined and bold. Discover a collection of premium spirits to elevate your evenings.",
   },
   {
     name: "Shake & Beer",
-    image: "/beer.jpg",
+    image: "/beer2.jpg",
     path: "/ShakeBeer",
     tag: "🍺 Chill Vibes",
     description: "Crisp and refreshing. The perfect choice for relaxed moments and friendly hangouts.",
   },
   {
     name: "Wine",
-    image: "/wine.jpg",
+    image: "/wine2.jpg",
     path: "/WineStore",
     tag: "🍷 Classic Taste",
     description: "Sophistication in every sip. Explore the finest selection of red, white, and sparkling wines.",
@@ -38,7 +38,7 @@ const FeaturedProducts = () => {
 
       {/* Title */}
       <h2 className="mb-16 text-4xl font-extrabold tracking-tight text-center text-orange-400 md:text-5xl drop-shadow-xl">
-        ✨ Featured Products
+        Featured Products
       </h2>
 
       {/* Cards Container */}
