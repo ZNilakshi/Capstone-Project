@@ -11,19 +11,30 @@ const timelineItems = [
 
 const branches = [
     {
-        name: "Welimada (Main Branch)",
-        description: "Heart of the hill country, our origin and flagship store.",
-        mapUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d12674.83081233136!2d81.1002124!3d6.9904296!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae4ef85b86e9c33%3A0x81e71d7d64eebb1f!2sWelimada!5e0!3m2!1sen!2slk!4v1618729162304!5m2!1sen!2slk"
+        name: "De Silva Wine Store - Welimada (Main Branch)",
+        description: "Retail sale of foreign liquor.",
+        mapUrl:"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3960.876590074438!2d80.91208929169974!3d6.905357906461594!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae47bef190157d9%3A0x84f34a6deba62987!2sDe%20Silva%20Wine%20Stores!5e0!3m2!1sen!2slk!4v1748005068145!5m2!1sen!2slk" 
     },
     {
-        name: "Bandarawela",
-        description: "Serving the bustling town with premium service.",
-        mapUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3952.774179434003!2d80.989807!3d6.830641!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae3b1f65ad7ce97%3A0x3441f4126e1f1c9d!2sBandarawela!5e0!3m2!1sen!2slk!4v1618732944569!5m2!1sen!2slk"
+        name: "Dinan restaurant - Badulla",
+        description: "Retail sale of beer & stout.",
+        mapUrl:"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3960.1779020737304!2d81.05586167499715!3d6.988314893012677!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae463b76002d11b%3A0xbe6fbbe098a5b8fa!2sDinan%20Restaurant!5e0!3m2!1sen!2slk!4v1748005226424!5m2!1sen!2slk" 
     },
     {
-        name: "Badulla",
-        description: "Our newest branch, delivering convenience and excellence.",
+        name: "Welimada pub - Welimada",
+        address:'No. 70/11, Buddulla Road, Welimada, Sri Lanka.',
+        description: "Retail sale of beer & stout.",
         mapUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d12670.902637697166!2d81.056915!3d6.991065!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae4f8dc2f8d79f7%3A0x4e47e671a8b5ae42!2sBadulla!5e0!3m2!1sen!2slk!4v1618733123121!5m2!1sen!2slk"
+    },
+    {
+        name: "De Silva Wine Store - Kesbewa.",
+        description: "Retail sale of foreign liquor.",
+        mapUrl:"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5213.381064928429!2d79.94520648607318!3d6.773110302611019!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae24f004c8e96b5%3A0xf0af1c5b4096a7f8!2sDe%20Silva%20Wine%20Stores!5e0!3m2!1sen!2slk!4v1748005573038!5m2!1sen!2slk" 
+    },
+    {
+        name: "De Silva Wine Store - Arawwala",
+        description: "Retail sale of foreign liquor.",
+        mapUrl:"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3961.558676574303!2d79.93438137499558!3d6.823403993174398!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae2510005c52cf5%3A0x5503ec14463fb73b!2sDe%20Silva%20Wine%20Stores%20-%20Arawwala!5e0!3m2!1sen!2slk!4v1748005650110!5m2!1sen!2slk" 
     }
 ];
 
