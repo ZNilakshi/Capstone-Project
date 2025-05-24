@@ -12,14 +12,14 @@ const timelineItems = [
 const branches = [
     {
         name: "De Silva Wine Store - Welimada",
-        address: "No. 23, Uva Road, Welimada, Sri Lanka.",
+        address: "No. 06, Hemapala Munidasa Road, Welimada, Sri Lanka.",
         contact: "055-222-3344",
         description: "Retail sale of foreign liquor.",
         mapUrl:"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3960.876590074438!2d80.91208929169974!3d6.905357906461594!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae47bef190157d9%3A0x84f34a6deba62987!2sDe%20Silva%20Wine%20Stores!5e0!3m2!1sen!2slk!4v1748005068145!5m2!1sen!2slk" 
     },
     {
         name: "Dinan restaurant - Badulla",
-        address: "No. 70/11, Badulla Road, Welimada, Sri Lanka.",
+        address: "No. 76/1/2, Second Floor, New Malls, South Lane, Badulla, Sri Lanka.",
         contact: "055-224-1122",
         description: "Retail sale of beer & stout.",
         mapUrl:"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3960.1779020737304!2d81.05586167499715!3d6.988314893012677!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae463b76002d11b%3A0xbe6fbbe098a5b8fa!2sDinan%20Restaurant!5e0!3m2!1sen!2slk!4v1748005226424!5m2!1sen!2slk" 
@@ -33,14 +33,14 @@ const branches = [
     },
     {
         name: "De Silva Wine Store - Kesbewa.",
-        address: "No. 12, Piliyandala Road, Kesbewa, Sri Lanka.",
+        address: "No. 7/1, Bandaragama Road, Kesbewa, Sri Lanka.",
         contact: "011-274-8899",
         description: "Retail sale of foreign liquor.",
         mapUrl:"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5213.381064928429!2d79.94520648607318!3d6.773110302611019!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae24f004c8e96b5%3A0xf0af1c5b4096a7f8!2sDe%20Silva%20Wine%20Stores!5e0!3m2!1sen!2slk!4v1748005573038!5m2!1sen!2slk" 
     },
     {
         name: "De Silva Wine Store - Arawwala",
-        address: "Arawwala Junction, Maharagama, Sri Lanka.",
+        address: "NO. 587/7, Piliyandala Road, Arawwala, Sri Lanka.",
         contact: "011-289-2211",
         description: "Retail sale of foreign liquor.",
         mapUrl:"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3961.558676574303!2d79.93438137499558!3d6.823403993174398!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae2510005c52cf5%3A0x5503ec14463fb73b!2sDe%20Silva%20Wine%20Stores%20-%20Arawwala!5e0!3m2!1sen!2slk!4v1748005650110!5m2!1sen!2slk" 
