@@ -1,26 +1,78 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const UserProfile = () => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("profile");
   const [isEditing, setIsEditing] = useState(false);
   const [orders, setOrders] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-  }, []);
+    const fetchUserProfile = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          navigate("/auth");
+          return;
+        }
+
+        const response = await axios.get(
+          "http://localhost:5000/api/user/profile",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        setUser(response.data);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching user profile:", error);
+        if (error.response?.status === 401) {
+          navigate("/auth");
+        }
+        setLoading(false);
+      }
+    };
+
+    fetchUserProfile();
+  }, [navigate]);
 
   useEffect(() => {
-    const storedOrders = localStorage.getItem("orders");
-    if (storedOrders) {
-      setOrders(JSON.parse(storedOrders));
-    }
-  }, []);
+    const fetchOrders = async () => {
+      if (activeTab === "orders") {
+        try {
+          const token = localStorage.getItem("token");
+          if (!token) {
+            navigate("/auth");
+            return;
+          }
+
+          const response = await axios.get(
+            "http://localhost:5000/api/user/orders",
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
+          setOrders(response.data);
+        } catch (error) {
+          console.error("Error fetching orders:", error);
+          if (error.response?.status === 401) {
+            navigate("/auth");
+          }
+        }
+      }
+    };
+
+    fetchOrders();
+  }, [activeTab, navigate]);
 
   const handleDeleteAccount = () => {
     const confirmDelete = window.confirm(
@@ -34,20 +86,31 @@ const UserProfile = () => {
     }
   };
 
-  const handleSave = (event) => {
+  const handleSave = async (event) => {
     event.preventDefault();
-    const updatedUser = {
-      firstName: event.target.firstName.value,
-      lastName: event.target.lastName.value,
-      email: event.target.email.value,
-      phone: event.target.phone.value,
-    };
-    setUser(updatedUser);
-    localStorage.setItem("user", JSON.stringify(updatedUser));
-    setIsEditing(false);
-    alert("Profile updated successfully!");
-  };
+    try {
+      const token = localStorage.getItem("token");
+      const updatedUser = {
+        firstName: event.target.firstName.value,
+        lastName: event.target.lastName.value,
+        email: event.target.email.value,
+        phone: event.target.phone.value,
+      };
 
+      await axios.put("http://localhost:5000/api/user/profile", updatedUser, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      setUser(updatedUser);
+      setIsEditing(false);
+      alert("Profile updated successfully!");
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      alert("Failed to update profile");
+    }
+  };
 
   const renderProfileContent = () => {
     if (!isEditing) {
@@ -79,9 +142,6 @@ const UserProfile = () => {
             <button
               onClick={() => setIsEditing(true)}
               className="px-6 py-2.5 text-white transition-all border rounded-md border-white/30 hover:bg-white/10"
-
-  
-
             >
               Edit Profile
             </button>
@@ -89,7 +149,6 @@ const UserProfile = () => {
         </div>
       );
     }
-
 
     return (
       <div className="flex flex-col h-full">
@@ -116,17 +175,12 @@ const UserProfile = () => {
           <div>
             <label className="block mb-2 text-sm text-gray-400">Email</label>
 
-          
-
             <input
               type="email"
               name="email"
               defaultValue={user.email || ""}
-
               placeholder="Email"
               className="w-full p-3 text-white border rounded-md bg-white/10 border-white/30"
-
-             
             />
           </div>
           <div>
@@ -135,18 +189,14 @@ const UserProfile = () => {
               type="tel"
               name="phone"
               defaultValue={user.phone || ""}
-
               placeholder="Phone Number"
               className="w-full p-3 text-white border rounded-md bg-white/10 border-white/30"
-
             />
           </div>
           <div className="flex justify-end mt-8">
             <button
               type="submit"
-
               className="px-6 py-2.5 text-white transition-all border rounded-md border-white/30 hover:bg-white/10"
-
             >
               Save Changes
             </button>
@@ -211,6 +261,14 @@ const UserProfile = () => {
       </div>
     );
   };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <p className="text-lg text-white">Loading...</p>
+      </div>
+    );
+  }
 
   if (!user) {
     return (
