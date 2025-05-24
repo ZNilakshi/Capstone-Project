@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 
 const brands = [
   { name: "Rockland", logo: "/Rockland-Logo.png", path: "/brand/rockland", glow: "hover:shadow-yellow-500" },
@@ -7,7 +8,12 @@ const brands = [
   { name: "DCSL", logo: "/DCSL_Logo.png", path: "/brand/dcsl", glow: "hover:shadow-red-500" },
   { name: "Mendis", logo: "/mendis_logo.png", path: "/brand/mendis", glow: "hover:shadow-blue-500" },
   { name: "Lion", logo: "/lion-logo.png", path: "/brand/lion", glow: "hover:shadow-amber-400" },
-  { name: "Heineken", logo: "/heineken-logo.png", path: "/brand/heineken", glow: "hover:shadow-lime-400" },
+  { name: "DCSL Breweries", logo: "/DBL-Logo-PNG.png", path: "/brand/dcsl", glow: "hover:shadow-lime-400" },
+  { name: "Heineken", logo: "/Heineken.webp", path: "/brand/heineken", glow: "hover:shadow-green-400" },
+  { name: "Anchor", logo: "/Anchor.webp", path: "/brand/anchor", glow: "hover:shadow-brown-400" },
+  { name: "Tiger", logo: "/Tiger.webp", path: "/brand/tiger", glow: "hover:shadow-blue-400" },
+  { name: "Bison", logo: "/Bison.webp", path: "/brand/bison", glow: "hover:shadow-red-400" },
+  { name: "DCSL Beer", logo: "/dcsl beer.jpg", path: "/brand/dcsl", glow: "hover:shadow-lime-400" },
 ];
 
 const arrowStyle = `
@@ -28,7 +34,6 @@ const ShopByBrand = () => {
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
 
-  // Check scroll position to toggle arrow visibility
   const checkForScrollPosition = () => {
     const el = scrollRef.current;
     if (!el) return;
@@ -40,7 +45,6 @@ const ShopByBrand = () => {
     checkForScrollPosition();
     const el = scrollRef.current;
     if (!el) return;
-
     el.addEventListener("scroll", checkForScrollPosition);
     window.addEventListener("resize", checkForScrollPosition);
     return () => {
@@ -49,10 +53,14 @@ const ShopByBrand = () => {
     };
   }, []);
 
-  // Scroll container by offset amount
   const scrollBy = (offset) => {
     scrollRef.current?.scrollBy({ left: offset, behavior: "smooth" });
   };
+
+  // Split brands into 2 rows
+  const half = Math.ceil(brands.length / 2);
+  const firstRow = brands.slice(0, half);
+  const secondRow = brands.slice(half);
 
   return (
     <div className="min-h-screen px-6 py-20 font-sans text-white bg-gradient-to-br from-gray-950 via-black to-gray-900">
@@ -65,13 +73,11 @@ const ShopByBrand = () => {
         </p>
       </header>
 
-      {/* Scroll container wrapper (relative for arrows) */}
       <div className="relative">
-        {/* Left arrow */}
         {canScrollLeft && (
           <button
             aria-label="Scroll Left"
-            onClick={() => scrollBy(-200)}
+            onClick={() => scrollBy(-300)}
             className={`${arrowStyle} left-2`}
             title="Scroll Left"
           >
@@ -89,11 +95,10 @@ const ShopByBrand = () => {
           </button>
         )}
 
-        {/* Right arrow */}
         {canScrollRight && (
           <button
             aria-label="Scroll Right"
-            onClick={() => scrollBy(200)}
+            onClick={() => scrollBy(300)}
             className={`${arrowStyle} right-2`}
             title="Scroll Right"
           >
@@ -111,27 +116,41 @@ const ShopByBrand = () => {
           </button>
         )}
 
-        {/* Horizontal scroll container */}
+        {/* Scrollable container with two rows */}
         <div
           ref={scrollRef}
-          className="flex px-4 py-8 space-x-6 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent scroll-smooth"
+          className="flex flex-col space-y-8 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent scroll-smooth"
         >
-          {brands.map((brand, index) => (
-            <button
-              key={index}
-              onClick={() => navigate(brand.path)}
-              className={`flex-shrink-0 relative bg-white/5 hover:bg-white/10 backdrop-blur-xl rounded-[2rem] p-4 sm:p-6 md:p-8 w-40 h-52 sm:w-52 sm:h-64 md:w-60 md:h-72 flex flex-col items-center justify-center border border-white/10 transition-all duration-300 transform hover:-translate-y-2 hover:scale-105 ${brand.glow} hover:ring-2 hover:ring-offset-2 hover:ring-white shadow-xl`}
-            >
-              <img
-                src={brand.logo}
-                alt={`${brand.name} Logo`}
-                className="object-contain mb-4 h-14 sm:h-16 md:h-24 sm:mb-6"
-              />
-              <p className="text-sm font-semibold tracking-wide text-center text-white uppercase sm:text-base md:text-lg drop-shadow-sm">
-                {brand.name}
-              </p>
-              <div className="absolute inset-0 rounded-[2rem] pointer-events-none shadow-[0_0_60px_10px_rgba(255,255,255,0.06)]" />
-            </button>
+          {[firstRow, secondRow].map((row, idx) => (
+            <div key={idx} className="flex px-4 py-2 space-x-6 min-w-max">
+              {row.map((brand, index) => (
+                <motion.button
+                  whileHover={{ scale: 1.05, y: -5 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                  key={index}
+                  onClick={() => navigate(brand.path)}
+                  className={`
+                    relative rounded-3xl p-4 sm:p-6 md:p-8 
+                    w-40 h-40 sm:w-52 sm:h-52 md:w-60 md:h-56 
+                    flex flex-col items-center justify-center 
+                    bg-white/10 backdrop-blur-md border border-white/10 
+                    transition-all duration-300 
+                    hover:ring-2 hover:ring-white/40
+                    ${brand.glow}  /* dynamic shadow color */
+                  `}
+                >
+                  <img
+                    src={brand.logo}
+                    alt={`${brand.name} Logo`}
+                    className="object-contain mb-3 h-14 sm:h-16 md:h-20 sm:mb-4"
+                  />
+                  <p className="text-xs font-semibold tracking-wide text-center text-white uppercase sm:text-sm drop-shadow-sm">
+                    {brand.name}
+                  </p>
+                  <div className="absolute inset-0 rounded-3xl pointer-events-none shadow-[0_0_60px_8px_rgba(255,255,255,0.04)]" />
+                </motion.button>
+              ))}
+            </div>
           ))}
         </div>
       </div>

@@ -85,11 +85,10 @@ const FeaturedProducts = () => {
 
       {/* Header */}
       <header className="mb-16 text-center">
-  <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold uppercase tracking-[0.3em] text-orange-400">
-    Featured Products
-  </h1>
-</header>
-
+        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold uppercase tracking-[0.3em] text-orange-400">
+          Featured Products
+        </h1>
+      </header>
 
       {/* Card Container with arrows */}
       <div className="relative">
@@ -190,7 +189,28 @@ const FeaturedProducts = () => {
                 <h3 className="text-2xl font-bold text-orange-200 transition group-hover:text-white">
                   {product.name}
                 </h3>
-                <p className="text-sm leading-relaxed text-gray-300">{product.description}</p>
+
+                <p className="text-sm leading-relaxed text-gray-300">
+                  {product.description}
+                </p>
+
+                {/* Spirit subcategories small box */}
+                {product.name === "Spirit" && (
+                  <div className="flex flex-wrap justify-center gap-2 mt-2">
+                    {["Arrack", "Brandy", "Gin", "Rum", "Vodka", "Whisky"].map(
+                      (type) => (
+                        <span
+                          key={type}
+                          className="px-3 py-1 text-xs font-semibold text-orange-400 transition rounded-full shadow-md cursor-default select-none bg-white/10 hover:bg-orange-500 hover:text-white"
+                        >
+                          {type}
+                        </span>
+                      )
+                    )}
+                  </div>
+                )}
+
+                
                 <button className="px-6 py-2 mt-4 font-semibold text-black transition bg-orange-500 rounded-full hover:bg-white hover:text-orange-500">
                   Explore Now →
                 </button>
