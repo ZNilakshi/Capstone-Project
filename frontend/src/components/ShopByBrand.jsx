@@ -13,7 +13,7 @@ const brands = [
   { name: "Anchor", logo: "/Anchor.webp", path: "/brand/anchor", glow: "hover:shadow-brown-400" },
   { name: "Tiger", logo: "/Tiger.webp", path: "/brand/tiger", glow: "hover:shadow-blue-400" },
   { name: "Bison", logo: "/Bison.webp", path: "/brand/bison", glow: "hover:shadow-red-400" },
-  { name: "DCSL Beer", logo: "/dcsl beer.jpg", path: "/brand/dcsl", glow: "hover:shadow-lime-400" },
+  { name: "DCSL Beer", logo: "/dcsl beer .jpg", path: "/brand/dcsl", glow: "hover:shadow-lime-400" },
 ];
 
 const arrowStyle = `
