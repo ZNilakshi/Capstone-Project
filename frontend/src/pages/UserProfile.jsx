@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const UserProfile = () => {
-  const [selectedImage, setSelectedImage] = useState(null);
   const [user, setUser] = useState(null);
-  const [activeTab, setActiveTab] = useState("profile"); // New state for tab management
+  const [activeTab, setActiveTab] = useState("profile");
+  const [isEditing, setIsEditing] = useState(false);
+  const [orders, setOrders] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -14,26 +15,22 @@ const UserProfile = () => {
     }
   }, []);
 
-  const handleUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setSelectedImage(imageUrl);
+  useEffect(() => {
+    const storedOrders = localStorage.getItem("orders");
+    if (storedOrders) {
+      setOrders(JSON.parse(storedOrders));
     }
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem("user");
-    setUser(null);
-    navigate("/auth"); // redirect to login
-  };
+  }, []);
 
   const handleDeleteAccount = () => {
     const confirmDelete = window.confirm(
-      "Are you sure you want to delete your account?"
+      "Are you sure you want to delete your account? This action cannot be undone."
     );
     if (confirmDelete) {
-      alert("Account deleted!");
+      localStorage.removeItem("user");
+      setUser(null);
+      navigate("/auth");
+      alert("Account deleted successfully!");
     }
   };
 
@@ -47,7 +44,157 @@ const UserProfile = () => {
     };
     setUser(updatedUser);
     localStorage.setItem("user", JSON.stringify(updatedUser));
+    setIsEditing(false);
     alert("Profile updated successfully!");
+  };
+
+  const renderProfileContent = () => {
+    if (!isEditing) {
+      return (
+        <div className="flex flex-col h-full">
+          <div className="flex-grow px-8 mt-8 space-y-6">
+            <div className="py-4 border-b border-white/30">
+              <p className="mb-2 text-base text-gray-400">Name</p>
+              <p className="text-lg text-white">{`${user.firstName || ""} ${
+                user.lastName || ""
+              }`}</p>
+            </div>
+            <div className="py-4 border-b border-white/30">
+              <p className="mb-2 text-base text-gray-400">Email</p>
+              <p className="text-lg text-white">{user.email || ""}</p>
+            </div>
+            <div className="py-4 border-b border-white/30">
+              <p className="mb-2 text-base text-gray-400">Phone</p>
+              <p className="text-lg text-white">{user.phone || ""}</p>
+            </div>
+          </div>
+          <div className="flex justify-end gap-4 px-8 mt-8">
+            <button
+              onClick={handleDeleteAccount}
+              className="px-6 py-2.5 text-white transition-all border border-red-500 rounded-md hover:bg-red-500/10"
+            >
+              Delete Account
+            </button>
+            <button
+              onClick={() => setIsEditing(true)}
+              className="px-6 py-2.5 text-white transition-all border rounded-md border-white/30 hover:bg-white/10"
+            >
+              Edit Profile
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="flex flex-col h-full">
+        <form className="flex-grow px-8 mt-8 space-y-6" onSubmit={handleSave}>
+          <div>
+            <label className="block mb-2 text-sm text-gray-400">Name</label>
+            <div className="flex gap-4">
+              <input
+                type="text"
+                name="firstName"
+                defaultValue={user.firstName || ""}
+                placeholder="First Name"
+                className="w-full p-3 text-white border rounded-md bg-white/10 border-white/30"
+              />
+              <input
+                type="text"
+                name="lastName"
+                defaultValue={user.lastName || ""}
+                placeholder="Last Name"
+                className="w-full p-3 text-white border rounded-md bg-white/10 border-white/30"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block mb-2 text-sm text-gray-400">Email</label>
+            <input
+              type="email"
+              name="email"
+              defaultValue={user.email || ""}
+              placeholder="Email"
+              className="w-full p-3 text-white border rounded-md bg-white/10 border-white/30"
+            />
+          </div>
+          <div>
+            <label className="block mb-2 text-sm text-gray-400">Phone</label>
+            <input
+              type="tel"
+              name="phone"
+              defaultValue={user.phone || ""}
+              placeholder="Phone Number"
+              className="w-full p-3 text-white border rounded-md bg-white/10 border-white/30"
+            />
+          </div>
+          <div className="flex justify-end mt-8">
+            <button
+              type="submit"
+              className="px-6 py-2.5 text-white transition-all border rounded-md border-white/30 hover:bg-white/10"
+            >
+              Save Changes
+            </button>
+          </div>
+        </form>
+      </div>
+    );
+  };
+
+  const renderOrderHistory = () => {
+    if (!orders || orders.length === 0) {
+      return (
+        <div className="mt-8 text-center">
+          <h3 className="mb-4 text-xl text-white">Order History</h3>
+          <p className="text-gray-400">No orders found.</p>
+        </div>
+      );
+    }
+
+    return (
+      <div className="px-8 mt-8">
+        <h3 className="mb-6 text-xl text-white">Order History</h3>
+        <div className="space-y-4">
+          {orders
+            .sort((a, b) => new Date(b.date) - new Date(a.date))
+            .map((order, index) => (
+              <div
+                key={order.id || index}
+                className="p-4 border rounded-lg border-white/30 bg-white/5"
+              >
+                <div className="flex items-start justify-between mb-4">
+                  <div>
+                    <p className="text-sm text-gray-400">Order Date</p>
+                    <p className="text-white">
+                      {new Date(order.date).toLocaleDateString()}
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm text-gray-400">Total</p>
+                    <p className="text-white">${order.total.toFixed(2)}</p>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  {order.items.map((item, itemIndex) => (
+                    <div
+                      key={itemIndex}
+                      className="flex items-center justify-between py-2 border-t border-white/10"
+                    >
+                      <div className="flex-1">
+                        <p className="text-white">{item.name}</p>
+                        <p className="text-sm text-gray-400">
+                          Quantity: {item.quantity}
+                        </p>
+                      </div>
+                      <p className="text-white">${item.price.toFixed(2)}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+        </div>
+      </div>
+    );
   };
 
   if (!user) {
@@ -64,131 +211,42 @@ const UserProfile = () => {
       style={{ backgroundImage: "url('/profile-bg.webp')" }}
     >
       <div className="flex items-center justify-center w-full min-h-screen">
-        {/* Main Content Box */}
         <div className="w-[800px] min-h-[600px] bg-black bg-opacity-50 backdrop-blur-md rounded-lg p-6 mt-20">
-          {/* Tab Navigation */}
           <div className="flex items-center justify-center mb-6">
-            <div className="flex items-center bg-white rounded-lg">
+            <div className="flex items-center gap-8 border-b border-gray-300">
               <button
                 onClick={() => setActiveTab("profile")}
-                className={`px-8 py-2 transition-all rounded-l-lg ${
+                className={`px-8 py-2 transition-all text-lg relative ${
                   activeTab === "profile"
-                    ? "bg-gray-300 text-black"
-                    : "bg-white text-black"
+                    ? "text-white font-semibold"
+                    : "text-gray-400"
                 }`}
               >
                 Profile
+                {activeTab === "profile" && (
+                  <div className="absolute bottom-[-2px] left-0 w-full h-[2px] bg-orange-500"></div>
+                )}
               </button>
               <button
                 onClick={() => setActiveTab("orders")}
-                className={`px-8 py-2 transition-all rounded-r-lg ${
+                className={`px-8 py-2 transition-all text-lg relative ${
                   activeTab === "orders"
-                    ? "bg-gray-300 text-black"
-                    : "bg-white text-black"
+                    ? "text-white font-semibold"
+                    : "text-gray-400"
                 }`}
               >
                 Order History
+                {activeTab === "orders" && (
+                  <div className="absolute bottom-[-2px] left-0 w-full h-[2px] bg-orange-500"></div>
+                )}
               </button>
             </div>
           </div>
 
-          {/* Content Section */}
           <div className="text-white">
-            {activeTab === "profile" ? (
-              // Profile Content
-              <div className="space-y-6">
-                {/* Profile Image */}
-                <div className="text-center">
-                  <div className="w-32 h-32 mx-auto mb-4 overflow-hidden bg-gray-300 rounded-full">
-                    {selectedImage ? (
-                      <img
-                        src={selectedImage}
-                        alt="Profile"
-                        className="object-cover w-full h-full"
-                      />
-                    ) : (
-                      <div className="flex items-center justify-center w-full h-full text-gray-500">
-                        No Image
-                      </div>
-                    )}
-                  </div>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    id="fileInput"
-                    onChange={handleUpload}
-                  />
-                  <label
-                    htmlFor="fileInput"
-                    className="inline-block px-4 py-2 text-black bg-white rounded-md cursor-pointer"
-                  >
-                    UPLOAD
-                  </label>
-                </div>
-
-                {/* Profile Form */}
-                <form className="space-y-4" onSubmit={handleSave}>
-                  <input
-                    type="text"
-                    name="firstName"
-                    defaultValue={user.firstName || ""}
-                    placeholder="FIRST NAME"
-                    className="w-full p-3 text-white border rounded-md bg-white/10 border-white/30"
-                  />
-                  <input
-                    type="text"
-                    name="lastName"
-                    defaultValue={user.lastName || ""}
-                    placeholder="LAST NAME"
-                    className="w-full p-3 text-white border rounded-md bg-white/10 border-white/30"
-                  />
-                  <input
-                    type="email"
-                    name="email"
-                    defaultValue={user.email || ""}
-                    placeholder="EMAIL"
-                    className="w-full p-3 text-white border rounded-md bg-white/10 border-white/30"
-                  />
-                  <input
-                    type="tel"
-                    name="phone"
-                    defaultValue={user.phone || ""}
-                    placeholder="PHONE NUMBER"
-                    className="w-full p-3 text-white border rounded-md bg-white/10 border-white/30"
-                  />
-                  <div className="flex gap-4">
-                    <button
-                      type="submit"
-                      className="px-6 py-2 text-black bg-white rounded-md"
-                    >
-                      Save Changes
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleLogout}
-                      className="px-6 py-2 text-white bg-red-500 rounded-md"
-                    >
-                      Logout
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleDeleteAccount}
-                      className="px-6 py-2 text-white bg-red-700 rounded-md"
-                    >
-                      Delete Account
-                    </button>
-                  </div>
-                </form>
-              </div>
-            ) : (
-              // Order History Content
-              <div className="text-center">
-                <h3 className="mb-4 text-xl">Order History</h3>
-                <p>No orders found.</p>
-                {/* You can add order history content here */}
-              </div>
-            )}
+            {activeTab === "profile"
+              ? renderProfileContent()
+              : renderOrderHistory()}
           </div>
         </div>
       </div>
