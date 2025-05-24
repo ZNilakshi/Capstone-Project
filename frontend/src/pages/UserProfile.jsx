@@ -97,18 +97,30 @@ const UserProfile = () => {
         phone: event.target.phone.value,
       };
 
-      await axios.put("http://localhost:5000/api/user/profile", updatedUser, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.put(
+        "http://localhost:5000/api/user/profile",
+        updatedUser,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-      setUser(updatedUser);
+      // Update local state and localStorage
+      setUser(response.data);
+      const currentUser = JSON.parse(localStorage.getItem("user"));
+      localStorage.setItem(
+        "user",
+        JSON.stringify({ ...currentUser, ...response.data })
+      );
+
       setIsEditing(false);
       alert("Profile updated successfully!");
     } catch (error) {
       console.error("Error updating profile:", error);
-      alert("Failed to update profile");
+      alert(error.response?.data?.message || "Failed to update profile");
     }
   };
 
@@ -193,7 +205,14 @@ const UserProfile = () => {
               className="w-full p-3 text-white border rounded-md bg-white/10 border-white/30"
             />
           </div>
-          <div className="flex justify-end mt-8">
+          <div className="flex justify-end gap-4 mt-8">
+            <button
+              type="button"
+              onClick={() => setIsEditing(false)}
+              className="px-6 py-2.5 text-white transition-all border rounded-md border-white/30 hover:bg-white/10"
+            >
+              Back
+            </button>
             <button
               type="submit"
               className="px-6 py-2.5 text-white transition-all border rounded-md border-white/30 hover:bg-white/10"
