@@ -48,6 +48,7 @@ const UserProfile = () => {
     alert("Profile updated successfully!");
   };
 
+
   const renderProfileContent = () => {
     if (!isEditing) {
       return (
@@ -78,6 +79,9 @@ const UserProfile = () => {
             <button
               onClick={() => setIsEditing(true)}
               className="px-6 py-2.5 text-white transition-all border rounded-md border-white/30 hover:bg-white/10"
+
+  
+
             >
               Edit Profile
             </button>
@@ -85,6 +89,7 @@ const UserProfile = () => {
         </div>
       );
     }
+
 
     return (
       <div className="flex flex-col h-full">
@@ -110,12 +115,18 @@ const UserProfile = () => {
           </div>
           <div>
             <label className="block mb-2 text-sm text-gray-400">Email</label>
+
+          
+
             <input
               type="email"
               name="email"
               defaultValue={user.email || ""}
+
               placeholder="Email"
               className="w-full p-3 text-white border rounded-md bg-white/10 border-white/30"
+
+             
             />
           </div>
           <div>
@@ -124,14 +135,18 @@ const UserProfile = () => {
               type="tel"
               name="phone"
               defaultValue={user.phone || ""}
+
               placeholder="Phone Number"
               className="w-full p-3 text-white border rounded-md bg-white/10 border-white/30"
+
             />
           </div>
           <div className="flex justify-end mt-8">
             <button
               type="submit"
+
               className="px-6 py-2.5 text-white transition-all border rounded-md border-white/30 hover:bg-white/10"
+
             >
               Save Changes
             </button>
