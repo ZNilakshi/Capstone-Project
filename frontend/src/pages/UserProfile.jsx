@@ -193,7 +193,14 @@ const UserProfile = () => {
               className="w-full p-3 text-white border rounded-md bg-white/10 border-white/30"
             />
           </div>
-          <div className="flex justify-end mt-8">
+          <div className="flex justify-end gap-4 mt-8">
+            <button
+              type="button"
+              onClick={() => setIsEditing(false)}
+              className="px-6 py-2.5 text-white transition-all border rounded-md border-white/30 hover:bg-white/10"
+            >
+              Back
+            </button>
             <button
               type="submit"
               className="px-6 py-2.5 text-white transition-all border rounded-md border-white/30 hover:bg-white/10"
