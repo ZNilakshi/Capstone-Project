@@ -97,18 +97,30 @@ const UserProfile = () => {
         phone: event.target.phone.value,
       };
 
-      await axios.put("http://localhost:5000/api/user/profile", updatedUser, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.put(
+        "http://localhost:5000/api/user/profile",
+        updatedUser,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-      setUser(updatedUser);
+      // Update local state and localStorage
+      setUser(response.data);
+      const currentUser = JSON.parse(localStorage.getItem("user"));
+      localStorage.setItem(
+        "user",
+        JSON.stringify({ ...currentUser, ...response.data })
+      );
+
       setIsEditing(false);
       alert("Profile updated successfully!");
     } catch (error) {
       console.error("Error updating profile:", error);
-      alert("Failed to update profile");
+      alert(error.response?.data?.message || "Failed to update profile");
     }
   };
 
