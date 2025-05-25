@@ -44,7 +44,7 @@ const FeaturedProducts = () => {
 
   // Auto-scroll every 2 seconds on mobile
   useEffect(() => {
-    if (!isMobile || !containerRef.current) return;
+    if (!isMobile) return;
 
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % products.length);
@@ -53,7 +53,18 @@ const FeaturedProducts = () => {
     return () => clearInterval(interval);
   }, [isMobile]);
 
-  // Scroll to the current index
+  // Auto-highlight current box every 4 seconds on desktop
+  useEffect(() => {
+    if (isMobile) return;
+
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % products.length);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [isMobile]);
+
+  // Scroll to current card on mobile
   useEffect(() => {
     if (!isMobile || !containerRef.current) return;
 
@@ -82,60 +93,70 @@ const FeaturedProducts = () => {
       {/* Cards Container */}
       <div
         ref={containerRef}
-        className={`flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory scrollbar-none ${
-          isMobile ? "justify-start" : "md:grid md:grid-cols-3 md:gap-8 md:overflow-visible md:snap-none"
+        className={`${
+          isMobile
+            ? "flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory scrollbar-none justify-start"
+            : "grid grid-cols-3 gap-8 overflow-visible"
         }`}
       >
-        {products.map((product, index) => (
-          <div
-            key={index}
-            onClick={() => navigate(product.path)}
-            className={`
-              snap-center shrink-0 cursor-pointer relative
-              ${isMobile ? "w-full" : "w-[50vw] sm:w-[50vw] md:w-full max-w-sm"}
-              bg-white/5 backdrop-blur-lg border border-orange-500 rounded-3xl shadow-lg
-              transition-transform duration-300 hover:-translate-y-2 hover:shadow-orange-300/40
-              hover:ring-2 hover:ring-orange-400 hover:ring-offset-2 hover:ring-offset-black
-              after:content-[''] after:absolute after:inset-0 after:rounded-3xl after:border-2 after:border-orange-400 after:scale-0 hover:after:scale-100 after:transition-transform after:duration-500 after:opacity-20
-            `}
-          >
-            <div className="overflow-hidden rounded-t-3xl">
-              <img
-                src={product.image}
-                alt={product.name}
-                className="object-cover w-full h-56"
-              />
+        {products.map((product, index) => {
+          // On desktop highlight the "current" box visually
+          const isActive = !isMobile && index === currentIndex;
+
+          return (
+            <div
+              key={index}
+              onClick={() => navigate(product.path)}
+              className={`
+                cursor-pointer relative
+                ${isMobile ? "snap-center shrink-0 w-full max-w-sm" : "w-full max-w-sm"}
+                bg-white/5 backdrop-blur-lg border border-orange-500 rounded-3xl shadow-lg
+                transition-transform duration-300 hover:-translate-y-2 hover:shadow-orange-300/40
+                hover:ring-2 hover:ring-orange-400 hover:ring-offset-2 hover:ring-offset-black
+                after:content-[''] after:absolute after:inset-0 after:rounded-3xl after:border-2 after:border-orange-400 after:scale-0 hover:after:scale-100 after:transition-transform after:duration-500 after:opacity-20
+                ${isActive ? "scale-105 shadow-orange-500/70 ring-4" : "scale-100"}
+              `}
+            >
+              <div className="overflow-hidden rounded-t-3xl">
+                <img
+                  src={product.image}
+                  alt={product.name}
+                  className="object-cover w-full h-56"
+                />
+              </div>
+
+              <span className="absolute px-4 py-1 text-xs font-semibold text-black bg-orange-500 rounded-full shadow-md top-4 left-4">
+                {product.tag}
+              </span>
+
+              <div className="p-6 space-y-4 text-center">
+                <h3 className="text-2xl font-bold text-orange-200">{product.name}</h3>
+                <p className="text-sm leading-relaxed text-gray-300">
+                  {product.description}
+                </p>
+
+                {product.name === "Spirit" && (
+                  <div className="flex flex-wrap justify-center gap-2 mt-2">
+                    {["Arrack", "Brandy", "Gin", "Rum", "Vodka", "Whisky"].map(
+                      (type) => (
+                        <span
+                          key={type}
+                          className="px-3 py-1 text-xs font-semibold text-orange-400 transition rounded-full shadow-md cursor-default select-none bg-white/10 hover:bg-orange-500 hover:text-white"
+                        >
+                          {type}
+                        </span>
+                      )
+                    )}
+                  </div>
+                )}
+
+                <button className="px-6 py-2 mt-4 font-semibold text-black transition bg-orange-500 rounded-full hover:bg-white hover:text-orange-500">
+                  Explore Now →
+                </button>
+              </div>
             </div>
-
-            <span className="absolute px-4 py-1 text-xs font-semibold text-black bg-orange-500 rounded-full shadow-md top-4 left-4">
-              {product.tag}
-            </span>
-
-            <div className="p-6 space-y-4 text-center">
-              <h3 className="text-2xl font-bold text-orange-200">{product.name}</h3>
-              <p className="text-sm leading-relaxed text-gray-300">
-                {product.description}
-              </p>
-
-              {product.name === "Spirit" && (
-                <div className="flex flex-wrap justify-center gap-2 mt-2">
-                  {["Arrack", "Brandy", "Gin", "Rum", "Vodka", "Whisky"].map((type) => (
-                    <span
-                      key={type}
-                      className="px-3 py-1 text-xs font-semibold text-orange-400 transition rounded-full shadow-md cursor-default select-none bg-white/10 hover:bg-orange-500 hover:text-white"
-                    >
-                      {type}
-                    </span>
-                  ))}
-                </div>
-              )}
-
-              <button className="px-6 py-2 mt-4 font-semibold text-black transition bg-orange-500 rounded-full hover:bg-white hover:text-orange-500">
-                Explore Now →
-              </button>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </section>
   );
