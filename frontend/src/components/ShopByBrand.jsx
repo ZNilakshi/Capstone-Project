@@ -57,7 +57,6 @@ const ShopByBrand = () => {
     scrollRef.current?.scrollBy({ left: offset, behavior: "smooth" });
   };
 
-  // Split brands into 2 rows
   const half = Math.ceil(brands.length / 2);
   const firstRow = brands.slice(0, half);
   const secondRow = brands.slice(half);
@@ -135,8 +134,8 @@ const ShopByBrand = () => {
                     flex flex-col items-center justify-center 
                     bg-white/10 backdrop-blur-md border border-white/10 
                     transition-all duration-300 
-                    hover:ring-2 hover:ring-white/40
-                    ${brand.glow}  /* dynamic shadow color */
+                    hover:ring-2 hover:ring-white/40 
+                    ${brand.glow}
                   `}
                 >
                   <img
@@ -153,6 +152,22 @@ const ShopByBrand = () => {
             </div>
           ))}
         </div>
+      </div>
+
+      {/* Simple test navigation buttons */}
+      <div className="flex flex-wrap justify-center gap-4 mt-16">
+        <button
+          onClick={() => navigate("/brand/heineken")}
+          className="px-6 py-2 text-white transition bg-green-600 rounded-full shadow-lg hover:bg-green-700"
+        >
+          Go to Heineken
+        </button>
+        <button
+          onClick={() => navigate("/brand/rockland")}
+          className="px-6 py-2 text-white transition bg-yellow-600 rounded-full shadow-lg hover:bg-yellow-700"
+        >
+          Go to Rockland
+        </button>
       </div>
     </div>
   );
