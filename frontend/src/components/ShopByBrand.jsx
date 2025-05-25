@@ -154,21 +154,7 @@ const ShopByBrand = () => {
         </div>
       </div>
 
-      {/* Simple test navigation buttons */}
-      <div className="flex flex-wrap justify-center gap-4 mt-16">
-        <button
-          onClick={() => navigate("/brand/heineken")}
-          className="px-6 py-2 text-white transition bg-green-600 rounded-full shadow-lg hover:bg-green-700"
-        >
-          Go to Heineken
-        </button>
-        <button
-          onClick={() => navigate("/brand/rockland")}
-          className="px-6 py-2 text-white transition bg-yellow-600 rounded-full shadow-lg hover:bg-yellow-700"
-        >
-          Go to Rockland
-        </button>
-      </div>
+      
     </div>
   );
 };
