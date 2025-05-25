@@ -151,11 +151,81 @@ const ShopByBrand = () => {
                 </motion.button>
               ))}
             </div>
+<<<<<<< HEAD
+        </section>
+           
+            
+            
+            <div className="flex flex-wrap justify-center gap-4 md:gap-8 mb-4">
+                <button onClick={() => navigate("/rockland")}>
+                   <div className="flex justify-center">
+                         <img
+                         src="/Rockland-Logo.png"
+                         alt="Rockland-Logo"
+                         className="w-50 max-w-2xl h-50 object-cover"
+                         />
+                    </div>
+                </button>
+
+                <button onClick={() => navigate("/idl")}>
+                   <div className="flex justify-center">
+                         <img
+                         src="/idl-logo.png"
+                         alt="idl-logo"
+                         className="w-55 max-w-2xl h-50 object-cover"
+                         />
+                    </div>
+                </button>
+
+                <button onClick={() => navigate("/dcsl")}>
+                   <div className="flex justify-center">
+                         <img
+                         src="/DCSL_Logo.png"
+                         alt="DCSL_Logo"
+                         className="w-60 max-w-2xl h-50 object-cover"
+                         />
+                    </div>
+                </button>
+
+                <button onClick={() => navigate("/mendis")}>
+                   <div className="flex justify-center">
+                         <img
+                         src="/mendis_logo.png"
+                         alt="mendis"
+                         className="w-45 max-w-2xl h-20 object-cover"
+                         />
+                    </div>
+                </button>
+
+                <button onClick={() => navigate("/lion")}>
+                   <div className="flex justify-center">
+                         <img
+                         src="/lion-logo.png"
+                         alt="lion"
+                         className="w-50 max-w-2xl h-20 object-cover"
+                         />
+                    </div>
+                </button>
+
+                <button onClick={() => navigate("/heineken")}>
+                   <div className="flex justify-center">
+                         <img
+                         src="/heineken-logo.png"
+                         alt="heineken-logo"
+                         className="w-40 max-w-2xl h-30 object-cover"
+                         />
+                    </div>
+                </button>
+            </div>
+         </div>
+    );
+=======
           ))}
         </div>
       </div>
     </div>
   );
+>>>>>>> main
 };
 
 export default ShopByBrand;
