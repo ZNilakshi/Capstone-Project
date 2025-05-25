@@ -8,12 +8,12 @@ const brands = [
   { name: "DCSL", logo: "/DCSL_Logo.png", path: "/brand/dcsl", glow: "hover:shadow-red-500" },
   { name: "Mendis", logo: "/mendis_logo.png", path: "/brand/mendis", glow: "hover:shadow-blue-500" },
   { name: "Lion", logo: "/lion-logo.png", path: "/brand/lion", glow: "hover:shadow-amber-400" },
-  { name: "DCSL Breweries", logo: "/DBL-Logo-PNG.png", path: "/brand/dcsl", glow: "hover:shadow-lime-400" },
+  { name: "DCSL Breweries", logo: "/DBL-Logo-PNG.png", path: "/brand/dcsl breweries", glow: "hover:shadow-lime-400" },
   { name: "Heineken", logo: "/Heineken.webp", path: "/brand/heineken", glow: "hover:shadow-green-400" },
   { name: "Anchor", logo: "/Anchor.webp", path: "/brand/anchor", glow: "hover:shadow-brown-400" },
   { name: "Tiger", logo: "/Tiger.webp", path: "/brand/tiger", glow: "hover:shadow-blue-400" },
   { name: "Bison", logo: "/Bison.webp", path: "/brand/bison", glow: "hover:shadow-red-400" },
-  { name: "DCSL Beer", logo: "/dcsl beer .jpg", path: "/brand/dcsl", glow: "hover:shadow-lime-400" },
+  { name: "DCSL Beer", logo: "/dcsl beer .jpg", path: "/brand/dcsl beer", glow: "hover:shadow-lime-400" },
 ];
 
 const arrowStyle = `

@@ -20,7 +20,7 @@ const UserProfile = () => {
         }
 
         const response = await axios.get(
-          "http://localhost:5000/api/user/profile",
+          "https://capstone-project-production-df71.up.railway.app/api/user/profile",
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -53,7 +53,7 @@ const UserProfile = () => {
           }
 
           const response = await axios.get(
-            "http://localhost:5000/api/user/orders",
+            "https://capstone-project-production-df71.up.railway.app/api/user/orders",
             {
               headers: {
                 Authorization: `Bearer ${token}`,
