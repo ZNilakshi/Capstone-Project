@@ -1,45 +1,46 @@
 const express = require("express");
 const router = express.Router();
-const Product = require("../models/product"); 
+const Product = require("../models/product");
 
 router.post("/add", async (req, res) => {
   try {
     console.log("Received product data:", req.body); // Add this line
     const newProduct = new Product(req.body);
     await newProduct.save();
-    res.status(201).json({ message: "Product added successfully", product: newProduct });
+    res
+      .status(201)
+      .json({ message: "Product added successfully", product: newProduct });
   } catch (error) {
     console.error("Error saving product:", error); // More detailed error
-    res.status(500).json({ 
+    res.status(500).json({
       message: "Failed to add product",
-      error: error.message 
+      error: error.message,
     });
   }
 });
 // Get all products
 router.get("/", async (req, res) => {
-    try {
-      const products = await Product.find();
-      res.status(200).json(products);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: "Failed to get products" });
-    }
-  });
+  try {
+    const products = await Product.find();
+    res.status(200).json(products);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Failed to get products" });
+  }
+});
 
+router.get("/brand/:brand", async (req, res) => {
+  try {
+    const brandName = new RegExp(`^${req.params.brand}$`, "i");
+    const products = await Product.find({ brand: brandName });
+    res.status(200).json(products);
+  } catch (error) {
+    console.error("Error getting products by brand:", error);
+    res.status(500).json({ message: "Failed to get products by brand" });
+  }
+});
 
-  router.get("/brand/:brand", async (req, res) => {
-    try {
-      const brandName = new RegExp(`^${req.params.brand}$`, 'i');
-      const products = await Product.find({ brand: brandName });
-      res.status(200).json(products);
-    } catch (error) {
-      console.error("Error getting products by brand:", error);
-      res.status(500).json({ message: "Failed to get products by brand" });
-    }
-  });
-
-// Update product 
+// Update product
 router.put("/:id", async (req, res) => {
   try {
     const updatedProduct = await Product.findByIdAndUpdate(
@@ -65,11 +66,11 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-router.put('/:id/stock', async (req, res) => {
+router.put("/:id/stock", async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
     if (!product) {
-      return res.status(404).json({ message: 'Product not found' });
+      return res.status(404).json({ message: "Product not found" });
     }
 
     product.quantity += parseInt(req.body.quantity);
@@ -79,7 +80,6 @@ router.put('/:id/stock', async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
-
 });
 
 // product routes file
@@ -97,9 +97,9 @@ router.get("/search", async (req, res) => {
   try {
     const query = req.query.q;
     if (!query || query.trim() === "") {
-      return res.status(400).json({ 
+      return res.status(400).json({
         message: "Search query is required",
-        suggestions: []
+        suggestions: [],
       });
     }
 
@@ -109,7 +109,7 @@ router.get("/search", async (req, res) => {
         { name: { $regex: query, $options: "i" } },
         { brand: { $regex: query, $options: "i" } },
         { category: { $regex: query, $options: "i" } },
-        { description: { $regex: query, $options: "i" } }
+        { description: { $regex: query, $options: "i" } },
       ],
     }).limit(50); // Limit results to prevent overload
 
@@ -118,27 +118,27 @@ router.get("/search", async (req, res) => {
       const similarProducts = await Product.find({
         $or: [
           { name: { $regex: query.split(" ")[0], $options: "i" } },
-          { brand: { $regex: query.split(" ")[0], $options: "i" } }
-        ]
+          { brand: { $regex: query.split(" ")[0], $options: "i" } },
+        ],
       }).limit(5);
-      
+
       return res.status(200).json({
         message: "No exact matches found",
         products: similarProducts,
         suggestions: [
           "Try different keywords",
           "Check your spelling",
-          "Search for a more general term"
-        ]
+          "Search for a more general term",
+        ],
       });
     }
 
     res.status(200).json(products);
   } catch (error) {
     console.error("Search error:", error);
-    res.status(500).json({ 
+    res.status(500).json({
       message: "Failed to perform search",
-      error: error.message 
+      error: error.message,
     });
   }
 });
