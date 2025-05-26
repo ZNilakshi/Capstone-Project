@@ -41,10 +41,10 @@ const AdminProductPanel = () => {
     }
   }, []);
 
-  const brands = ["BRAND", "ROCKLANDS", "DLL", "DCSL", "MENDIS", "LION", "HEINEKEN"];
-  const sizes = ["SIZE", "750ML", "1L", "500ML"];
+  const brands = ["BRAND", "ROCKLANDS", "IDL", "DCSL", "MENDIS", "LION", "HEINEKEN","TIGER","DCSL BEER","BISON","ANCHOR"];
+  const sizes = ["SIZE", "750ML", "1L", "625ML","500ML","325ML", "375ML","330ML","180ML"];
   const abvLevels = ["ABV", "5%", "6%", "7%", "10%"];
-  const categories = ["CATEGORY", "Shake & Beer", "Wine", "Sprite"];
+  const categories = ["CATEGORY", "Shake & Beer", "Wine", "Sprite","Arrack","Gin","Whisky","Rum","Vodka","Brandy","Nine Arches"];
 
   const handlePhotoUpload = async (e) => {
     const file = e.target.files[0];
@@ -216,9 +216,9 @@ const AdminProductPanel = () => {
 
   return (
 
-    <div className=" p-8 bg-black min-h-screen mt-20 flex gap-8">
+    <div className="flex min-h-screen gap-8 p-8 mt-20 bg-black ">
 
-      <div className="w-1/3  bg-black p-6 rounded-xl shadow-lg flex flex-col gap-6">
+      <div className="flex flex-col w-1/3 gap-6 p-6 bg-black shadow-lg rounded-xl">
         <button
           onClick={() => setView("profile")}
           className={`p-4 rounded-lg text-center font-bold text-xl flex items-center justify-center gap-2 ${view === "profile" ? "bg-orange-500 text-white" : "bg-gray-200"
@@ -242,31 +242,31 @@ const AdminProductPanel = () => {
         </button>
         <button
           onClick={handleLogout}
-          className="p-4 bg-red-500 text-white rounded-lg text-center font-bold text-xl"
+          className="p-4 text-xl font-bold text-center text-white bg-red-500 rounded-lg"
         >
           Logout
         </button>
       </div>
 
       {/* Main Content */}
-      <div className="w-2/3 flex flex-col gap-6">
+      <div className="flex flex-col w-2/3 gap-6">
         {view === "profile" && adminDetails && (
-          <div className="bg-white p-6 rounded-xl shadow-lg">
-            <h2 className="text-2xl font-bold mb-6">Admin Profile</h2>
+          <div className="p-6 bg-white shadow-lg rounded-xl">
+            <h2 className="mb-6 text-2xl font-bold">Admin Profile</h2>
 
             <div className="flex items-start gap-8 mb-8">
-              <div className="w-32 h-32 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden">
+              <div className="flex items-center justify-center w-32 h-32 overflow-hidden bg-gray-200 rounded-full">
                 <FaUserCircle className="text-gray-400 text-8xl" />
               </div>
 
               <div className="flex-1">
-                <h3 className="text-xl font-semibold mb-2">
+                <h3 className="mb-2 text-xl font-semibold">
                   {adminDetails.firstName} {adminDetails.lastName}
                 </h3>
-                <p className="text-gray-600 mb-1">
+                <p className="mb-1 text-gray-600">
                   <span className="font-medium">Username:</span> {adminDetails.username}
                 </p>
-                <p className="text-gray-600 mb-1">
+                <p className="mb-1 text-gray-600">
                   <span className="font-medium">Email:</span> {adminDetails.email}
                 </p>
                 <p className="text-gray-600">
@@ -276,16 +276,16 @@ const AdminProductPanel = () => {
             </div>
 
             <div className="grid grid-cols-2 gap-6">
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <h4 className="font-semibold text-lg mb-3">Account Information</h4>
+              <div className="p-4 rounded-lg bg-gray-50">
+                <h4 className="mb-3 text-lg font-semibold">Account Information</h4>
                 <div className="space-y-2">
                   <p><span className="font-medium">Account Created:</span> {new Date(adminDetails.createdAt).toLocaleDateString()}</p>
                   <p><span className="font-medium">Last Login:</span> {new Date().toLocaleString()}</p>
                 </div>
               </div>
 
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <h4 className="font-semibold text-lg mb-3">Admin Statistics</h4>
+              <div className="p-4 rounded-lg bg-gray-50">
+                <h4 className="mb-3 text-lg font-semibold">Admin Statistics</h4>
                 <div className="space-y-2">
                   <p><span className="font-medium">Total Products:</span> {products.length}</p>
                   <p><span className="font-medium">Total Stock Items:</span> {products.reduce((sum, product) => sum + parseInt(product.quantity || 0), 0)}</p>
@@ -296,12 +296,12 @@ const AdminProductPanel = () => {
         )}
 
         {view === "addProduct" && (
-          <div className="bg-white p-6 rounded-xl shadow-lg">
-            <h2 className="text-2xl font-bold mb-4">{editingIndex !== null ? "Edit Product" : "Add Product"}</h2>
+          <div className="p-6 bg-white shadow-lg rounded-xl">
+            <h2 className="mb-4 text-2xl font-bold">{editingIndex !== null ? "Edit Product" : "Add Product"}</h2>
 
             <div className="grid grid-cols-2 gap-4">
               <div className="relative">
-                <label className="absolute -top-2 left-3 bg-white px-1 text-orange-400 text-sm">Product Name</label>
+                <label className="absolute px-1 text-sm text-orange-400 bg-white -top-2 left-3">Product Name</label>
                 <input
                   type="text"
                   value={name}
@@ -312,7 +312,7 @@ const AdminProductPanel = () => {
               </div>
 
               <div className="relative">
-                <label className="absolute -top-2 left-3 bg-white px-1 text-orange-400 text-sm">Price (LKR)</label>
+                <label className="absolute px-1 text-sm text-orange-400 bg-white -top-2 left-3">Price (LKR)</label>
                 <input
                   type="number"
                   value={price}
@@ -323,7 +323,7 @@ const AdminProductPanel = () => {
               </div>
 
               <div className="relative">
-                <label className="absolute -top-2 left-3 bg-white px-1 text-orange-400 text-sm">Quantity</label>
+                <label className="absolute px-1 text-sm text-orange-400 bg-white -top-2 left-3">Quantity</label>
                 <input
                   type="number"
                   value={quantity}
@@ -334,11 +334,11 @@ const AdminProductPanel = () => {
               </div>
 
               <div className="relative">
-                <label className="absolute -top-3 left-3 bg-white px-1 text-orange-400 text-sm">Brand</label>
+                <label className="absolute px-1 text-sm text-orange-400 bg-white -top-3 left-3">Brand</label>
                 <select
                   value={brand}
                   onChange={(e) => setBrand(e.target.value)}
-                  className="w-full py-3 px-3 border-2 border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 appearance-none"
+                  className="w-full px-3 py-3 border-2 border-black rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-orange-400"
                 >
                   {brands.map((brand, index) => (
                     <option key={index} value={brand}>{brand}</option>
@@ -347,11 +347,11 @@ const AdminProductPanel = () => {
               </div>
 
               <div className="relative">
-                <label className="absolute -top-3 left-3 bg-white px-1 text-orange-400 text-sm">Size</label>
+                <label className="absolute px-1 text-sm text-orange-400 bg-white -top-3 left-3">Size</label>
                 <select
                   value={size}
                   onChange={(e) => setSize(e.target.value)}
-                  className="w-full py-4 px-3 border-2 border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 appearance-none"
+                  className="w-full px-3 py-4 border-2 border-black rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-orange-400"
                 >
                   {sizes.map((size, index) => (
                     <option key={index} value={size}>{size}</option>
@@ -360,11 +360,11 @@ const AdminProductPanel = () => {
               </div>
 
               <div className="relative">
-                <label className="absolute -top-3 left-3 bg-white px-1 text-orange-400 text-sm">ABV</label>
+                <label className="absolute px-1 text-sm text-orange-400 bg-white -top-3 left-3">ABV</label>
                 <select
                   value={abv}
                   onChange={(e) => setAbv(e.target.value)}
-                  className="w-full py-4 px-3 border-2 border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 appearance-none"
+                  className="w-full px-3 py-4 border-2 border-black rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-orange-400"
                 >
                   {abvLevels.map((abv, index) => (
                     <option key={index} value={abv}>{abv}</option>
@@ -373,11 +373,11 @@ const AdminProductPanel = () => {
               </div>
 
               <div className="relative">
-                <label className="absolute -top-3 left-3 bg-white px-1 text-orange-400 text-sm">Category</label>
+                <label className="absolute px-1 text-sm text-orange-400 bg-white -top-3 left-3">Category</label>
                 <select
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
-                  className="w-full py-4 px-3 border-2 border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 appearance-none"
+                  className="w-full px-3 py-4 border-2 border-black rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-orange-400"
                 >
                   {categories.map((category, index) => (
                     <option key={index} value={category}>{category}</option>
@@ -386,18 +386,18 @@ const AdminProductPanel = () => {
               </div>
 
               <div className="relative">
-                <label className="absolute -top-2 left-3 bg-white px-1 text-orange-400 text-sm">Upload Image</label>
+                <label className="absolute px-1 text-sm text-orange-400 bg-white -top-2 left-3">Upload Image</label>
                 {photo && (
-                  <div className="mb-2 flex items-center gap-2">
+                  <div className="flex items-center gap-2 mb-2">
                     <img
                       src={photo}
                       alt="Current product"
-                      className="w-16 h-16 rounded-lg object-cover"
+                      className="object-cover w-16 h-16 rounded-lg"
                     />
                     <button
                       type="button"
                       onClick={removePhoto}
-                      className="text-red-500 text-sm"
+                      className="text-sm text-red-500"
                     >
                       Remove
                     </button>
@@ -407,7 +407,7 @@ const AdminProductPanel = () => {
                   type="file"
                   accept="image/*"
                   onChange={handlePhotoUpload}
-                  className="w-full p-3 border-2 border-black rounded-lg bg-gray-100 cursor-pointer focus:outline-none focus:ring-2 focus:ring-orange-400"
+                  className="w-full p-3 bg-gray-100 border-2 border-black rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-orange-400"
                 />
               </div>
             </div>
@@ -425,18 +425,18 @@ const AdminProductPanel = () => {
         )}
 
         {view === "addStock" && (
-          <div className="bg-white p-6 rounded-xl shadow-lg">
-            <h2 className="text-2xl font-bold mb-4">Manage Stock</h2>
+          <div className="p-6 bg-white shadow-lg rounded-xl">
+            <h2 className="mb-4 text-2xl font-bold">Manage Stock</h2>
             {products.length > 0 ? (
               <div className="grid grid-cols-2 gap-4">
                 <div className="relative">
-                  <label className="absolute -top-3 left-3 bg-white px-1 text-orange-400 text-sm">
+                  <label className="absolute px-1 text-sm text-orange-400 bg-white -top-3 left-3">
                     Select Product
                   </label>
                   <select
                     value={selectedProductId}
                     onChange={(e) => setSelectedProductId(e.target.value)}
-                    className="w-full py-4 px-3 border-2 border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 appearance-none"
+                    className="w-full px-3 py-4 border-2 border-black rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-orange-400"
                   >
                     <option value="" disabled>Select Product</option>
                     {products.map((product) => (
@@ -448,7 +448,7 @@ const AdminProductPanel = () => {
                 </div>
 
                 <div className="relative">
-                  <label className="absolute -top-2 left-3 bg-white px-1 text-orange-400 text-sm">
+                  <label className="absolute px-1 text-sm text-orange-400 bg-white -top-2 left-3">
                     Quantity to Add
                   </label>
                   <input
@@ -456,7 +456,7 @@ const AdminProductPanel = () => {
                     value={stockToAdd}
                     onChange={(e) => setStockToAdd(e.target.value)}
                     placeholder="Enter quantity"
-                    className="w-full py-4 px-3 border-2 border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
+                    className="w-full px-3 py-4 border-2 border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
                   />
                 </div>
 
@@ -477,8 +477,8 @@ const AdminProductPanel = () => {
 
         {/* Product List */}
         {products.length > 0 && view !== "profile" && (
-          <div className="bg-white p-6 rounded-xl shadow-lg">
-            <h2 className="text-2xl font-bold mb-4">Product List</h2>
+          <div className="p-6 bg-white shadow-lg rounded-xl">
+            <h2 className="mb-4 text-2xl font-bold">Product List</h2>
             <div className="overflow-x-auto">
               <table className="min-w-full table-auto">
                 <thead className="bg-gray-200">
@@ -519,7 +519,7 @@ const AdminProductPanel = () => {
                           <img
                             src={product.photo}
                             alt={product.name}
-                            className="w-16 h-16 rounded-lg object-cover"
+                            className="object-cover w-16 h-16 rounded-lg"
                           />
                         )}
                       </td>
@@ -527,7 +527,7 @@ const AdminProductPanel = () => {
                         <td className="p-3">
                           <button
                             onClick={() => editProduct(index)}
-                            className="text-blue-500 hover:text-blue-700 mr-2"
+                            className="mr-2 text-blue-500 hover:text-blue-700"
                           >
                             <FaEdit />
                           </button>
