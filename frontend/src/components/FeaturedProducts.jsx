@@ -207,7 +207,7 @@ const FeaturedProducts = () => {
 
               {product.name === "Spirit" && (
                 <div className="flex flex-wrap justify-center gap-2 mt-2">
-                  {["Arrack", "Brandy", "Gin", "Rum", "Vodka", "Whisky"].map(
+                  {["Arrack", "Brandy", "Gin", "Rum", "Vodka", "Whisky","Nine Arches"].map(
                     (type) => (
                       <span
                         key={type}
