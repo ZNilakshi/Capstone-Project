@@ -41,7 +41,7 @@ const AdminProductPanel = () => {
     }
   }, []);
 
-  const brands = ["BRAND", "ROCKLANDS", "IDL", "DCSL", "MENDIS", "LION", "HEINEKEN","TIGER","DCSL BEER","BISON","ANCHOR"];
+  const brands = ["BRAND", "ROCKLAND", "IDL", "DCSL", "MENDIS", "LION", "HEINEKEN","TIGER","DCSL BEER","BISON","ANCHOR"];
   const sizes = ["SIZE", "750ML", "1L", "625ML","500ML","325ML", "375ML","330ML","180ML"];
   const abvLevels = ["ABV", "5%", "6%", "7%", "10%"];
   const categories = ["CATEGORY", "Shake & Beer", "Wine", "Sprite","Arrack","Gin","Whisky","Rum","Vodka","Brandy","Nine Arches"];
