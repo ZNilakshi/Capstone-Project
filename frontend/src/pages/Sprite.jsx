@@ -26,21 +26,33 @@ const FilterableProductList = () => {
   useEffect(() => {
     const fetchWines = async () => {
       try {
-        const response = await axios.get("https://capstone-project-production-df71.up.railway.app/api/products/category/Sprite");
-        setProducts(response.data);
-        // Initialize quantities
+        const categories = ["Gin", "Arrack", "Whisky", "Rum", "Vodka", "Brandy", "Nine Arches"];
+
+        // Make parallel API requests for all categories
+        const requests = categories.map((category) =>
+          axios.get(`https://capstone-project-production-df71.up.railway.app/api/products/category/${category}`)
+        );
+
+        const responses = await Promise.all(requests);
+
+        // Combine results from all responses
+        const allProducts = responses.flatMap((res) => res.data);
+
+        setProducts(allProducts);
+
+        // Initialize quantities for all products
         const initialQuantities = {};
-        response.data.forEach(product => {
+        allProducts.forEach((product) => {
           initialQuantities[product._id] = 1;
         });
         setQuantities(initialQuantities);
       } catch (err) {
-        console.error("Failed to fetch wines", err);
+        console.error("Failed to fetch products", err);
       } finally {
         setLoading(false);
       }
     };
-    
+
     fetchWines();
   }, []);
 
