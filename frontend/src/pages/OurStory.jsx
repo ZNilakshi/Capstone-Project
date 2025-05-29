@@ -66,14 +66,16 @@ function OurStory() {
                         <div className="flex flex-col items-center justify-between gap-8 md:flex-row">
                             {/* Founder 1 */}
                             <div className="flex flex-col items-center space-y-2">
-                                <img src="/owner1.jpg" alt="Founder - P. T. M. de Silva" className="object-cover w-40 h-40 border-4 border-orange-400 rounded-full shadow-md" />
-                                <p className="text-lg font-semibold text-white">P. T. M. De Silva</p>
-                            </div>
-                            {/* Founder 2 */}
-                            <div className="flex flex-col items-center space-y-2">
-                                <img src="/owner2.jpg" alt="Founder - P. W. R. Dharmakeerthi" className="object-cover w-40 h-40 border-4 border-orange-400 rounded-full shadow-md" />
+                                <img src="/ranjith owner.jpg" alt="Founder - P. W. R. Dharmakeerthi" className="object-cover w-40 h-40 border-4 border-orange-400 rounded-full shadow-md" />
                                 <p className="text-lg font-semibold text-white">P. W. R. Dharmakeerthi</p>
                             </div>
+                            {/* Founder 2 */}
+                            
+                            <div className="flex flex-col items-center space-y-2">
+                                <img src="/owner2.jpg" alt="Founder - P. T. M. de Silva" className="object-cover w-40 h-40 border-4 border-orange-400 rounded-full shadow-md" />
+                                <p className="text-lg font-semibold text-white">P. T. M. De Silva</p>
+                            </div>
+                          
                         </div>
                         <p className="mt-6 text-lg leading-relaxed text-gray-300">
                             De Silva Wine Stores was founded by P. T. M. De Silva and P. W. R. Dharmakeerthi, a visionary entrepreneur with over 20 years of experience in the beverage industry. Together, they have built a reputation for excellence, community focus, and quality service.
