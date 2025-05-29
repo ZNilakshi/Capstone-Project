@@ -269,9 +269,7 @@ const AdminProductPanel = () => {
                 <p className="mb-1 text-gray-600">
                   <span className="font-medium">Email:</span> {adminDetails.email}
                 </p>
-                <p className="text-gray-600">
-                  <span className="font-medium">Role:</span> {adminDetails.roles?.join(", ")}
-                </p>
+                
               </div>
             </div>
 
@@ -279,8 +277,7 @@ const AdminProductPanel = () => {
               <div className="p-4 rounded-lg bg-gray-50">
                 <h4 className="mb-3 text-lg font-semibold">Account Information</h4>
                 <div className="space-y-2">
-                  <p><span className="font-medium">Account Created:</span> {new Date(adminDetails.createdAt).toLocaleDateString()}</p>
-                  <p><span className="font-medium">Last Login:</span> {new Date().toLocaleString()}</p>
+                       <p><span className="font-medium">Last Login:</span> {new Date().toLocaleString()}</p>
                 </div>
               </div>
 
