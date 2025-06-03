@@ -1,126 +1,147 @@
 import { useCart } from "../context/CartContext";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState , useEffect } from "react";
 
 const Checkout = () => {
   const { cart } = useCart();
   const navigate = useNavigate();
-  const [showCardForm, setShowCardForm] = useState(false);
-  const [cardDetails, setCardDetails] = useState({
-    number: '',
+  const [showDetailsForm, setShowDetailsForm] = useState(false);
+  const [userDetails, setUserDetails] = useState({
     name: '',
-    expiry: '',
-    cvv: ''
+    email: '',
+    phone: '',
+    location: ''
   });
   const [errors, setErrors] = useState({
-    number: '',
     name: '',
-    expiry: ''
+    email: '',
+    phone: '',
+    location: ''
   });
 
-  const validateCardNumber = (number) => {
-    const cleaned = number.replace(/\D/g, '');
-    return cleaned.length === 16;
-  };
+  const locations = ['Welimada', 'Badulla', 'Bandarawela', 'Hali-Ela', 'Passara', 'Mahiyanganaya'];
+ // Add this useEffect to load user data on component mount
+ useEffect(() => {
+  console.log("Checking localStorage for user data...");
+  const storedUser = localStorage.getItem("user"); // Ensure key is correct ("user")
+  
+  if (!storedUser) {
+    console.warn("No user data in localStorage");
+    return;
+  }
 
-  const validateExpiry = (expiry) => {
-    const [month, year] = expiry.split('/');
-    if (!month || !year || month.length !== 2 || year.length !== 2) return false;
+  try {
+    // Trim whitespace (in case of corruption)
+    const trimmedUser = storedUser.trim();
     
-    const monthNum = parseInt(month, 10);
-    return monthNum >= 1 && monthNum <= 12;
-  };
+    // Check if it starts/ends with { } (basic validation)
+    if (!trimmedUser.startsWith("{") || !trimmedUser.endsWith("}")) {
+      throw new Error("Invalid JSON format");
+    }
 
+    const parsedUser = JSON.parse(trimmedUser);
+    console.log("Parsed user object:", parsedUser);
+
+    setUserDetails({
+      name: parsedUser.username || "", // Fallback to username if name missing
+      email: parsedUser.email || "",   // Will be empty if not in data
+      phone: parsedUser.phone || "",
+      location: parsedUser.location || "",
+    });
+
+    if (parsedUser.username) {
+      setShowDetailsForm(true);
+    }
+  } catch (error) {
+    console.error("Failed to parse user data:", error);
+    // Clear corrupted data (optional)
+    localStorage.removeItem("user");
+  }
+}, []);
   const validateName = (name) => {
     return /^[a-zA-Z\s'-]+$/.test(name) && name.trim().length > 0;
+  };
+
+  const validateEmail = (email) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
+
+  const validatePhone = (phone) => {
+    return /^\d{10}$/.test(phone);
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     
-    if (name === 'number') {
+    if (name === 'phone') {
       const cleaned = value.replace(/\D/g, '');
-      const formatted = cleaned.replace(/(\d{4})(?=\d)/g, '$1 ');
-      setCardDetails(prev => ({
+      setUserDetails(prev => ({
         ...prev,
-        [name]: formatted.trim()
+        [name]: cleaned.substring(0, 10)
       }));
       
       setErrors(prev => ({
         ...prev,
-        number: cleaned.length > 0 && cleaned.length !== 16 ? 'Card number must be 16 digits' : ''
-      }));
-      return;
-    }
-    
-    if (name === 'expiry') {
-      let formatted = value.replace(/\D/g, '');
-      if (formatted.length > 2) {
-        formatted = formatted.substring(0, 2) + '/' + formatted.substring(2, 4);
-      }
-      setCardDetails(prev => ({
-        ...prev,
-        [name]: formatted
-      }));
-      
-      if (formatted.length === 5) {
-        const isValid = validateExpiry(formatted);
-        setErrors(prev => ({
-          ...prev,
-          expiry: !isValid ? 'Invalid expiry date (MM/YY)' : ''
-        }));
-      } else {
-        setErrors(prev => ({
-          ...prev,
-          expiry: ''
-        }));
-      }
-      return;
-    }
-    
-    if (name === 'cvv') {
-      const cleaned = value.replace(/\D/g, '');
-      setCardDetails(prev => ({
-        ...prev,
-        [name]: cleaned.substring(0, 4)
+        phone: cleaned.length > 0 && !validatePhone(cleaned) ? 'Phone must be 10 digits' : ''
       }));
       return;
     }
     
     if (name === 'name') {
       const cleaned = value.replace(/[^a-zA-Z\s'-]/g, '');
-      setCardDetails(prev => ({
+      setUserDetails(prev => ({
         ...prev,
         [name]: cleaned
       }));
       
       setErrors(prev => ({
         ...prev,
-        name: cleaned.length > 0 && !validateName(cleaned) ? 'Please enter a valid name (letters only)' : ''
+        name: cleaned.length > 0 && !validateName(cleaned) ? 'Please enter a valid name' : ''
       }));
       return;
     }
+    
+    if (name === 'email') {
+      setUserDetails(prev => ({
+        ...prev,
+        [name]: value
+      }));
+      
+      setErrors(prev => ({
+        ...prev,
+        email: value.length > 0 && !validateEmail(value) ? 'Please enter a valid email' : ''
+      }));
+      return;
+    }
+    
+    // For location select
+    setUserDetails(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmitDetails = (e) => {
     e.preventDefault();
     
-    const isCardValid = validateCardNumber(cardDetails.number);
-    const isExpiryValid = cardDetails.expiry.length === 5 && validateExpiry(cardDetails.expiry);
-    const isNameValid = validateName(cardDetails.name);
+    const isNameValid = validateName(userDetails.name);
+    const isEmailValid = validateEmail(userDetails.email);
+    const isPhoneValid = validatePhone(userDetails.phone);
+    const isLocationValid = userDetails.location !== '';
     
-    if (!isCardValid || !isExpiryValid || !isNameValid) {
+    if (!isNameValid || !isEmailValid || !isPhoneValid || !isLocationValid) {
       setErrors({
-        number: !isCardValid ? 'Card number must be 16 digits' : '',
-        expiry: !isExpiryValid ? 'Invalid expiry date (MM/YY)' : '',
-        name: !isNameValid ? 'Please enter a valid name' : ''
+        name: !isNameValid ? 'Please enter a valid name' : '',
+        email: !isEmailValid ? 'Please enter a valid email' : '',
+        phone: !isPhoneValid ? 'Phone must be 10 digits' : '',
+        location: !isLocationValid ? 'Please select a location' : ''
       });
       return;
     }
     
-    // Here you would typically process the payment
-    alert('Payment processed successfully!');
-    navigate("/order-confirmation");
+    // Here you would typically save the details and proceed to payment
+    alert('Details saved successfully!');
+    // Proceed to payment or next step
   };
 
   if (!cart || !cart.items || cart.items.length === 0) {
@@ -190,113 +211,95 @@ const Checkout = () => {
             </div>
           </div>
           
-          {/* Payment Form */}
+          {/* Details Form */}
           <div className="lg:w-1/2 bg-white shadow rounded-lg p-6">
-            <h2 className="text-xl font-bold mb-6 border-b pb-2">PAYMENT METHODS</h2>
-            
-            <div className="flex items-center bg-green-50 border border-green-200 rounded-lg p-3">
-              <div className="flex items-center justify-center bg-white rounded-full w-6 h-6 mr-2">
-                <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-              </div>
-              <span className="text-sm text-green-700">Your Payment Information is Safe With Us.</span>
-            </div>
+            <h2 className="text-xl font-bold mb-6 border-b pb-2">Your Details</h2>
             
             <div className="space-y-6">
-              {!showCardForm ? (
+              {!showDetailsForm ? (
                 <button 
-                  onClick={() => setShowCardForm(true)}
+                  onClick={() => setShowDetailsForm(true)}
                   className="w-full bg-blue-600 text-white py-3 rounded-lg font-bold hover:bg-blue-700 transition"
                 >
-                  ADD A NEW CARD
+                  ADD YOUR DETAILS
                 </button>
               ) : (
-                <>
-                  <div className="flex items-center justify-center gap-2">
-                    <div className="h-8 w-12 bg-blue-50 flex items-center justify-center rounded">
-                      <img
-                        src="https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png"
-                        alt="Visa"
-                        className="h-5 mx-1"
-                      />
-                    </div>
-                    <img
-                      src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg"
-                      alt="MasterCard"
-                      className="h-5 mx-1"
+                <form onSubmit={handleSubmitDetails} className="space-y-4">
+                  <div>
+                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+                      Full Name
+                    </label>
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      value={userDetails.name}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="John Doe"
                     />
+                    {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name}</p>}
                   </div>
                   
-                  <form onSubmit={handleSubmit} className="space-y-4">
-                    <div>
-                      <label className="block text-gray-700 mb-1">CARD NUMBER</label>
-                      <input
-                        type="text"
-                        name="number"
-                        value={cardDetails.number}
-                        onChange={handleInputChange}
-                        placeholder="1234 5678 9012 3456"
-                        className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-gray-800"
-                        maxLength={19}
-                        required
-                      />
-                      {errors.number && <p className="text-red-500 text-sm mt-1">{errors.number}</p>}
-                    </div>
-                    
-                    <div>
-                      <label className="block text-gray-700 mb-1">CARDHOLDER NAME</label>
-                      <input
-                        type="text"
-                        name="name"
-                        value={cardDetails.name}
-                        onChange={handleInputChange}
-                        placeholder="John Doe"
-                        className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-gray-800"
-                        required
-                      />
-                      {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
-                    </div>
-                    
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-gray-700 mb-1">MM/YY</label>
-                        <input
-                          type="text"
-                          name="expiry"
-                          value={cardDetails.expiry}
-                          onChange={handleInputChange}
-                          placeholder="MM/YY"
-                          className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-gray-800"
-                          maxLength={5}
-                          required
-                        />
-                        {errors.expiry && <p className="text-red-500 text-sm mt-1">{errors.expiry}</p>}
-                      </div>
-                      
-                      <div>
-                        <label className="block text-gray-700 mb-1">CVV</label>
-                        <input
-                          type="text"
-                          name="cvv"
-                          value={cardDetails.cvv}
-                          onChange={handleInputChange}
-                          placeholder="123"
-                          className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-gray-800"
-                          maxLength={4}
-                          required
-                        />
-                      </div>
-                    </div>
-                    
-                    <button
-                      type="submit"
-                      className="w-full bg-gray-800 text-white py-3 rounded-lg font-bold hover:bg-gray-700 transition mt-6"
+                  <div>
+                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                      Email Address
+                    </label>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      value={userDetails.email}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="john@example.com"
+                    />
+                    {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
+                  </div>
+                  
+                  <div>
+                    <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
+                      Phone Number
+                    </label>
+                    <input
+                      type="tel"
+                      id="phone"
+                      name="phone"
+                      value={userDetails.phone}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="0771234567"
+                      maxLength="10"
+                    />
+                    {errors.phone && <p className="mt-1 text-sm text-red-600">{errors.phone}</p>}
+                  </div>
+                  
+                  <div>
+                    <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-1">
+                      Nearest Location to You
+                    </label>
+                    <select
+                      id="location"
+                      name="location"
+                      value={userDetails.location}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500"
                     >
-                      PAY NOW
-                    </button>
-                  </form>
-                </>
+                      <option value="">Select a location</option>
+                      {locations.map(location => (
+                        <option key={location} value={location}>{location}</option>
+                      ))}
+                    </select>
+                    {errors.location && <p className="mt-1 text-sm text-red-600">{errors.location}</p>}
+                  </div>
+                  
+                  <button
+                    type="submit"
+                    className="w-full bg-blue-600 text-white py-3 rounded-lg font-bold hover:bg-blue-700 transition"
+                  >
+                    SAVE DETAILS
+                  </button>
+                </form>
               )}
             </div>
           </div>

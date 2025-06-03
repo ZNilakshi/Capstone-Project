@@ -130,7 +130,7 @@ const Cart = () => {
               <span className="font-bold">Rs.{subtotal.toFixed(2)}</span>
             </div>
             <div className="text-gray-800 flex justify-between py-2 border-t border-gray-200">
-              <span className="font-medium">Shipping</span>
+            
               <span className="font-bold">FREE</span>
             </div>
             <div className="text-gray-800 flex justify-between py-4 border-t border-gray-200 font-bold text-lg">
