@@ -22,7 +22,8 @@ const BrandPage = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get(`https://capstone-project-production-df71.up.railway.app/api/products/brand/${brandName}`);
+        const baseUrl = process.env.REACT_APP_API_BASE_URL;
+        const response = await axios.get(`${baseUrl}/api/products/brand/${brandName}`);
         setProducts(response.data);
       } catch (err) {
         console.error("Failed to fetch products", err);

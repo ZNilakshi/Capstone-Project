@@ -4,7 +4,7 @@ const Product = require("../models/product");
 
 router.post("/add", async (req, res) => {
   try {
-    console.log("Received product data:", req.body); // Add this line
+    console.log("Received product data:", req.body); 
     const newProduct = new Product(req.body);
     await newProduct.save();
     res.status(201).json({ message: "Product added successfully", product: newProduct });
@@ -111,10 +111,10 @@ router.get("/search", async (req, res) => {
         { category: { $regex: query, $options: "i" } },
         { description: { $regex: query, $options: "i" } }
       ],
-    }).limit(50); // Limit results to prevent overload
+    }).limit(50); 
 
     if (products.length === 0) {
-      // If no results, find similar terms
+     
       const similarProducts = await Product.find({
         $or: [
           { name: { $regex: query.split(" ")[0], $options: "i" } },

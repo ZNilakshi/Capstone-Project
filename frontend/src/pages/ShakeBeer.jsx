@@ -24,9 +24,11 @@ const brands = ["Any Brand","LION","DCSL BREWERIES","HEINEKEN","ANCHOR","TIGER",
   useEffect(() => {
     const fetchProducts = async () => {
       try {
+        const baseUrl = process.env.REACT_APP_API_BASE_URL;
         const encodedCategory = encodeURIComponent("Shake & Beer");
-        const response = await axios.get(`http://localhost:5000/api/products/category/${encodedCategory}`);
+        const response = await axios.get(`${baseUrl}/api/products/category/${encodedCategory}`);
         setProducts(response.data);
+  
         // Initialize quantities
         const initialQuantities = {};
         response.data.forEach(product => {
@@ -39,9 +41,10 @@ const brands = ["Any Brand","LION","DCSL BREWERIES","HEINEKEN","ANCHOR","TIGER",
         setLoading(false);
       }
     };
-    
+  
     fetchProducts();
   }, []);
+  
 
   const handleQuantityChange = (productId, newQuantity) => {
     if (newQuantity < 1) return;

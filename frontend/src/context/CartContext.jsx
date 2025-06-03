@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const CartContext = createContext();
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState(null);
@@ -19,7 +20,7 @@ export const CartProvider = ({ children }) => {
         return;
       }
 
-      const response = await axios.get("https://capstone-project-production-df71.up.railway.app/api/cart", {
+      const response = await axios.get(`${API_BASE_URL}/api/cart`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setCart(response.data);
@@ -43,7 +44,7 @@ export const CartProvider = ({ children }) => {
       }
 
       const response = await axios.post(
-        "https://capstone-project-production-df71.up.railway.app/api/cart/add",
+        `${API_BASE_URL}/api/cart/add`,
         { productId, quantity },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -65,7 +66,7 @@ export const CartProvider = ({ children }) => {
       }
 
       const response = await axios.put(
-        `https://capstone-project-production-df71.up.railway.app/api/cart/update/${productId}`,
+        `${API_BASE_URL}/api/cart/update/${productId}`,
         { quantity },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -84,7 +85,7 @@ export const CartProvider = ({ children }) => {
       }
 
       const response = await axios.delete(
-        `https://capstone-project-production-df71.up.railway.app/api/cart/remove/${productId}`,
+        `${API_BASE_URL}/api/cart/remove/${productId}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setCart(response.data);
@@ -102,7 +103,7 @@ export const CartProvider = ({ children }) => {
       }
 
       const response = await axios.delete(
-        "https://capstone-project-production-df71.up.railway.app/api/cart/clear",
+        `${API_BASE_URL}/api/cart/clear`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setCart(response.data);

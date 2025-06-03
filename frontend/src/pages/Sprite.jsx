@@ -30,8 +30,9 @@ const FilterableProductList = () => {
 
         // Make parallel API requests for all categories
         const requests = categories.map((category) =>
-          axios.get(`https://capstone-project-production-df71.up.railway.app/api/products/category/${category}`)
+          axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/products/category/${category}`)
         );
+        
 
         const responses = await Promise.all(requests);
 

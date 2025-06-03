@@ -24,15 +24,16 @@ const AdminProductPanel = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get("https://capstone-project-production-df71.up.railway.app/api/products");
+        const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/products`);
         setProducts(response.data);
       } catch (err) {
         console.error("Failed to fetch products", err);
       }
     };
-
+  
     fetchProducts();
   }, []);
+  
 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("user"));
@@ -78,10 +79,11 @@ const AdminProductPanel = () => {
     try {
       setIsUpdatingStock(true);
 
-      const response = await axios.put(
-        `https://capstone-project-production-df71.up.railway.app/api/products/${selectedProductId}/stock`,
-        { quantity: parseInt(stockToAdd) }
-      );
+const response = await axios.put(
+  `${process.env.REACT_APP_API_BASE_URL}/api/products/${selectedProductId}/stock`,
+  { quantity: parseInt(stockToAdd) }
+);
+
 
       // Update local products state
       setProducts(products.map(product =>
@@ -134,14 +136,14 @@ const AdminProductPanel = () => {
 
     try {
       let response;
-
+    
       if (editingIndex !== null) {
         // Update existing product
         response = await axios.put(
-          `https://capstone-project-production-df71.up.railway.app/api/products/${products[editingIndex]._id}`,
+          `${process.env.REACT_APP_API_BASE_URL}/api/products/${products[editingIndex]._id}`,
           productData
         );
-
+    
         const updatedProducts = [...products];
         updatedProducts[editingIndex] = response.data;
         setProducts(updatedProducts);
@@ -149,16 +151,17 @@ const AdminProductPanel = () => {
       } else {
         // Add new product
         response = await axios.post(
-          "https://capstone-project-production-df71.up.railway.app/api/products/add",
+          `${process.env.REACT_APP_API_BASE_URL}/api/products/add`,
           productData
         );
         setProducts([...products, response.data.product]);
         alert("Product saved successfully!");
       }
-
+    
       resetForm();
       setEditingIndex(null);
-    } catch (error) {
+    } 
+     catch (error) {
       console.error("Error:", error);
       alert(error.response?.data?.message || "An error occurred");
     }
@@ -184,15 +187,16 @@ const AdminProductPanel = () => {
 
     try {
       await axios.delete(
-        `https://capstone-project-production-df71.up.railway.app/api/products/${products[index]._id}`
+        `${process.env.REACT_APP_API_BASE_URL}/api/products/${products[index]._id}`
       );
-
+    
       setProducts(products.filter((_, i) => i !== index));
       alert("Product deleted successfully");
     } catch (err) {
       console.error("Delete error:", err);
       alert("Failed to delete product");
     }
+    
   };
 
   const editProduct = (index) => {

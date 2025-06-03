@@ -11,7 +11,7 @@ const cartItemSchema = new mongoose.Schema({
     required: true, 
     min: 1 
   },
-  priceAtAddition: {  // Store price at time of adding to cart
+  priceAtAddition: {  
     type: Number,
     required: true
   }

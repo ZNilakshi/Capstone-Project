@@ -24,8 +24,9 @@ const brands = ["Any Brand", "Shake & Beer", "Wine", "Sprite","Arrack","Gin","Wh
   useEffect(() => {
     const fetchWines = async () => {
       try {
-        const response = await axios.get("https://capstone-project-production-df71.up.railway.app/api/products/category/Wine");
+        const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/products/category/Wine`);
         setProducts(response.data);
+      
         // Initialize quantities
         const initialQuantities = {};
         response.data.forEach(product => {
@@ -34,7 +35,8 @@ const brands = ["Any Brand", "Shake & Beer", "Wine", "Sprite","Arrack","Gin","Wh
         setQuantities(initialQuantities);
       } catch (err) {
         console.error("Failed to fetch wines", err);
-      } finally {
+      }
+       finally {
         setLoading(false);
       }
     };
