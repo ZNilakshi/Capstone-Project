@@ -1,12 +1,34 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
+import axios from "axios";
 const UserProfile = () => {
   const [user, setUser] = useState(null);
   const [activeTab, setActiveTab] = useState("profile");
   const [isEditing, setIsEditing] = useState(false);
   const [orders, setOrders] = useState([]);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.get('/api/auth/me', {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            setUser(response.data);
+            localStorage.setItem('user', JSON.stringify(response.data));
+        } catch (err) {
+            console.error("Failed to fetch user data", err);
+        }
+    };
+
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+        setUser(JSON.parse(storedUser));
+    } else {
+        fetchUserData();
+    }
+}, []);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");

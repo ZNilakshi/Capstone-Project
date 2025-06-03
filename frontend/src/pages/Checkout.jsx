@@ -7,13 +7,15 @@ const Checkout = () => {
   const navigate = useNavigate();
   const [showDetailsForm, setShowDetailsForm] = useState(false);
   const [userDetails, setUserDetails] = useState({
-    name: '',
+    firstName: '',
+    lastName: '',
     email: '',
     phone: '',
     location: ''
   });
   const [errors, setErrors] = useState({
-    name: '',
+    firstName: '',
+    lastName: '',
     email: '',
     phone: '',
     location: ''
@@ -23,7 +25,7 @@ const Checkout = () => {
  // Add this useEffect to load user data on component mount
  useEffect(() => {
   console.log("Checking localStorage for user data...");
-  const storedUser = localStorage.getItem("user"); // Ensure key is correct ("user")
+  const storedUser = localStorage.getItem("user");
   
   if (!storedUser) {
     console.warn("No user data in localStorage");
@@ -31,10 +33,7 @@ const Checkout = () => {
   }
 
   try {
-    // Trim whitespace (in case of corruption)
     const trimmedUser = storedUser.trim();
-    
-    // Check if it starts/ends with { } (basic validation)
     if (!trimmedUser.startsWith("{") || !trimmedUser.endsWith("}")) {
       throw new Error("Invalid JSON format");
     }
@@ -43,18 +42,18 @@ const Checkout = () => {
     console.log("Parsed user object:", parsedUser);
 
     setUserDetails({
-      name: parsedUser.username || "", // Fallback to username if name missing
-      email: parsedUser.email || "",   // Will be empty if not in data
+      firstName: parsedUser.firstName || "",
+      lastName: parsedUser.lastName || "",      
+      email: parsedUser.email || "",
       phone: parsedUser.phone || "",
       location: parsedUser.location || "",
     });
 
-    if (parsedUser.username) {
+    if (parsedUser.firstName || parsedUser.lastName) {
       setShowDetailsForm(true);
     }
   } catch (error) {
     console.error("Failed to parse user data:", error);
-    // Clear corrupted data (optional)
     localStorage.removeItem("user");
   }
 }, []);
@@ -225,21 +224,38 @@ const Checkout = () => {
                 </button>
               ) : (
                 <form onSubmit={handleSubmitDetails} className="space-y-4">
-                  <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                      Full Name
-                    </label>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      value={userDetails.name}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="John Doe"
-                    />
-                    {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name}</p>}
-                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+    <div>
+      <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-1">
+        First Name
+      </label>
+      <input
+        type="text"
+        id="firstName"
+        name="firstName"
+        value={userDetails.firstName || ""}
+        onChange={handleInputChange}
+        className="w-full px-4 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500"
+        placeholder="John"
+      />
+      {errors.firstName && <p className="mt-1 text-sm text-red-600">{errors.firstName}</p>}
+    </div>
+    <div>
+      <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-1">
+        Last Name
+      </label>
+      <input
+        type="text"
+        id="lastName"
+        name="lastName"
+        value={userDetails.lastName || ""}
+        onChange={handleInputChange}
+        className="w-full px-4 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500"
+        placeholder="Doe"
+      />
+      {errors.lastName && <p className="mt-1 text-sm text-red-600">{errors.lastName}</p>}
+    </div>
+  </div>
                   
                   <div>
                     <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
@@ -279,25 +295,25 @@ const Checkout = () => {
                       Nearest Location to You
                     </label>
                     <select
-                      id="location"
-                      name="location"
-                      value={userDetails.location}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500"
-                    >
-                      <option value="">Select a location</option>
-                      {locations.map(location => (
-                        <option key={location} value={location}>{location}</option>
-                      ))}
-                    </select>
+  id="location"
+  name="location"
+  value={userDetails.location}
+  onChange={handleInputChange}
+  className="w-full px-4 py-3 h-12 border rounded-lg focus:ring-blue-500 focus:border-blue-500"
+>
+  <option value="">Select a location</option>
+  {locations.map(location => (
+    <option key={location} value={location}>{location}</option>
+  ))}
+</select>
                     {errors.location && <p className="mt-1 text-sm text-red-600">{errors.location}</p>}
                   </div>
                   
                   <button
                     type="submit"
-                    className="w-full bg-blue-600 text-white py-3 rounded-lg font-bold hover:bg-blue-700 transition"
+                    className="w-full bg-orange-600 text-white py-3 rounded-lg font-bold hover:bg-orange-700 transition"
                   >
-                    SAVE DETAILS
+                    CONFIRM ORDER
                   </button>
                 </form>
               )}

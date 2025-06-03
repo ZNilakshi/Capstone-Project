@@ -5,6 +5,7 @@ const userSchema = new mongoose.Schema({
     lastName: String,
     username: { type: String, required: true, unique: true },
     email: { type: String, unique: true, sparse: true },
+    phone: String, // Add this if you want to store phone numbers
     password: { type: String, required: true },
     role: { type: String, enum: ['user', 'admin'], default: 'user' },
 }, { timestamps: true });

@@ -31,6 +31,7 @@ router.post("/register", async (req, res) => {
 });
 
 // Login
+// In your auth route
 router.post("/login", async (req, res) => {
     const { username, password } = req.body;
 
@@ -45,10 +46,33 @@ router.post("/login", async (req, res) => {
             expiresIn: "1d",
         });
 
-        res.status(200).json({ token, user: { username: user.username, role: user.role , email: user.email } });
+        res.status(200).json({ 
+            token, 
+            user: { 
+                firstName: user.firstName,
+                lastName: user.lastName,
+                username: user.username, 
+                email: user.email,
+                role: user.role,
+                
+            } 
+        });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }// Add this to your auth routes
+router.get("/me", async (req, res) => {
+    try {
+        const token = req.headers.authorization.split(" ")[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await User.findById(decoded.userId).select('-password');
+        
+        if (!user) return res.status(404).json({ message: "User not found" });
+        
+        res.status(200).json(user);
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
+});
 });
 
 module.exports = router;
