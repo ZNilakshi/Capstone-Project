@@ -12,17 +12,112 @@ const Checkout = () => {
     expiry: '',
     cvv: ''
   });
+  const [errors, setErrors] = useState({
+    number: '',
+    name: '',
+    expiry: ''
+  });
+
+  const validateCardNumber = (number) => {
+    const cleaned = number.replace(/\D/g, '');
+    return cleaned.length === 16;
+  };
+
+  const validateExpiry = (expiry) => {
+    const [month, year] = expiry.split('/');
+    if (!month || !year || month.length !== 2 || year.length !== 2) return false;
+    
+    const monthNum = parseInt(month, 10);
+    return monthNum >= 1 && monthNum <= 12;
+  };
+
+  const validateName = (name) => {
+    return /^[a-zA-Z\s'-]+$/.test(name) && name.trim().length > 0;
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setCardDetails(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    
+    if (name === 'number') {
+      const cleaned = value.replace(/\D/g, '');
+      const formatted = cleaned.replace(/(\d{4})(?=\d)/g, '$1 ');
+      setCardDetails(prev => ({
+        ...prev,
+        [name]: formatted.trim()
+      }));
+      
+      setErrors(prev => ({
+        ...prev,
+        number: cleaned.length > 0 && cleaned.length !== 16 ? 'Card number must be 16 digits' : ''
+      }));
+      return;
+    }
+    
+    if (name === 'expiry') {
+      let formatted = value.replace(/\D/g, '');
+      if (formatted.length > 2) {
+        formatted = formatted.substring(0, 2) + '/' + formatted.substring(2, 4);
+      }
+      setCardDetails(prev => ({
+        ...prev,
+        [name]: formatted
+      }));
+      
+      if (formatted.length === 5) {
+        const isValid = validateExpiry(formatted);
+        setErrors(prev => ({
+          ...prev,
+          expiry: !isValid ? 'Invalid expiry date (MM/YY)' : ''
+        }));
+      } else {
+        setErrors(prev => ({
+          ...prev,
+          expiry: ''
+        }));
+      }
+      return;
+    }
+    
+    if (name === 'cvv') {
+      const cleaned = value.replace(/\D/g, '');
+      setCardDetails(prev => ({
+        ...prev,
+        [name]: cleaned.substring(0, 4)
+      }));
+      return;
+    }
+    
+    if (name === 'name') {
+      const cleaned = value.replace(/[^a-zA-Z\s'-]/g, '');
+      setCardDetails(prev => ({
+        ...prev,
+        [name]: cleaned
+      }));
+      
+      setErrors(prev => ({
+        ...prev,
+        name: cleaned.length > 0 && !validateName(cleaned) ? 'Please enter a valid name (letters only)' : ''
+      }));
+      return;
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    
+    const isCardValid = validateCardNumber(cardDetails.number);
+    const isExpiryValid = cardDetails.expiry.length === 5 && validateExpiry(cardDetails.expiry);
+    const isNameValid = validateName(cardDetails.name);
+    
+    if (!isCardValid || !isExpiryValid || !isNameValid) {
+      setErrors({
+        number: !isCardValid ? 'Card number must be 16 digits' : '',
+        expiry: !isExpiryValid ? 'Invalid expiry date (MM/YY)' : '',
+        name: !isNameValid ? 'Please enter a valid name' : ''
+      });
+      return;
+    }
+    
     // Here you would typically process the payment
     alert('Payment processed successfully!');
     navigate("/order-confirmation");
@@ -96,17 +191,18 @@ const Checkout = () => {
           </div>
           
           {/* Payment Form */}
-        <div className="lg:w-1/2 bg-white shadow rounded-lg p-6">
+          <div className="lg:w-1/2 bg-white shadow rounded-lg p-6">
             <h2 className="text-xl font-bold mb-6 border-b pb-2">PAYMENT METHODS</h2>
             
             <div className="flex items-center bg-green-50 border border-green-200 rounded-lg p-3">
-  <div className="flex items-center justify-center bg-white rounded-full w-6 h-6 mr-2">
-    <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-    </svg>
-  </div>
-  <span className="text-sm text-green-700">Your Payment Information is Safe With Us.</span>
-</div>
+              <div className="flex items-center justify-center bg-white rounded-full w-6 h-6 mr-2">
+                <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <span className="text-sm text-green-700">Your Payment Information is Safe With Us.</span>
+            </div>
+            
             <div className="space-y-6">
               {!showCardForm ? (
                 <button 
@@ -120,16 +216,16 @@ const Checkout = () => {
                   <div className="flex items-center justify-center gap-2">
                     <div className="h-8 w-12 bg-blue-50 flex items-center justify-center rounded">
                       <img
-              src="https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png"
-              alt="Visa"
-              className="h-5 mx-1"
-            />
+                        src="https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png"
+                        alt="Visa"
+                        className="h-5 mx-1"
+                      />
                     </div>
-                   <img
-              src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg"
-              alt="MasterCard"
-              className="h-5 mx-1"
-            />
+                    <img
+                      src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg"
+                      alt="MasterCard"
+                      className="h-5 mx-1"
+                    />
                   </div>
                   
                   <form onSubmit={handleSubmit} className="space-y-4">
@@ -142,8 +238,10 @@ const Checkout = () => {
                         onChange={handleInputChange}
                         placeholder="1234 5678 9012 3456"
                         className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-gray-800"
+                        maxLength={19}
                         required
                       />
+                      {errors.number && <p className="text-red-500 text-sm mt-1">{errors.number}</p>}
                     </div>
                     
                     <div>
@@ -157,6 +255,7 @@ const Checkout = () => {
                         className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-gray-800"
                         required
                       />
+                      {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
                     </div>
                     
                     <div className="grid grid-cols-2 gap-4">
@@ -169,8 +268,10 @@ const Checkout = () => {
                           onChange={handleInputChange}
                           placeholder="MM/YY"
                           className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-gray-800"
+                          maxLength={5}
                           required
                         />
+                        {errors.expiry && <p className="text-red-500 text-sm mt-1">{errors.expiry}</p>}
                       </div>
                       
                       <div>
@@ -182,6 +283,7 @@ const Checkout = () => {
                           onChange={handleInputChange}
                           placeholder="123"
                           className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-gray-800"
+                          maxLength={4}
                           required
                         />
                       </div>
