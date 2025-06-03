@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -9,112 +9,127 @@ export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [orderLoading, setOrderLoading] = useState(false);
+  const [orderError, setOrderError] = useState(null);
   const navigate = useNavigate();
 
-  const fetchCart = async () => {
+  // Common axios config
+  const authAxios = axios.create({
+    baseURL: API_BASE_URL,
+  });
+
+  // Add request interceptor to handle token refresh if needed
+  authAxios.interceptors.request.use(config => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  });
+
+  const handleAuthError = useCallback((err) => {
+    if (err.response?.status === 401) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      navigate("/auth");
+    }
+  }, [navigate]);
+
+  const fetchCart = useCallback(async () => {
     try {
+      setLoading(true);
       const token = localStorage.getItem("token");
       if (!token) {
         setCart(null);
-        setLoading(false);
         return;
       }
 
-      const response = await axios.get(`${API_BASE_URL}/api/cart`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const response = await authAxios.get("/api/cart");
       setCart(response.data);
     } catch (err) {
-      if (err.response?.status === 401) {
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-      }
-      setError(err);
+      handleAuthError(err);
+      setError(err.response?.data?.message || err.message);
     } finally {
       setLoading(false);
     }
-  };
+  }, [authAxios, handleAuthError]);
 
-  const addToCart = async (productId, quantity = 1) => {
+  const addToCart = useCallback(async (productId, quantity = 1) => {
     try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        navigate("/auth");
-        return;
-      }
-
-      const response = await axios.post(
-        `${API_BASE_URL}/api/cart/add`,
-        { productId, quantity },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const response = await authAxios.post("/api/cart/add", {
+        productId,
+        quantity
+      });
       setCart(response.data);
+      return response.data;
     } catch (err) {
-      setError(err);
-      if (err.response?.status === 401) {
-        navigate("/auth");
-      }
+      handleAuthError(err);
+      setError(err.response?.data?.message || err.message);
+      throw err;
     }
-  };
+  }, [authAxios, handleAuthError]);
 
-  const updateQuantity = async (productId, quantity) => {
+  const updateQuantity = useCallback(async (productId, quantity) => {
     try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        navigate("/auth");
-        return;
-      }
-
-      const response = await axios.put(
-        `${API_BASE_URL}/api/cart/update/${productId}`,
-        { quantity },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const response = await authAxios.put(`/api/cart/update/${productId}`, {
+        quantity
+      });
       setCart(response.data);
+      return response.data;
     } catch (err) {
-      setError(err);
+      handleAuthError(err);
+      setError(err.response?.data?.message || err.message);
+      throw err;
     }
-  };
+  }, [authAxios, handleAuthError]);
 
-  const removeFromCart = async (productId) => {
+  const removeFromCart = useCallback(async (productId) => {
     try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        navigate("/auth");
-        return;
-      }
-
-      const response = await axios.delete(
-        `${API_BASE_URL}/api/cart/remove/${productId}`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const response = await authAxios.delete(`/api/cart/remove/${productId}`);
       setCart(response.data);
+      return response.data;
     } catch (err) {
-      setError(err);
+      handleAuthError(err);
+      setError(err.response?.data?.message || err.message);
+      throw err;
     }
-  };
+  }, [authAxios, handleAuthError]);
 
-  const clearCart = async () => {
+  const clearCart = useCallback(async () => {
     try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        navigate("/auth");
-        return;
-      }
-
-      const response = await axios.delete(
-        `${API_BASE_URL}/api/cart/clear`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const response = await authAxios.delete("/api/cart/clear");
       setCart(response.data);
+      return response.data;
     } catch (err) {
-      setError(err);
+      handleAuthError(err);
+      setError(err.response?.data?.message || err.message);
+      throw err;
     }
-  };
+  }, [authAxios, handleAuthError]);
+
+  const submitOrder = useCallback(async (orderData) => {
+    try {
+      setOrderLoading(true);
+      setOrderError(null);
+      
+      const response = await authAxios.post("/api/orders", orderData);
+      
+      // Clear cart after successful order
+      await clearCart();
+      
+      return response.data;
+    } catch (err) {
+      handleAuthError(err);
+      setOrderError(err.response?.data?.message || err.message);
+      throw err;
+    } finally {
+      setOrderLoading(false);
+    }
+  }, [authAxios, clearCart, handleAuthError]);
 
   useEffect(() => {
     fetchCart();
-  }, []);
+  }, [fetchCart]);
 
   return (
     <CartContext.Provider
@@ -122,11 +137,14 @@ export const CartProvider = ({ children }) => {
         cart,
         loading,
         error,
+        orderLoading,
+        orderError,
         addToCart,
         updateQuantity,
         removeFromCart,
         clearCart,
-        fetchCart
+        fetchCart,
+        submitOrder
       }}
     >
       {children}

@@ -120,17 +120,20 @@ const Checkout = () => {
     }));
   };
 
-  const handleSubmitDetails = (e) => {
+  const handleSubmitDetails = async (e) => {
     e.preventDefault();
     
-    const isNameValid = validateName(userDetails.name);
+    // Validate all fields
+    const isFirstNameValid = validateName(userDetails.firstName);
+    const isLastNameValid = validateName(userDetails.lastName);
     const isEmailValid = validateEmail(userDetails.email);
     const isPhoneValid = validatePhone(userDetails.phone);
     const isLocationValid = userDetails.location !== '';
     
-    if (!isNameValid || !isEmailValid || !isPhoneValid || !isLocationValid) {
+    if (!isFirstNameValid || !isLastNameValid || !isEmailValid || !isPhoneValid || !isLocationValid) {
       setErrors({
-        name: !isNameValid ? 'Please enter a valid name' : '',
+        firstName: !isFirstNameValid ? 'Please enter a valid first name' : '',
+        lastName: !isLastNameValid ? 'Please enter a valid last name' : '',
         email: !isEmailValid ? 'Please enter a valid email' : '',
         phone: !isPhoneValid ? 'Phone must be 10 digits' : '',
         location: !isLocationValid ? 'Please select a location' : ''
@@ -138,9 +141,55 @@ const Checkout = () => {
       return;
     }
     
-    // Here you would typically save the details and proceed to payment
-    alert('Details saved successfully!');
-    // Proceed to payment or next step
+    try {
+      // Prepare order data
+      const orderData = {
+        user: {
+          firstName: userDetails.firstName,
+          lastName: userDetails.lastName,
+          email: userDetails.email,
+          phone: userDetails.phone,
+          location: userDetails.location
+        },
+        items: cart.items.map(item => ({
+          productId: item.product._id,
+          name: item.product.name,
+          size: item.product.size,
+          price: item.product.price,
+          quantity: item.quantity
+        })),
+        subtotal: subtotal,
+        total: subtotal,
+        status: 'pending', // or 'processing'
+        createdAt: new Date().toISOString()
+      };
+  
+      // Send to your backend API
+      const response = await fetch('http://localhost:5000/api/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(orderData)
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to submit order');
+      }
+  
+      const result = await response.json();
+      
+      // Clear cart after successful order
+      // You'll need to add clearCart to your CartContext if not already there
+      // clearCart();
+      
+      // Redirect to order confirmation page
+      navigate(`/order-confirmation/${result.orderId}`);
+      
+    } catch (error) {
+      console.error('Order submission error:', error);
+      alert('There was an error submitting your order. Please try again.');
+    }
   };
 
   if (!cart || !cart.items || cart.items.length === 0) {
