@@ -31,9 +31,28 @@ export const CartProvider = ({ children }) => {
     if (err.response?.status === 401) {
       localStorage.removeItem("token");
       localStorage.removeItem("user");
-      navigate("/auth");
+      // Store the current path for redirect after login
+      localStorage.setItem("redirectPath", window.location.pathname);
+      navigate("/auth", { state: { from: window.location.pathname } });
     }
   }, [navigate]);
+
+  const protectedCartAction = useCallback(async (action) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      // Store current path for redirect
+      localStorage.setItem("redirectPath", window.location.pathname);
+      navigate("/auth");
+      throw new Error("Authentication required");
+    }
+    
+    try {
+      return await action();
+    } catch (err) {
+      handleAuthError(err);
+      throw err;
+    }
+  }, [navigate, handleAuthError]);
 
   const fetchCart = useCallback(async () => {
     try {
@@ -55,77 +74,62 @@ export const CartProvider = ({ children }) => {
   }, [authAxios, handleAuthError]);
 
   const addToCart = useCallback(async (productId, quantity = 1) => {
-    try {
+    return protectedCartAction(async () => {
       const response = await authAxios.post("/api/cart/add", {
         productId,
         quantity
       });
       setCart(response.data);
       return response.data;
-    } catch (err) {
-      handleAuthError(err);
-      setError(err.response?.data?.message || err.message);
-      throw err;
-    }
-  }, [authAxios, handleAuthError]);
+    });
+  }, [authAxios, protectedCartAction]);
 
   const updateQuantity = useCallback(async (productId, quantity) => {
-    try {
+    return protectedCartAction(async () => {
       const response = await authAxios.put(`/api/cart/update/${productId}`, {
         quantity
       });
       setCart(response.data);
       return response.data;
-    } catch (err) {
-      handleAuthError(err);
-      setError(err.response?.data?.message || err.message);
-      throw err;
-    }
-  }, [authAxios, handleAuthError]);
+    });
+  }, [authAxios, protectedCartAction]);
 
   const removeFromCart = useCallback(async (productId) => {
-    try {
+    return protectedCartAction(async () => {
       const response = await authAxios.delete(`/api/cart/remove/${productId}`);
       setCart(response.data);
       return response.data;
-    } catch (err) {
-      handleAuthError(err);
-      setError(err.response?.data?.message || err.message);
-      throw err;
-    }
-  }, [authAxios, handleAuthError]);
+    });
+  }, [authAxios, protectedCartAction]);
 
   const clearCart = useCallback(async () => {
-    try {
+    return protectedCartAction(async () => {
       const response = await authAxios.delete("/api/cart/clear");
       setCart(response.data);
       return response.data;
-    } catch (err) {
-      handleAuthError(err);
-      setError(err.response?.data?.message || err.message);
-      throw err;
-    }
-  }, [authAxios, handleAuthError]);
+    });
+  }, [authAxios, protectedCartAction]);
 
   const submitOrder = useCallback(async (orderData) => {
     try {
       setOrderLoading(true);
       setOrderError(null);
       
-      const response = await authAxios.post("/api/orders", orderData);
+      const response = await protectedCartAction(async () => {
+        return await authAxios.post("/api/orders", orderData);
+      });
       
       // Clear cart after successful order
       await clearCart();
       
       return response.data;
     } catch (err) {
-      handleAuthError(err);
       setOrderError(err.response?.data?.message || err.message);
       throw err;
     } finally {
       setOrderLoading(false);
     }
-  }, [authAxios, clearCart, handleAuthError]);
+  }, [authAxios, clearCart, protectedCartAction]);
 
   useEffect(() => {
     fetchCart();
