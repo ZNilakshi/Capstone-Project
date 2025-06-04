@@ -19,8 +19,8 @@ const AgeVerification = () => {
     }
   };
 
-  if (isVerified) return null; // Hide modal if verified
-
+  if (isVerified) return null; 
+  
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black bg-opacity-10 backdrop-blur-sm  px-4">
       <div className="bg-white bg-opacity-10 backdrop-blur-lg p-20 rounded-lg text-center shadow-2xl border border-white border-opacity-30 max-w-md w-full">
