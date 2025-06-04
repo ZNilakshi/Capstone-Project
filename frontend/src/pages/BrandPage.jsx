@@ -29,7 +29,7 @@ const BrandPage = () => {
         const response = await axios.get(`${baseUrl}/api/products/brand/${brandName}`);
         setProducts(response.data);
         
-        // Initialize quantities with 1 for each product
+        // Initialize quantities
         const initialQuantities = {};
         response.data.forEach(product => {
           initialQuantities[product._id] = 1;
@@ -57,19 +57,16 @@ const BrandPage = () => {
   const handleAddToCart = (productId) => {
     const product = products.find(p => p._id === productId);
     if (product) {
-      const quantityToAdd = quantities[productId] || 1;
-      console.log(`Adding ${quantityToAdd} of ${product.name} to cart`);
-      
       addToCart({
         ...product,
-        quantity: quantityToAdd
+        quantity: quantities[productId] || 1
       });
-
       setAddedItems(prev => ({
         ...prev,
         [productId]: true
       }));
       
+      // Reset added status after 2 seconds
       setTimeout(() => {
         setAddedItems(prev => ({
           ...prev,
@@ -110,19 +107,130 @@ const BrandPage = () => {
     <div className="flex flex-col min-h-screen gap-6 p-6 mt-20 text-white bg-black md:flex-row">
       {/* Sidebar Filter */}
       <div className="w-full md:w-72 lg:w-80 p-6 rounded-xl bg-gradient-to-b from-[#1a0a03] to-[#2A1205] border border-orange-900 shadow-lg sticky top-4 h-fit">
-        {/* ... (keep all your existing filter code) ... */}
+        <h2 className="pb-3 mb-6 text-2xl font-bold tracking-wide text-white uppercase border-b border-orange-800">Filters</h2>
+
+        {/* Price Filter */}
+        <div className="mb-8">
+          <h3 className="mb-3 text-lg font-bold text-orange-300">Price Range</h3>
+          <input
+            type="range"
+            min="950"
+            max="100000"
+            step="50"
+            value={priceRange}
+            onChange={(e) => setPriceRange(parseInt(e.target.value))}
+            className="w-full cursor-pointer"
+          />
+          <div className="flex justify-between mt-2 text-sm text-gray-300">
+            <span>LKR 950</span>
+            <span>LKR 9050</span>
+          </div>
+          <div className="mt-3 px-3 py-2 bg-[#3a1a0a] rounded-lg text-center">
+            <span className="font-bold text-orange-300">Selected: </span>
+            LKR {priceRange.toLocaleString()}
+          </div>
+        </div>
+
+        {/* Category Filter */}
+        <div className="mb-8">
+          <h3 className="mb-3 text-lg font-bold text-orange-300">Category</h3>
+          <div className="flex flex-wrap gap-2">
+            {categories.map((category) => (
+              <button
+                key={category}
+                onClick={() => setSelectedCategory(category)}
+                className={`px-3 py-2 rounded-lg text-sm ${selectedCategory === category
+                  ? 'bg-orange-600 text-white font-bold'
+                  : 'bg-[#3a1a0a] hover:bg-[#4a2a1a] text-gray-200'}`}
+              >
+                {category}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Size Filter */}
+        <div className="mb-8">
+          <h3 className="mb-3 text-lg font-bold text-orange-300">Bottle Size</h3>
+          <div className="flex flex-wrap gap-2">
+            {sizes.map((size) => (
+              <button
+                key={size}
+                onClick={() => setSelectedSize(size)}
+                className={`px-3 py-2 rounded-lg text-sm ${selectedSize === size
+                  ? 'bg-orange-600 text-white font-bold'
+                  : 'bg-[#3a1a0a] hover:bg-[#4a2a1a] text-gray-200'}`}
+              >
+                {size}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* ABV Filter */}
+        <div>
+          <h3 className="mb-3 text-lg font-bold text-orange-300">Alcohol Content</h3>
+          <div className="flex flex-wrap gap-2">
+            {abvLevels.map((abv) => (
+              <button
+                key={abv}
+                onClick={() => setSelectedAbv(abv)}
+                className={`px-3 py-2 rounded-lg text-sm ${selectedAbv === abv
+                  ? 'bg-orange-600 text-white font-bold'
+                  : 'bg-[#3a1a0a] hover:bg-[#4a2a1a] text-gray-200'}`}
+              >
+                {abv}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Reset Filters */}
+        <button 
+          onClick={() => {
+            setPriceRange(9050);
+            setSelectedSize("Any Size");
+            setSelectedAbv("Any ABV");
+            setSelectedCategory("Any Category");
+          }}
+          className="w-full py-2 mt-6 text-orange-400 border border-orange-600 rounded-lg hover:bg-orange-900"
+        >
+          Reset All Filters
+        </button>
       </div>
 
       {/* Main Content */}
       <div className="flex-1">
         {/* Hero Section */}
         <div className="relative w-full mb-8 overflow-hidden rounded-xl">
-          {/* ... (keep your hero section code) ... */}
+          <div className="absolute inset-0 z-10 bg-gradient-to-r from-black to-transparent"></div>
+          <img
+            src={`/${brandName.toLowerCase()}-banner.webp`}
+            alt={`${brandName} Banner`}
+            className="object-cover w-full h-64"
+          />
+          <div className="absolute inset-0 z-20 flex items-center p-8 md:p-12">
+            <div className="max-w-2xl">
+              <h1 className="mb-4 text-4xl font-bold text-white md:text-5xl">
+                {brandName.toUpperCase()} COLLECTION
+              </h1>
+              <p className="text-lg text-gray-200">
+                Discover our exquisite selection of {brandName} products.
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* Results Count */}
         <div className="flex items-center justify-between mb-6">
-          {/* ... (keep your results count code) ... */}
+          <h2 className="text-2xl font-light text-gray-300">
+            Showing <span className="font-bold text-orange-400">{filteredProducts.length}</span> products
+          </h2>
+          <div className="text-sm text-gray-400">
+            {selectedSize !== "Any Size" && <span className="bg-[#3a1a0a] px-3 py-1 rounded-full mr-2">Size: {selectedSize} ×</span>}
+            {selectedAbv !== "Any ABV" && <span className="bg-[#3a1a0a] px-3 py-1 rounded-full mr-2">ABV: {selectedAbv} ×</span>}
+            {selectedCategory !== "Any Category" && <span className="bg-[#3a1a0a] px-3 py-1 rounded-full">Category: {selectedCategory} ×</span>}
+          </div>
         </div>
 
         {/* Product Grid */}
@@ -134,7 +242,6 @@ const BrandPage = () => {
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
             >
-              {/* Product Image and Basic Info */}
               <div className="relative w-full p-2">
                 <span className="absolute z-10 px-3 py-1 text-xs font-bold text-orange-500 bg-white border border-orange-400 top-2 right-2">
                   {product.points || "4.5"} POINTS
@@ -149,7 +256,6 @@ const BrandPage = () => {
                 {product.vintage && <p className="text-sm text-gray-600">Vintage: {product.vintage}</p>}
               </div>
 
-              {/* Hover Actions */}
               <motion.div
                 animate={{ opacity: hoveredIndex === index ? 1 : 0 }}
                 className="absolute bottom-0 z-20 flex flex-col items-center w-full p-4 text-center transition-opacity duration-300 bg-white border border-gray-400 rounded-lg shadow-lg"
