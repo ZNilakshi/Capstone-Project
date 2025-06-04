@@ -1,10 +1,3 @@
-// const Footer = () => {
-//     return <footer className="bg-black text-white text-center py-4">Footer Content</footer>;
-//   };
-
-//   export default Footer;
-
-
 import React from "react";
 import { FaFacebookF, FaInstagram, FaYoutube } from "react-icons/fa";
 import { Link } from "react-router-dom";
@@ -57,7 +50,7 @@ const Footer = () => {
 
         </div>
 
-        {/* Payment Method */}
+        {/* Payment 
         <div>
           <h3 className="text-lg font-semibold mb-2">PAYMENT METHODS</h3>
           <button className="bg-gray-700 px-4 py-2 mt-2 flex items-center justify-center w-full sm:w-auto">
@@ -74,7 +67,7 @@ const Footer = () => {
             />
           </button>
         </div>
-
+Method */}
         {/* Place an Order */}
         <div>
           <h3 className="text-lg font-semibold mb-2"> DE SILVA WINE STORE </h3>
