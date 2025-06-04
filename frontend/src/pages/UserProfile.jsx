@@ -34,6 +34,19 @@ const UserProfile = () => {
       fetchUserData();
     }
   }, []);
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
+
+  useEffect(() => {
+    const storedOrders = localStorage.getItem("orders");
+    if (storedOrders) {
+      setOrders(JSON.parse(storedOrders));
+    }
+  }, []);
 
   // Fetch user orders
   const fetchUserOrders = useCallback(async () => {
@@ -82,10 +95,7 @@ const UserProfile = () => {
         phone: event.target.phone.value,
       };
       
-      const token = localStorage.getItem('token');
-      await axios.put('/api/auth/update', updatedUser, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      
       
       setUser(updatedUser);
       localStorage.setItem("user", JSON.stringify(updatedUser));
