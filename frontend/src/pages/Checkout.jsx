@@ -25,8 +25,8 @@ const Checkout = () => {
     orderId: null
   });
 
-  const locations = ['Welimada', 'Badulla', 'Bandarawela', 'Hali-Ela', 'Passara', 'Mahiyanganaya'];
- // Add this useEffect to load user data on component mount
+  const locations = ['Welimada', 'Badulla', 'Kesbewa', 'Arawwa'];
+
  useEffect(() => {
   console.log("Checking localStorage for user data...");
   const storedUser = localStorage.getItem("user");
@@ -136,10 +136,10 @@ const Checkout = () => {
     
     if (!isFirstNameValid || !isLastNameValid || !isEmailValid || !isPhoneValid || !isLocationValid) {
       setErrors({
-        firstName: !isFirstNameValid ? 'Please enter a valid first name' : '',
-        lastName: !isLastNameValid ? 'Please enter a valid last name' : '',
+        firstName: !isFirstNameValid ? 'Please enter first name' : '',
+        lastName: !isLastNameValid ? 'Please enter last name' : '',
         email: !isEmailValid ? 'Please enter a valid email' : '',
-        phone: !isPhoneValid ? 'Phone must be 10 digits' : '',
+        phone: !isPhoneValid ? 'Please enter Phone number' : '',
         location: !isLocationValid ? 'Please select a location' : ''
       });
       return;
@@ -269,7 +269,7 @@ if (orderConfirmation.isConfirmed) {
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Order Summary */}
           <div className="lg:w-1/2 bg-white shadow rounded-lg p-6">
-            <h2 className="text-xl font-bold mb-6 border-b pb-2">PRODUCT</h2>
+            <h2 className="text-xl font-bold mb-6 border-b pb-2">PRODUCTS</h2>
             
             {/* Products List */}
             <div className="space-y-4">
@@ -291,16 +291,10 @@ if (orderConfirmation.isConfirmed) {
             </div>
             
             {/* Order Totals */}
-            <div className="mt-8 border-t pt-6">
-              <div className="flex justify-between py-2">
-                <span className="font-medium">SUBTOTAL</span>
-                <span className="font-bold">LKR.{subtotal.toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between py-2">
-                <span className="font-medium">SHIPPING</span>
-                <span className="font-bold">FREE</span>
-              </div>
-              <div className="flex justify-between py-4 border-t border-gray-200 font-bold text-lg">
+            <div className="mt-8 pt-6">
+             
+              
+              <div className="flex justify-between py-4  border-gray-200 font-bold text-lg">
                 <span>TOTAL</span>
                 <span>LKR.{subtotal.toFixed(2)}</span>
               </div>
@@ -309,13 +303,13 @@ if (orderConfirmation.isConfirmed) {
           
           {/* Details Form */}
           <div className="lg:w-1/2 bg-white shadow rounded-lg p-6">
-            <h2 className="text-xl font-bold mb-6 border-b pb-2">Your Details</h2>
+            <h2 className="text-xl font-bold mb-6 border-b pb-2">YOUR DETAILS</h2>
             
             <div className="space-y-6">
               {!showDetailsForm ? (
                 <button 
                   onClick={() => setShowDetailsForm(true)}
-                  className="w-full bg-blue-600 text-white py-3 rounded-lg font-bold hover:bg-blue-700 transition"
+                  className="w-full bg-orange-600 text-white py-3 rounded-lg font-bold hover:bg-orange-700 transition"
                 >
                   ADD YOUR DETAILS
                 </button>
@@ -391,18 +385,18 @@ if (orderConfirmation.isConfirmed) {
                     <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-1">
                       Nearest Location to You
                     </label>
-                    <select
-  id="location"
-  name="location"
-  value={userDetails.location}
-  onChange={handleInputChange}
-  className="w-full px-4 py-3 h-12 border rounded-lg focus:ring-blue-500 focus:border-blue-500"
->
-  <option value="">Select a location</option>
-  {locations.map(location => (
-    <option key={location} value={location}>{location}</option>
-  ))}
-</select>
+                  <select
+                    id="location"
+                    name="location"
+                    value={userDetails.location}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 h-12 border rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option value="">Select a location</option>
+                    {locations.map(location => (
+                      <option key={location} value={location}>{location}</option>
+                    ))}
+                  </select>
                     {errors.location && <p className="mt-1 text-sm text-red-600">{errors.location}</p>}
                   </div>
                   
