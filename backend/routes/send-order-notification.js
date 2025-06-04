@@ -12,7 +12,7 @@ const transporter = nodemailer.createTransport({
 });
 
 // POST endpoint
-router.post('/send-order-notification', async (req, res) => {
+router.post('/', async (req, res) => {
   console.log('Received notification request'); // Debug log
   
   try {
