@@ -111,15 +111,15 @@ const FilterableProductList = () => {
             <input
               type="range"
               className="w-full cursor-pointer filter-slider"
-              min="950"
-              max="9050"
+              min="300"
+              max="20000"
               step="50"
               value={priceRange}
               onChange={(e) => setPriceRange(parseInt(e.target.value))}
             />
             <div className="flex justify-between w-full mt-2 text-sm text-gray-300">
-              <span>LKR 950</span>
-              <span>LKR 9050</span>
+              <span>LKR 300</span>
+              <span>LKR 20000</span>
             </div>
             <div className="mt-3 px-3 py-2 bg-[#3a1a0a] rounded-lg text-center w-full">
               <span className="font-bold text-orange-300">Selected: </span>

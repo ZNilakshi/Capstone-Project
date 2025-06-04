@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import { FaUserCircle, FaBoxOpen, FaWarehouse, FaTrash, FaEdit } from "react-icons/fa";
+import { FaUserCircle, FaBoxOpen, FaWarehouse, FaTrash, FaEdit, FaShoppingBag, } from "react-icons/fa";
 import axios from "axios";
 
 const AdminProductPanel = () => {
   const [products, setProducts] = useState([]);
+  const [orders, setOrders] = useState([]); // New state for orders
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [brand, setBrand] = useState("BRAND");
@@ -19,7 +20,7 @@ const AdminProductPanel = () => {
   const [selectedProductId, setSelectedProductId] = useState("");
   const [stockToAdd, setStockToAdd] = useState("");
   const [isUpdatingStock, setIsUpdatingStock] = useState(false);
-
+  const [loadingOrders, setLoadingOrders] = useState(false); // Loading state for orders
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -34,6 +35,23 @@ const AdminProductPanel = () => {
     fetchProducts();
   }, []);
   
+  useEffect(() => {
+    const fetchOrders = async () => {
+      if (view === "orders") {
+        try {
+          setLoadingOrders(true);
+          const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/orders`);
+          setOrders(response.data);
+        } catch (err) {
+          console.error("Failed to fetch orders", err);
+        } finally {
+          setLoadingOrders(false);
+        }
+      }
+    };
+
+    fetchOrders();
+  }, [view]);
 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("user"));
@@ -243,6 +261,14 @@ const response = await axios.put(
             }`}
         >
           <FaWarehouse /> Add Stock
+        </button>
+        <button
+          onClick={() => setView("orders")}
+          className={`p-4 rounded-lg text-center font-bold text-xl flex items-center justify-center gap-2 ${
+            view === "orders" ? "bg-orange-500 text-white" : "bg-gray-200"
+          }`}
+        >
+          <FaShoppingBag /> Orders
         </button>
         <button
           onClick={handleLogout}
@@ -475,7 +501,68 @@ const response = await axios.put(
             )}
           </div>
         )}
+        {view === "orders" && (
+          <div className="p-6 bg-white shadow-lg rounded-xl">
+            <h2 className="mb-4 text-2xl font-bold">All Orders</h2>
+            
+            {loadingOrders ? (
+              <p>Loading orders...</p>
+            ) : orders.length === 0 ? (
+              <p>No orders found.</p>
+            ) : (
+              <div className="space-y-4">
+                {orders.map((order) => (
+                  <div key={order._id} className="p-4 border rounded-lg border-gray-200">
+                    <div className="flex justify-between mb-4">
+                      <div>
+                        <p className="font-semibold">Order ID: {order._id}</p>
+                        <p className="text-sm text-gray-600">
+                          {new Date(order.createdAt).toLocaleString()}
+                        </p>
+                      </div>
+                      
+                    </div>
 
+                    <div className="mb-4">
+                      <h3 className="font-semibold">Customer:</h3>
+                      <p>{order.user.firstName} {order.user.lastName}</p>
+                      <p>{order.user.email}</p>
+                      <p>{order.user.phone}</p>
+                      <p>{order.user.location}</p>
+                    </div>
+
+                    <div className="mb-4">
+                      <h3 className="font-semibold">Order Items:</h3>
+                      <div className="mt-2 space-y-2">
+                        {order.items.map((item, index) => (
+                          <div key={index} className="flex justify-between p-2 bg-gray-50 rounded">
+                            <div>
+                              <p>{item.name}</p>
+                              <p className="text-sm text-gray-600">
+                                {item.size && `Size: ${item.size} | `}
+                                Qty: {item.quantity}
+                              </p>
+                            </div>
+                            <p>LKR {item.price.toFixed(2)}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="flex justify-between pt-4 border-t">
+                      <p className="font-semibold">Subtotal:</p>
+                      <p>LKR {order.subtotal.toFixed(2)}</p>
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="font-semibold">Total:</p>
+                      <p>LKR {order.total.toFixed(2)}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
         {/* Product List */}
         {products.length > 0 && view !== "profile" && (
           <div className="p-6 bg-white shadow-lg rounded-xl">

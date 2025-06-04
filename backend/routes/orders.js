@@ -25,5 +25,12 @@ router.get('/user/:email', async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-
+router.get('/', async (req, res) => {
+  try {
+    const orders = await Order.find().sort({ createdAt: -1 });
+    res.status(200).json(orders);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 module.exports = router;
