@@ -22,7 +22,7 @@ const AgeVerification = () => {
   if (isVerified) return null; // Hide modal if verified
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-10 backdrop-blur-sm  px-4">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black bg-opacity-10 backdrop-blur-sm  px-4">
       <div className="bg-white bg-opacity-10 backdrop-blur-lg p-20 rounded-lg text-center shadow-2xl border border-white border-opacity-30 max-w-md w-full">
         <h2 className="text-2xl font-semibold text-white mb-4">
           Are you over 21 years of age?
