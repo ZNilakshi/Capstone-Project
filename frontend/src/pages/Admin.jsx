@@ -4,7 +4,7 @@ import axios from "axios";
 
 const AdminProductPanel = () => {
   const [products, setProducts] = useState([]);
-  const [orders, setOrders] = useState([]); // New state for orders
+  const [orders, setOrders] = useState([]); 
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [brand, setBrand] = useState("BRAND");
@@ -20,7 +20,7 @@ const AdminProductPanel = () => {
   const [selectedProductId, setSelectedProductId] = useState("");
   const [stockToAdd, setStockToAdd] = useState("");
   const [isUpdatingStock, setIsUpdatingStock] = useState(false);
-  const [loadingOrders, setLoadingOrders] = useState(false); // Loading state for orders
+  const [loadingOrders, setLoadingOrders] = useState(false); 
 
   useEffect(() => {
     const fetchProducts = async () => {

@@ -71,7 +71,7 @@ const FeaturedProducts = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Apply scroll based on current index on mobile
+ 
   useEffect(() => {
     if (isMobile()) {
       const container = containerRef.current;
@@ -179,7 +179,7 @@ const FeaturedProducts = () => {
               hover:ring-2 hover:ring-orange-400 hover:ring-offset-2 hover:ring-offset-black
               after:content-[''] after:absolute after:inset-0 after:rounded-3xl after:border-2 after:border-orange-400 after:scale-0 hover:after:scale-100 after:transition-transform after:duration-500 after:opacity-20
             "
-            style={{ minWidth: "100%" }} // Ensures one card per screen on mobile
+            style={{ minWidth: "100%" }} 
           >
             {/* Image */}
             <div className="overflow-hidden rounded-t-3xl">

@@ -12,16 +12,17 @@ const SearchPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { addToCart } = useCart();
+  const [query, setQuery] = useState("");
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
-    const query = searchParams.get("q");
+    const searchQuery = searchParams.get("q") || "";
+    setQuery(searchQuery);
 
-    if (!query) {
+    if (!searchQuery) {
       navigate("/");
       return;
     }
-
    
     const fetchSearchResults = async () => {
       try {
@@ -60,6 +61,29 @@ const SearchPage = () => {
   return (
     <div className="container min-h-screen px-4 py-24 mx-auto">
       <div className="mb-8">
+        <form 
+          onSubmit={(e) => {
+            e.preventDefault();
+            navigate(`/search?q=${encodeURIComponent(query)}`);
+          }}
+          className="mb-6"
+        >
+          <div className="relative max-w-xl mx-auto">
+            <input
+              type="text"
+              placeholder="Search for products..."
+              className="w-full py-3 pl-4 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 text-black"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+            />
+            <button 
+              type="submit"
+              className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500 hover:text-orange-500"
+            >
+              <FaSearch className="text-xl" />
+            </button>
+          </div>
+        </form>
         <h1 className="text-2xl font-bold text-gray-800">
           Search Results for:{" "}
           <span className="text-orange-500">

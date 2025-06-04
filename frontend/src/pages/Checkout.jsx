@@ -168,7 +168,7 @@ const Checkout = () => {
         createdAt: new Date().toISOString()
       };
   
-      // Send to your backend API
+      // Send to  backend API
       const response = await fetch('http://localhost:5000/api/orders', {
         method: 'POST',
         headers: {
@@ -192,7 +192,7 @@ const Checkout = () => {
       orderId: result.orderId
     });
 
-    // Send email to manager (you'll need to implement this endpoint)
+    // Send email to manager )
     try {
       await fetch('http://localhost:5000/api/send-order-notification', {
         method: 'POST',

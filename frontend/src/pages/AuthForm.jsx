@@ -127,9 +127,7 @@ const AuthForm = () => {
                                 <input type="checkbox" className="accent-orange-500" />
                                 Remember me
                             </label>
-                            <button className="text-xs bg-white/10 px-2 py-1 rounded-xl hover:text-white">
-                                Forget Password?
-                            </button>
+                         
                         </div>
                     ) : (
                         <div className="text-sm text-gray-300 mb-4">
