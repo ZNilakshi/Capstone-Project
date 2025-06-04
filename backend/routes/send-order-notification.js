@@ -13,7 +13,7 @@ const transporter = nodemailer.createTransport({
 
 // POST endpoint
 router.post('/', async (req, res) => {
-  console.log('Received notification request'); // Debug log
+  console.log('Received notification request'); 
   
   try {
     const { orderId, customerName, customerEmail, totalAmount } = req.body;
