@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useState , useEffect } from "react";
 
 const Checkout = () => {
-  const { cart } = useCart();
+  const { cart , clearCart } = useCart();
   const navigate = useNavigate();
   const [showDetailsForm, setShowDetailsForm] = useState(false);
   const [userDetails, setUserDetails] = useState({
@@ -19,6 +19,10 @@ const Checkout = () => {
     email: '',
     phone: '',
     location: ''
+  });
+  const [orderConfirmation, setOrderConfirmation] = useState({
+    isConfirmed: false,
+    orderId: null
   });
 
   const locations = ['Welimada', 'Badulla', 'Bandarawela', 'Hali-Ela', 'Passara', 'Mahiyanganaya'];
@@ -180,18 +184,62 @@ const Checkout = () => {
       const result = await response.json();
       
       // Clear cart after successful order
-      // You'll need to add clearCart to your CartContext if not already there
-      // clearCart();
-      
-      // Redirect to order confirmation page
-      navigate(`/order-confirmation/${result.orderId}`);
-      
-    } catch (error) {
-      console.error('Order submission error:', error);
-      alert('There was an error submitting your order. Please try again.');
-    }
-  };
+    clearCart();
+    
+    // Set order confirmation state
+    setOrderConfirmation({
+      isConfirmed: true,
+      orderId: result.orderId
+    });
 
+    // Send email to manager (you'll need to implement this endpoint)
+    try {
+      await fetch('http://localhost:5000/api/send-order-notification', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          orderId: result.orderId,
+          customerName: `${userDetails.firstName} ${userDetails.lastName}`,
+          customerEmail: userDetails.email,
+          totalAmount: subtotal
+        })
+      });
+    } catch (emailError) {
+      console.error('Failed to send manager email:', emailError);
+      // This shouldn't affect the user experience
+    }
+
+  } catch (error) {
+    console.error('Order submission error:', error);
+    alert('There was an error submitting your order. Please try again.');
+  }
+};
+if (orderConfirmation.isConfirmed) {
+  return (
+    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4 mt-16">
+      <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full text-center">
+        <svg className="mx-auto h-12 w-12 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+        </svg>
+        <h1 className="text-2xl font-bold mb-4 mt-4">ORDER CONFIRMED!</h1>
+        <p className="mb-4 text-gray-600">
+          Your order ID is: <span className="font-bold">{orderConfirmation.orderId}</span>
+        </p>
+        <p className="mb-6 text-gray-600">
+          For order details, you can view in your profile order history.
+        </p>
+        <button
+          onClick={() => navigate("/")}
+          className="bg-gray-800 text-white px-6 py-3 rounded-lg font-bold hover:bg-gray-700 transition w-full"
+        >
+          CONTINUE SHOPPING
+        </button>
+      </div>
+    </div>
+  );
+}
   if (!cart || !cart.items || cart.items.length === 0) {
     return (
       <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4 mt-16">

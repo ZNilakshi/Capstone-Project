@@ -1,48 +1,63 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+
 const UserProfile = () => {
   const [user, setUser] = useState(null);
   const [activeTab, setActiveTab] = useState("profile");
   const [isEditing, setIsEditing] = useState(false);
   const [orders, setOrders] = useState([]);
+  const [loadingOrders, setLoadingOrders] = useState(false);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
+  // Fetch user data
   useEffect(() => {
     const fetchUserData = async () => {
-        try {
-            const token = localStorage.getItem('token');
-            const response = await axios.get('/api/auth/me', {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-            setUser(response.data);
-            localStorage.setItem('user', JSON.stringify(response.data));
-        } catch (err) {
-            console.error("Failed to fetch user data", err);
-        }
+      try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get('/api/auth/me', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setUser(response.data);
+        localStorage.setItem('user', JSON.stringify(response.data));
+      } catch (err) {
+        console.error("Failed to fetch user data", err);
+        setError("Failed to load user data");
+      }
     };
 
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
-        setUser(JSON.parse(storedUser));
-    } else {
-        fetchUserData();
-    }
-}, []);
-
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
       setUser(JSON.parse(storedUser));
+    } else {
+      fetchUserData();
     }
   }, []);
 
-  useEffect(() => {
-    const storedOrders = localStorage.getItem("orders");
-    if (storedOrders) {
-      setOrders(JSON.parse(storedOrders));
+  // Fetch user orders
+  const fetchUserOrders = useCallback(async () => {
+    try {
+      setLoadingOrders(true);
+      setError(null);
+      const token = localStorage.getItem('token');
+      const response = await axios.get(`http://localhost:5000/api/orders/user/${user.email}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setOrders(response.data);
+    } catch (err) {
+      console.error("Failed to fetch orders", err);
+      setError("Failed to load orders");
+    } finally {
+      setLoadingOrders(false);
     }
-  }, []);
+  }, [user?.email]);
+
+  useEffect(() => {
+    if (activeTab === "orders" && user?.email) {
+      fetchUserOrders();
+    }
+  }, [activeTab, user?.email, fetchUserOrders]);
 
   const handleDeleteAccount = () => {
     const confirmDelete = window.confirm(
@@ -50,24 +65,36 @@ const UserProfile = () => {
     );
     if (confirmDelete) {
       localStorage.removeItem("user");
+      localStorage.removeItem("token");
       setUser(null);
       navigate("/auth");
       alert("Account deleted successfully!");
     }
   };
 
-  const handleSave = (event) => {
+  const handleSave = async (event) => {
     event.preventDefault();
-    const updatedUser = {
-      firstName: event.target.firstName.value,
-      lastName: event.target.lastName.value,
-      email: event.target.email.value,
-      phone: event.target.phone.value,
-    };
-    setUser(updatedUser);
-    localStorage.setItem("user", JSON.stringify(updatedUser));
-    setIsEditing(false);
-    alert("Profile updated successfully!");
+    try {
+      const updatedUser = {
+        firstName: event.target.firstName.value,
+        lastName: event.target.lastName.value,
+        email: event.target.email.value,
+        phone: event.target.phone.value,
+      };
+      
+      const token = localStorage.getItem('token');
+      await axios.put('/api/auth/update', updatedUser, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      setUser(updatedUser);
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+      setIsEditing(false);
+      alert("Profile updated successfully!");
+    } catch (err) {
+      console.error("Failed to update profile", err);
+      alert("Failed to update profile");
+    }
   };
 
   const renderProfileContent = () => {
@@ -120,6 +147,7 @@ const UserProfile = () => {
                 defaultValue={user.firstName || ""}
                 placeholder="First Name"
                 className="w-full p-3 text-white border rounded-md bg-white/10 border-white/30"
+                required
               />
               <input
                 type="text"
@@ -127,6 +155,7 @@ const UserProfile = () => {
                 defaultValue={user.lastName || ""}
                 placeholder="Last Name"
                 className="w-full p-3 text-white border rounded-md bg-white/10 border-white/30"
+                required
               />
             </div>
           </div>
@@ -138,6 +167,7 @@ const UserProfile = () => {
               defaultValue={user.email || ""}
               placeholder="Email"
               className="w-full p-3 text-white border rounded-md bg-white/10 border-white/30"
+              required
             />
           </div>
           <div>
@@ -148,6 +178,7 @@ const UserProfile = () => {
               defaultValue={user.phone || ""}
               placeholder="Phone Number"
               className="w-full p-3 text-white border rounded-md bg-white/10 border-white/30"
+              required
             />
           </div>
           <div className="flex justify-end gap-4 mt-8">
@@ -156,11 +187,11 @@ const UserProfile = () => {
               onClick={() => setIsEditing(false)}
               className="px-6 py-2.5 text-white transition-all border rounded-md border-white/30 hover:bg-white/10"
             >
-              Back
+              Cancel
             </button>
             <button
               type="submit"
-              className="px-6 py-2.5 text-white transition-all border rounded-md border-white/30 hover:bg-white/10"
+              className="px-6 py-2.5 text-white bg-blue-600 rounded-md hover:bg-blue-700"
             >
               Save Changes
             </button>
@@ -171,7 +202,29 @@ const UserProfile = () => {
   };
 
   const renderOrderHistory = () => {
-    if (!orders || orders.length === 0) {
+    if (error) {
+      return (
+        <div className="mt-8 text-center">
+          <p className="text-red-400">{error}</p>
+          <button 
+            onClick={fetchUserOrders}
+            className="mt-2 px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600"
+          >
+            Retry
+          </button>
+        </div>
+      );
+    }
+
+    if (loadingOrders) {
+      return (
+        <div className="mt-8 text-center">
+          <p className="text-gray-400">Loading orders...</p>
+        </div>
+      );
+    }
+
+    if (!orders.length) {
       return (
         <div className="mt-8 text-center">
           <h3 className="mb-4 text-xl text-white">Order History</h3>
@@ -182,45 +235,59 @@ const UserProfile = () => {
 
     return (
       <div className="px-8 mt-8">
-        <h3 className="mb-6 text-xl text-white">Order History</h3>
+        <div className="flex justify-between items-center mb-6">
+          <h3 className="text-xl text-white">Order History</h3>
+          <button 
+            onClick={fetchUserOrders}
+            className="px-4 py-2 text-white bg-gray-700 rounded-md hover:bg-gray-600"
+          >
+            Refresh
+          </button>
+        </div>
         <div className="space-y-4">
-          {orders
-            .sort((a, b) => new Date(b.date) - new Date(a.date))
-            .map((order, index) => (
-              <div
-                key={order.id || index}
-                className="p-4 border rounded-lg border-white/30 bg-white/5"
-              >
-                <div className="flex items-start justify-between mb-4">
-                  <div>
-                    <p className="text-sm text-gray-400">Order Date</p>
-                    <p className="text-white">
-                      {new Date(order.date).toLocaleDateString()}
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-sm text-gray-400">Total</p>
-                    <p className="text-white">${order.total.toFixed(2)}</p>
-                  </div>
+          {orders.map((order) => (
+            <div
+              key={order._id}
+              className="p-4 border rounded-lg border-white/30 bg-white/5"
+            >
+              <div className="flex items-start justify-between mb-4">
+                <div>
+                  <p className="text-sm text-gray-400">Order Date</p>
+                  <p className="text-white">
+                    {new Date(order.createdAt).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    })}
+                  </p>
                 </div>
-                <div className="space-y-2">
-                  {order.items.map((item, itemIndex) => (
-                    <div
-                      key={itemIndex}
-                      className="flex items-center justify-between py-2 border-t border-white/10"
-                    >
-                      <div className="flex-1">
-                        <p className="text-white">{item.name}</p>
-                        <p className="text-sm text-gray-400">
-                          Quantity: {item.quantity}
-                        </p>
-                      </div>
-                      <p className="text-white">${item.price.toFixed(2)}</p>
-                    </div>
-                  ))}
+               
+                <div className="text-right">
+                  <p className="text-sm text-gray-400">Total</p>
+                  <p className="text-white">Rs.{order.total.toFixed(2)}</p>
                 </div>
               </div>
-            ))}
+              <div className="space-y-2">
+                {order.items.map((item) => (
+                  <div
+                    key={item._id}
+                    className="flex items-center justify-between py-2 border-t border-white/10"
+                  >
+                    <div className="flex-1">
+                      <p className="text-white">{item.name}</p>
+                      <p className="text-sm text-gray-400">
+                        {item.size && `Size: ${item.size} | `}
+                        Quantity: {item.quantity}
+                      </p>
+                    </div>
+                    <p className="text-white">Rs.{item.price.toFixed(2)}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     );

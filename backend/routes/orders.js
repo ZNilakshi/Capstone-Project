@@ -1,7 +1,7 @@
-// In your server routes (e.g., routes/orders.js)
+
 const express = require('express');
 const router = express.Router();
-const Order = require('../models/Order'); // Assuming you have an Order model
+const Order = require('../models/Order');
 
 router.post('/', async (req, res) => {
   try {
@@ -12,6 +12,15 @@ router.post('/', async (req, res) => {
       message: 'Order created successfully',
       orderId: order._id
     });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.get('/user/:email', async (req, res) => {
+  try {
+    const orders = await Order.find({ 'user.email': req.params.email }).sort({ createdAt: -1 });
+    res.status(200).json(orders);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
