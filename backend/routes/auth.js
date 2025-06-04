@@ -31,7 +31,7 @@ router.post("/register", async (req, res) => {
 });
 
 // Login
-// In your auth route
+
 router.post("/login", async (req, res) => {
     const { username, password } = req.body;
 
@@ -59,7 +59,8 @@ router.post("/login", async (req, res) => {
         });
     } catch (err) {
         res.status(500).json({ message: err.message });
-    }// Add this to your auth routes
+    }
+    
 router.get("/me", async (req, res) => {
     try {
         const token = req.headers.authorization.split(" ")[1];
