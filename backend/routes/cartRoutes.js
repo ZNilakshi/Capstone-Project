@@ -4,7 +4,7 @@ const Cart = require("../models/cart");
 const Product = require("../models/product");
 const auth = require("../middleware/auth");
 
-// Middleware to get or create cart for user
+
 const getCart = async (req, res, next) => {
   try {
     let cart = await Cart.findOne({ user: req.user.userId }).populate('items.product');
