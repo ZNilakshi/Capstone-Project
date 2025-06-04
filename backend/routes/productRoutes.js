@@ -142,4 +142,27 @@ router.get("/search", async (req, res) => {
     });
   }
 });
+// In your backend routes
+router.get('/api/products/search', async (req, res) => {
+  try {
+    const query = req.query.q;
+    
+    if (!query) {
+      return res.status(400).json({ message: "Search query is required" });
+    }
+
+    const results = await Product.find({
+      $or: [
+        { name: { $regex: query, $options: 'i' } },
+        { description: { $regex: query, $options: 'i' } },
+        { category: { $regex: query, $options: 'i' } }
+      ]
+    }).limit(20);
+
+    res.json(results);
+  } catch (error) {
+    console.error("Search error:", error);
+    res.status(500).json({ message: "Error performing search" });
+  }
+});
 module.exports = router;
