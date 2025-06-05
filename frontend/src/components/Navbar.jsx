@@ -154,7 +154,7 @@ const Navbar = () => {
             </li>
             <li
               onClick={() => {
-                navigate("/about");
+                navigate("/OurStory");
                 setIsMenuOpen(false);
               }}
               className="hover:text-orange-500 cursor-pointer"
