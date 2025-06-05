@@ -21,7 +21,23 @@ const AdminProductPanel = () => {
   const [stockToAdd, setStockToAdd] = useState("");
   const [isUpdatingStock, setIsUpdatingStock] = useState(false);
   const [loadingOrders, setLoadingOrders] = useState(false); 
+  const [orderFilter, setOrderFilter] = useState('all');
 
+  const updateOrderStatus = async (orderId, newStatus) => {
+    try {
+      await axios.put(`${process.env.REACT_APP_API_BASE_URL}/api/orders/${orderId}/status`, {
+        status: newStatus
+      });
+      
+      // Update local state
+      setOrders(orders.map(order => 
+        order._id === orderId ? { ...order, status: newStatus } : order
+      ));
+    } catch (error) {
+      console.error("Error updating order status:", error);
+      alert("Failed to update order status");
+    }
+  };
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -502,69 +518,117 @@ const response = await axios.put(
           </div>
         )}
         {view === "orders" && (
-          <div className="p-6 bg-white shadow-lg rounded-xl">
-            <h2 className="mb-4 text-2xl font-bold">All Orders</h2>
-            
-            {loadingOrders ? (
-              <p>Loading orders...</p>
-            ) : orders.length === 0 ? (
-              <p>No orders found.</p>
-            ) : (
-              <div className="space-y-4">
-                {orders.map((order) => (
-                  <div key={order._id} className="p-4 border rounded-lg border-gray-200">
-                    <div className="flex justify-between mb-4">
-                      <div>
-                        <p className="font-semibold">Order ID: {order._id}</p>
-                        <p className="text-sm text-gray-600">
-                          {new Date(order.createdAt).toLocaleString()}
-                        </p>
-                      </div>
-                      
-                    </div>
+  <div className="p-6 bg-white shadow-lg rounded-xl">
+    <h2 className="mb-4 text-2xl font-bold">All Orders</h2>
+    
+    {loadingOrders ? (
+      <p>Loading orders...</p>
+    ) : orders.length === 0 ? (
+      <p>No orders found.</p>
+    ) : (
+      <div className="space-y-4">
+        <div className="flex mb-4">
+          <button 
+            onClick={() => setOrderFilter('all')}
+            className={`px-4 py-2 mr-2 rounded-lg ${orderFilter === 'all' ? 'bg-orange-500 text-white' : 'bg-gray-200'}`}
+          >
+            All Orders
+          </button>
+          <button 
+            onClick={() => setOrderFilter('pending')}
+            className={`px-4 py-2 mr-2 rounded-lg ${orderFilter === 'pending' ? 'bg-orange-500 text-white' : 'bg-gray-200'}`}
+          >
+            Pending
+          </button>
+          <button 
+            onClick={() => setOrderFilter('completed')}
+            className={`px-4 py-2 rounded-lg ${orderFilter === 'completed' ? 'bg-orange-500 text-white' : 'bg-gray-200'}`}
+          >
+            Completed
+          </button>
+        </div>
 
-                    <div className="mb-4">
-                      <h3 className="font-semibold">Customer:</h3>
-                      <p>{order.user.firstName} {order.user.lastName}</p>
-                      <p>{order.user.email}</p>
-                      <p>{order.user.phone}</p>
-                      <p>{order.user.location}</p>
-                    </div>
+        {orders
+          .filter(order => 
+            orderFilter === 'all' || 
+            order.status === orderFilter
+          )
+          .map((order) => (
+          <div key={order._id} className="p-4 border rounded-lg border-gray-200">
+            <div className="flex justify-between mb-4">
+              <div>
+                <p className="font-semibold">Order ID: {order._id}</p>
+                <p className="text-sm text-gray-600">
+                  {new Date(order.createdAt).toLocaleString()}
+                </p>
+                <p className={`inline-block px-2 py-1 mt-1 text-sm rounded-full ${
+                  order.status === 'completed' 
+                    ? 'bg-green-100 text-green-800' 
+                    : 'bg-yellow-100 text-yellow-800'
+                }`}>
+                  {order.status}
+                </p>
+              </div>
+              <button
+  onClick={() => updateOrderStatus(order._id, order.status === 'pending' ? 'completed' : 'pending')}
+  className={`relative inline-flex items-center h-6 rounded-full w-11 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 ${
+    order.status === 'completed' ? 'bg-green-500' : 'bg-gray-300'
+  }`}
+>
+  <span
+    className={`inline-block w-4 h-4 transform transition-transform bg-white rounded-full ${
+      order.status === 'completed' ? 'translate-x-6' : 'translate-x-1'
+    }`}
+  />
+  <span className="sr-only">
+    {order.status === 'pending' ? 'Mark as Completed' : 'Mark as Pending'}
+  </span>
+</button>
+            </div>
 
-                    <div className="mb-4">
-                      <h3 className="font-semibold">Order Items:</h3>
-                      <div className="mt-2 space-y-2">
-                        {order.items.map((item, index) => (
-                          <div key={index} className="flex justify-between p-2 bg-gray-50 rounded">
-                            <div>
-                              <p>{item.name}</p>
-                              <p className="text-sm text-gray-600">
-                                {item.size && `Size: ${item.size} | `}
-                                Qty: {item.quantity}
-                              </p>
-                            </div>
-                            <p>LKR {item.price.toFixed(2)}</p>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
+            {/* Rest of the order details... */}
+            <div className="mb-4">
+              <h3 className="font-semibold">Customer:</h3>
+              <p>{order.user.firstName} {order.user.lastName}</p>
+              <p>{order.user.email}</p>
+              <p>{order.user.phone}</p>
+              <p>{order.user.location}</p>
+            </div>
 
-                    <div className="flex justify-between pt-4 border-t">
-                      <p className="font-semibold">Subtotal:</p>
-                      <p>LKR {order.subtotal.toFixed(2)}</p>
+            <div className="mb-4">
+              <h3 className="font-semibold">Order Items:</h3>
+              <div className="mt-2 space-y-2">
+                {order.items.map((item, index) => (
+                  <div key={index} className="flex justify-between p-2 bg-gray-50 rounded">
+                    <div>
+                      <p>{item.name}</p>
+                      <p className="text-sm text-gray-600">
+                        {item.size && `Size: ${item.size} | `}
+                        Qty: {item.quantity}
+                      </p>
                     </div>
-                    <div className="flex justify-between">
-                      <p className="font-semibold">Total:</p>
-                      <p>LKR {order.total.toFixed(2)}</p>
-                    </div>
+                    <p>LKR {item.price.toFixed(2)}</p>
                   </div>
                 ))}
               </div>
-            )}
+            </div>
+
+            <div className="flex justify-between pt-4 border-t">
+              <p className="font-semibold">Subtotal:</p>
+              <p>LKR {order.subtotal.toFixed(2)}</p>
+            </div>
+            <div className="flex justify-between">
+              <p className="font-semibold">Total:</p>
+              <p>LKR {order.total.toFixed(2)}</p>
+            </div>
           </div>
-        )}
+        ))}
+      </div>
+    )}
+  </div>
+)}
         {/* Product List */}
-        {products.length > 0 && view !== "profile" && (
+        {products.length > 0 && view !== "profile" && view !== "orders" && (
           <div className="p-6 bg-white shadow-lg rounded-xl">
             <h2 className="mb-4 text-2xl font-bold">Product List</h2>
             <div className="overflow-x-auto">
