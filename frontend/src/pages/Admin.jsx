@@ -466,57 +466,134 @@ const response = await axios.put(
             </button>
           </div>
         )}
+{view === "addStock" && (
+  <div className="p-6 bg-white shadow-lg rounded-xl">
+    <h2 className="mb-4 text-2xl font-bold">Manage Stock</h2>
+    {products.length > 0 ? (
+      <div className="space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* Brand Filter */}
+          <div className="relative">
+            <label className="absolute px-1 text-sm text-orange-400 bg-white -top-3 left-3">
+              Select Brand
+            </label>
+            <select
+              value={brand}
+              onChange={(e) => {
+                setBrand(e.target.value);
+                setSelectedProductId(""); // Reset product selection when brand changes
+              }}
+              className="w-full px-3 py-4 border-2 border-black rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-orange-400"
+            >
+              <option value="BRAND">All Brands</option>
+              {brands.filter(b => b !== "BRAND").map((brand, index) => (
+                <option key={index} value={brand}>{brand}</option>
+              ))}
+            </select>
+          </div>
 
-        {view === "addStock" && (
-          <div className="p-6 bg-white shadow-lg rounded-xl">
-            <h2 className="mb-4 text-2xl font-bold">Manage Stock</h2>
-            {products.length > 0 ? (
-              <div className="grid grid-cols-2 gap-4">
-                <div className="relative">
-                  <label className="absolute px-1 text-sm text-orange-400 bg-white -top-3 left-3">
-                    Select Product
-                  </label>
-                  <select
-                    value={selectedProductId}
-                    onChange={(e) => setSelectedProductId(e.target.value)}
-                    className="w-full px-3 py-4 border-2 border-black rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-orange-400"
-                  >
-                    <option value="" disabled>Select Product</option>
-                    {products.map((product) => (
-                      <option key={product._id} value={product._id}>
-                        {product.name} (Current: {product.quantity})
-                      </option>
-                    ))}
-                  </select>
-                </div>
+          {/* Category Filter */}
+          <div className="relative">
+            <label className="absolute px-1 text-sm text-orange-400 bg-white -top-3 left-3">
+              Select Category
+            </label>
+            <select
+              value={category}
+              onChange={(e) => {
+                setCategory(e.target.value);
+                setSelectedProductId(""); // Reset product selection when category changes
+              }}
+              className="w-full px-3 py-4 border-2 border-black rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-orange-400"
+            >
+              <option value="CATEGORY">All Categories</option>
+              {categories.filter(c => c !== "CATEGORY").map((category, index) => (
+                <option key={index} value={category}>{category}</option>
+              ))}
+            </select>
+          </div>
 
-                <div className="relative">
-                  <label className="absolute px-1 text-sm text-orange-400 bg-white -top-2 left-3">
-                    Quantity to Add
-                  </label>
-                  <input
-                    type="number"
-                    value={stockToAdd}
-                    onChange={(e) => setStockToAdd(e.target.value)}
-                    placeholder="Enter quantity"
-                    className="w-full px-3 py-4 border-2 border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
-                  />
-                </div>
+          {/* ABV Filter */}
+          <div className="relative">
+            <label className="absolute px-1 text-sm text-orange-400 bg-white -top-3 left-3">
+              Select ABV
+            </label>
+            <select
+              value={abv}
+              onChange={(e) => {
+                setAbv(e.target.value);
+                setSelectedProductId(""); // Reset product selection when ABV changes
+              }}
+              className="w-full px-3 py-4 border-2 border-black rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-orange-400"
+            >
+              <option value="ABV">All ABV Levels</option>
+              {abvLevels.filter(a => a !== "ABV").map((abv, index) => (
+                <option key={index} value={abv}>{abv}</option>
+              ))}
+            </select>
+          </div>
+        </div>
 
-                <button
-                  onClick={addStock}
-                  disabled={isUpdatingStock}
-                  className={`col-span-2 w-full bg-orange-500 text-white p-3 rounded-lg mt-4 ${isUpdatingStock ? "opacity-50 cursor-not-allowed" : ""
-                    }`}
-                >
-                  {isUpdatingStock ? "Updating..." : "Update Stock"}
-                </button>
-              </div>
-            ) : (
-              <p>No products available to manage stock.</p>
-            )}
+        {/* Product Selection - Only shows after filters are selected */}
+        {(brand !== "BRAND" || category !== "CATEGORY" || abv !== "ABV") && (
+          <div className="relative">
+            <label className="absolute px-1 text-sm text-orange-400 bg-white -top-3 left-3">
+              Select Product
+            </label>
+            <select
+              value={selectedProductId}
+              onChange={(e) => setSelectedProductId(e.target.value)}
+              className="w-full px-3 py-4 border-2 border-black rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-orange-400"
+            >
+              <option value="" disabled>Select a product</option>
+              {products
+                .filter(product => 
+                  (brand === "BRAND" || product.brand === brand) &&
+                  (category === "CATEGORY" || product.category === category) &&
+                  (abv === "ABV" || product.abv === abv)
+                )
+                .map((product) => (
+                  <option key={product._id} value={product._id}>
+                    {product.name} ({product.size}) - Stock: {product.quantity}
+                  </option>
+                ))}
+            </select>
           </div>
         )}
+
+        {/* Stock Update Section - Only shows after product is selected */}
+        {selectedProductId && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+            <div className="relative">
+              <label className="absolute px-1 text-sm text-orange-400 bg-white -top-2 left-3">
+                Quantity to Add
+              </label>
+              <input
+                type="number"
+                value={stockToAdd}
+                onChange={(e) => setStockToAdd(e.target.value)}
+                placeholder="Enter quantity"
+                min="1"
+                className="w-full px-3 py-4 border-2 border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
+              />
+            </div>
+
+            <button
+              onClick={addStock}
+              disabled={isUpdatingStock || !stockToAdd}
+              className={`w-full bg-orange-500 text-white p-3 rounded-lg ${
+                isUpdatingStock || !stockToAdd ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+            >
+              {isUpdatingStock ? "Updating..." : "Update Stock"}
+            </button>
+          </div>
+        )}
+      </div>
+    ) : (
+      <p>No products available to manage stock.</p>
+    )}
+  </div>
+)}
         {view === "orders" && (
   <div className="p-6 bg-white shadow-lg rounded-xl">
     <h2 className="mb-4 text-2xl font-bold">All Orders</h2>
