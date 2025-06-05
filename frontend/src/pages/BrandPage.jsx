@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import axios from "axios";
 import { useCart } from "../context/CartContext";
 import { useParams } from "react-router-dom";
-import { FaMinus, FaPlus, FaCheck } from "react-icons/fa";
+import { FaMinus, FaPlus, FaCheck, FaFilter, FaTimes } from "react-icons/fa";
 
 const BrandPage = () => {
   const { brandName } = useParams();
@@ -16,6 +16,7 @@ const BrandPage = () => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [quantities, setQuantities] = useState({});
   const [addedItems, setAddedItems] = useState({});
+  const [showFilters, setShowFilters] = useState(false);
   const { addToCart } = useCart();
 
   const sizes = ["Any Size", "750ML", "1L", "625ML","500ML","375ML", "330ML","325ML","180ML"];
@@ -29,7 +30,6 @@ const BrandPage = () => {
         const response = await axios.get(`${baseUrl}/api/products/brand/${brandName}`);
         setProducts(response.data);
         
-        // Initialize quantities
         const initialQuantities = {};
         response.data.forEach(product => {
           initialQuantities[product._id] = 1;
@@ -66,7 +66,6 @@ const BrandPage = () => {
         [productId]: true
       }));
       
-      // Reset added status after 2 seconds
       setTimeout(() => {
         setAddedItems(prev => ({
           ...prev,
@@ -105,107 +104,129 @@ const BrandPage = () => {
 
   return (
     <div className="flex flex-col min-h-screen gap-6 p-6 mt-20 text-white bg-black md:flex-row">
-      {/* Sidebar Filter */}
-      <div className="w-full md:w-72 lg:w-80 p-6 rounded-xl bg-gradient-to-b from-[#1a0a03] to-[#2A1205] border border-orange-900 shadow-lg sticky top-4 h-fit">
-        <h2 className="pb-3 mb-6 text-2xl font-bold tracking-wide text-white uppercase border-b border-orange-800">Filters</h2>
-
-        {/* Price Filter */}
-        <div className="mb-8">
-          <h3 className="mb-3 text-lg font-bold text-orange-300">Price Range</h3>
-          <input
-            type="range"
-            min="950"
-            max="100000"
-            step="50"
-            value={priceRange}
-            onChange={(e) => setPriceRange(parseInt(e.target.value))}
-            className="w-full cursor-pointer"
-          />
-          <div className="flex justify-between mt-2 text-sm text-gray-300">
-            <span>LKR 950</span>
-            <span>LKR 9050</span>
-          </div>
-          <div className="mt-3 px-3 py-2 bg-[#3a1a0a] rounded-lg text-center">
-            <span className="font-bold text-orange-300">Selected: </span>
-            LKR {priceRange.toLocaleString()}
-          </div>
-        </div>
-
-        {/* Category Filter */}
-        <div className="mb-8">
-          <h3 className="mb-3 text-lg font-bold text-orange-300">Category</h3>
-          <div className="flex flex-wrap gap-2">
-            {categories.map((category) => (
-              <button
-                key={category}
-                onClick={() => setSelectedCategory(category)}
-                className={`px-3 py-2 rounded-lg text-sm ${selectedCategory === category
-                  ? 'bg-orange-600 text-white font-bold'
-                  : 'bg-[#3a1a0a] hover:bg-[#4a2a1a] text-gray-200'}`}
-              >
-                {category}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Size Filter */}
-        <div className="mb-8">
-          <h3 className="mb-3 text-lg font-bold text-orange-300">Bottle Size</h3>
-          <div className="flex flex-wrap gap-2">
-            {sizes.map((size) => (
-              <button
-                key={size}
-                onClick={() => setSelectedSize(size)}
-                className={`px-3 py-2 rounded-lg text-sm ${selectedSize === size
-                  ? 'bg-orange-600 text-white font-bold'
-                  : 'bg-[#3a1a0a] hover:bg-[#4a2a1a] text-gray-200'}`}
-              >
-                {size}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* ABV Filter */}
-        <div>
-          <h3 className="mb-3 text-lg font-bold text-orange-300">Alcohol Content</h3>
-          <div className="flex flex-wrap gap-2">
-            {abvLevels.map((abv) => (
-              <button
-                key={abv}
-                onClick={() => setSelectedAbv(abv)}
-                className={`px-3 py-2 rounded-lg text-sm ${selectedAbv === abv
-                  ? 'bg-orange-600 text-white font-bold'
-                  : 'bg-[#3a1a0a] hover:bg-[#4a2a1a] text-gray-200'}`}
-              >
-                {abv}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Reset Filters */}
-        <button 
-          onClick={() => {
-            setPriceRange(9050);
-            setSelectedSize("Any Size");
-            setSelectedAbv("Any ABV");
-            setSelectedCategory("Any Category");
-          }}
-          className="w-full py-2 mt-6 text-orange-400 border border-orange-600 rounded-lg hover:bg-orange-900"
-        >
-          Reset All Filters
-        </button>
+      {/* Mobile Filter Toggle Button */}
+      <div className="md:hidden">
+      <button 
+  onClick={() => setShowFilters(!showFilters)}
+  className="flex items-center justify-center w-full py-3 mb-4 space-x-2 text-white bg-orange-600 rounded-lg md:hidden"
+>
+  {showFilters ? (
+    <>
+      <FaTimes /> <span>Hide Filters</span>
+    </>
+  ) : (
+    <>
+      <FaFilter /> <span>Show Filters</span>
+    </>
+  )}
+</button>
       </div>
+      <div className={`${showFilters ? 'block' : 'hidden'} md:block w-full md:w-72 lg:w-80 p-4 md:p-6 rounded-xl bg-gradient-to-b from-[#1a0a03] to-[#2A1205] border border-orange-900 shadow-lg md:sticky md:top-4 h-auto md:h-[calc(100vh-6rem)] overflow-y-auto`}>
 
+       {/* Sidebar Filter */}
+      
+  <h2 className="pb-3 mb-6 text-2xl font-bold tracking-wide text-white uppercase border-b border-orange-800">Filters</h2>
+
+  {/* Scrollable content container */}
+  <div className="space-y-8">
+    {/* Price Filter */}
+    <div>
+      <h3 className="mb-3 text-lg font-bold text-orange-300">Price Range</h3>
+   <input
+                type="range"
+                className="w-full cursor-pointer filter-slider"
+                min="300"
+                max="20000"
+                step="50"
+                value={priceRange}
+                onChange={(e) => setPriceRange(parseInt(e.target.value))}
+              />
+              <div className="flex justify-between w-full mt-2 text-sm text-gray-300">
+                <span>LKR 300</span>
+                <span>LKR 20000</span>
+              </div>
+      <div className="mt-3 px-3 py-2 bg-[#3a1a0a] rounded-lg text-center">
+        <span className="font-bold text-orange-300">Selected: </span>
+        LKR {priceRange.toLocaleString()}
+      </div>
+    </div>
+
+    {/* Category Filter */}
+    <div>
+      <h3 className="mb-3 text-lg font-bold text-orange-300">Category</h3>
+      <div className="flex flex-wrap gap-2">
+        {categories.map((category) => (
+          <button
+            key={category}
+            onClick={() => setSelectedCategory(category)}
+            className={`px-3 py-2 rounded-lg text-sm ${selectedCategory === category
+              ? 'bg-orange-600 text-white font-bold'
+              : 'bg-[#3a1a0a] hover:bg-[#4a2a1a] text-gray-200'}`}
+          >
+            {category}
+          </button>
+        ))}
+      </div>
+    </div>
+
+    {/* Size Filter */}
+    <div>
+      <h3 className="mb-3 text-lg font-bold text-orange-300">Bottle Size</h3>
+      <div className="flex flex-wrap gap-2">
+        {sizes.map((size) => (
+          <button
+            key={size}
+            onClick={() => setSelectedSize(size)}
+            className={`px-3 py-2 rounded-lg text-sm ${selectedSize === size
+              ? 'bg-orange-600 text-white font-bold'
+              : 'bg-[#3a1a0a] hover:bg-[#4a2a1a] text-gray-200'}`}
+          >
+            {size}
+          </button>
+        ))}
+      </div>
+    </div>
+
+    {/* ABV Filter */}
+    <div>
+      <h3 className="mb-3 text-lg font-bold text-orange-300">Alcohol Content</h3>
+      <div className="flex flex-wrap gap-2">
+        {abvLevels.map((abv) => (
+          <button
+            key={abv}
+            onClick={() => setSelectedAbv(abv)}
+            className={`px-3 py-2 rounded-lg text-sm ${selectedAbv === abv
+              ? 'bg-orange-600 text-white font-bold'
+              : 'bg-[#3a1a0a] hover:bg-[#4a2a1a] text-gray-200'}`}
+          >
+            {abv}
+          </button>
+        ))}
+      </div>
+    </div>
+
+    {/* Reset Filters */}
+    <button 
+      onClick={() => {
+        setPriceRange(9050);
+        setSelectedSize("Any Size");
+        setSelectedAbv("Any ABV");
+        setSelectedCategory("Any Category");
+      }}
+      className="w-full py-2 text-orange-400 border border-orange-600 rounded-lg hover:bg-orange-900"
+    >
+      Reset All Filters
+    </button>
+
+</div>
+</div>
       {/* Main Content */}
       <div className="flex-1">
         {/* Hero Section */}
         <div className="relative w-full mb-8 overflow-hidden rounded-xl">
           <div className="absolute inset-0 z-10 bg-gradient-to-r from-black to-transparent"></div>
           <img
-            src={`/${brandName.toLowerCase()}-banner.webp`}
+            src={`/winebanner.webp`}
             alt={`${brandName} Banner`}
             className="object-cover w-full h-64"
           />
