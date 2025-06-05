@@ -37,14 +37,14 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-black text-white py-4 px-6 fixed top-0 left-0 w-full z-50 shadow-md">
+    <nav className="bg-black text-white py-1 px-6 fixed top-0 left-0 w-full z-50 shadow-md">
       <div className="container mx-auto flex justify-between items-center">
-        <h1
-          className="text-orange-500 font-bold text-lg tracking-wide cursor-pointer"
-          onClick={() => navigate("/")}
-        >
-          LOGO
-        </h1>
+      <img
+  src="/logo.png" 
+  alt="Company Logo"
+  className="h-[66px] cursor-pointer" // Adjust height as needed
+  onClick={() => navigate("/")}
+/>
 
         {/* Desktop Menu */}
         <ul className="hidden md:flex space-x-6 text-lg font-semibold">
