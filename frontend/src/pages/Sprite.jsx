@@ -244,7 +244,7 @@ const FilterableProductList = () => {
             <div className="max-w-2xl">
               <h1 className="mb-4 text-4xl font-bold text-white md:text-5xl">Premium Sprite Collection</h1>
               <p className="text-lg text-gray-200">
-                Discover our exquisite selection of fine wines from around the world. 
+                Discover our exquisite selection of fine sprite from around the world. 
                 Each bottle tells a story of tradition, passion, and exceptional craftsmanship.
               </p>
             </div>
