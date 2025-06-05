@@ -218,7 +218,7 @@ const UserProfile = () => {
           <p className="text-red-400">{error}</p>
           <button 
             onClick={fetchUserOrders}
-            className="mt-2 px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600"
+            className="px-4 py-2 mt-2 text-white bg-blue-500 rounded-md hover:bg-blue-600"
           >
             Retry
           </button>
@@ -245,7 +245,7 @@ const UserProfile = () => {
 
     return (
       <div className="px-8 mt-8">
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex items-center justify-between mb-6">
           <h3 className="text-xl text-white">Order History</h3>
           <button 
             onClick={fetchUserOrders}
