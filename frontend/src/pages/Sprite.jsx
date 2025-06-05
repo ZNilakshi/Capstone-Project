@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
 import { useCart } from "../context/CartContext";
-import { FaMinus, FaPlus, FaCheck } from "react-icons/fa";
+import { FaMinus, FaPlus, FaCheck, FaFilter, FaTimes } from "react-icons/fa";
 
 const FilterableProductList = () => {
   const [products, setProducts] = useState([]);
@@ -15,7 +15,7 @@ const FilterableProductList = () => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [quantities, setQuantities] = useState({});
   const [addedItems, setAddedItems] = useState({});
-
+  const [showFilters, setShowFilters] = useState(false); // New state for mobile filters
   const { addToCart } = useCart();
 
   const brands = ["Any Brand","ROCKLAND","IDL","DCSL","MENDIS","LION","DCSL BREWERIES","HEINEKEN","ANCHOR","TIGER","BISON","DCSL BEER"];
@@ -28,20 +28,15 @@ const FilterableProductList = () => {
       try {
         const categories = ["Gin", "Arrack", "Whisky", "Rum", "Vodka", "Brandy", "Nine Arches"];
 
-        // Make parallel API requests for all categories
         const requests = categories.map((category) =>
           axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/products/category/${category}`)
         );
         
-
         const responses = await Promise.all(requests);
-
-        // Combine results from all responses
         const allProducts = responses.flatMap((res) => res.data);
 
         setProducts(allProducts);
 
-        // Initialize quantities for all products
         const initialQuantities = {};
         allProducts.forEach((product) => {
           initialQuantities[product._id] = 1;
@@ -71,7 +66,6 @@ const FilterableProductList = () => {
       ...prev,
       [productId]: true
     }));
-    // Reset the "Added" state after 2 seconds
     setTimeout(() => {
       setAddedItems(prev => ({
         ...prev,
@@ -99,125 +93,147 @@ const FilterableProductList = () => {
   );
 
   return (
-    <div className="flex flex-col min-h-screen gap-6 p-6 mt-20 text-white bg-black md:flex-row">
-      {/* Sidebar Filter */}
-      <div className="w-full md:w-72 lg:w-80 p-6 rounded-xl bg-gradient-to-b from-[#1a0a03] to-[#2A1205] border border-orange-900 shadow-lg sticky top-4 h-fit">
+    <div className="flex flex-col min-h-screen gap-6 p-4 mt-20 text-white bg-black md:flex-row">
+      {/* Mobile Filter Toggle Button */}
+      <div className="md:hidden">
+        <button 
+          onClick={() => setShowFilters(!showFilters)}
+          className="flex items-center justify-center w-full py-3 mb-4 space-x-2 text-white bg-orange-600 rounded-lg"
+        >
+          {showFilters ? (
+            <>
+              <FaTimes /> <span>Hide Filters</span>
+            </>
+          ) : (
+            <>
+              <FaFilter /> <span>Show Filters</span>
+            </>
+          )}
+        </button>
+      </div>
+
+      {/* Sidebar Filter - Now conditionally rendered on mobile */}
+      <div className={`${showFilters ? 'block' : 'hidden'} md:block w-full md:w-72 lg:w-80 p-4 md:p-6 rounded-xl bg-gradient-to-b from-[#1a0a03] to-[#2A1205] border border-orange-900 shadow-lg md:sticky md:top-4 h-auto md:h-[calc(100vh-6rem)] overflow-y-auto`}>
         <h2 className="pb-3 mb-6 text-2xl font-bold tracking-wide text-white uppercase border-b border-orange-800">Filters</h2>
 
-        {/* Price Filter */}
-        <div className="mb-8">
-          <h3 className="mb-3 text-lg font-bold text-orange-300">Price Range</h3>
-          <div className="relative flex flex-col items-center w-full">
-            <input
-              type="range"
-              className="w-full cursor-pointer filter-slider"
-              min="300"
-              max="20000"
-              step="50"
-              value={priceRange}
-              onChange={(e) => setPriceRange(parseInt(e.target.value))}
-            />
-            <div className="flex justify-between w-full mt-2 text-sm text-gray-300">
-              <span>LKR 300</span>
-              <span>LKR 20000</span>
+        <div className="space-y-8 overflow-y-auto max-h-[calc(100%-4rem)] pr-2">
+          {/* Price Filter */}
+          <div>
+            <h3 className="mb-3 text-lg font-bold text-orange-300">Price Range</h3>
+            <div className="relative flex flex-col items-center w-full">
+              <input
+                type="range"
+                className="w-full cursor-pointer filter-slider"
+                min="300"
+                max="20000"
+                step="50"
+                value={priceRange}
+                onChange={(e) => setPriceRange(parseInt(e.target.value))}
+              />
+              <div className="flex justify-between w-full mt-2 text-sm text-gray-300">
+                <span>LKR 300</span>
+                <span>LKR 20000</span>
+              </div>
+              <div className="mt-3 px-3 py-2 bg-[#3a1a0a] rounded-lg text-center w-full">
+                <span className="font-bold text-orange-300">Selected: </span>
+                <span className="font-medium">LKR {priceRange.toLocaleString()}</span>
+              </div>
             </div>
-            <div className="mt-3 px-3 py-2 bg-[#3a1a0a] rounded-lg text-center w-full">
-              <span className="font-bold text-orange-300">Selected: </span>
-              <span className="font-medium">LKR {priceRange.toLocaleString()}</span>
+          </div>
+
+          {/* Brand Filter */}
+          <div>
+            <h3 className="mb-3 text-lg font-bold text-orange-300">Brand</h3>
+            <div className="grid grid-cols-2 gap-2">
+              {brands.map((brand) => (
+                <button
+                  key={brand}
+                  onClick={() => setSelectedBrand(brand)}
+                  className={`px-3 py-2 rounded-lg text-sm transition-all ${selectedBrand === brand 
+                    ? 'bg-orange-600 text-white font-bold' 
+                    : 'bg-[#3a1a0a] hover:bg-[#4a2a1a] text-gray-200'}`}
+                >
+                  {brand}
+                </button>
+              ))}
             </div>
           </div>
-        </div>
 
-        {/* Brand Filter */}
-        <div className="mb-8">
-          <h3 className="mb-3 text-lg font-bold text-orange-300">Brand</h3>
-          <div className="grid grid-cols-2 gap-2">
-            {brands.map((brand) => (
-              <button
-                key={brand}
-                onClick={() => setSelectedBrand(brand)}
-                className={`px-3 py-2 rounded-lg text-sm transition-all ${selectedBrand === brand 
-                  ? 'bg-orange-600 text-white font-bold' 
-                  : 'bg-[#3a1a0a] hover:bg-[#4a2a1a] text-gray-200'}`}
-              >
-                {brand}
-              </button>
-            ))}
+          {/* Category
+          <div>
+            <h3 className="mb-3 text-lg font-bold text-orange-300">Category</h3>
+            <div className="flex flex-wrap gap-2">
+              {categories.map((category) => (
+                <button
+                  key={category}
+                  onClick={() => setSelectedCategory(category)}
+                  className={`px-3 py-2 rounded-lg text-sm ${selectedCategory === category
+                    ? 'bg-orange-600 text-white font-bold'
+                    : 'bg-[#3a1a0a] hover:bg-[#4a2a1a] text-gray-200'}`}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
+           Filter */}
 
-       {/* Category Filter */}
-        <div className="mb-8">
-          <h3 className="mb-3 text-lg font-bold text-orange-300">Category</h3>
-          <div className="flex flex-wrap gap-2">
-            {categories.map((category) => (
-              <button
-                key={category}
-                onClick={() => setSelectedCategory(category)}
-                className={`px-3 py-2 rounded-lg text-sm ${selectedCategory === category
-                  ? 'bg-orange-600 text-white font-bold'
-                  : 'bg-[#3a1a0a] hover:bg-[#4a2a1a] text-gray-200'}`}
-              >
-                {category}
-              </button>
-            ))}
+          {/* Size Filter */}
+          <div>
+            <h3 className="mb-3 text-lg font-bold text-orange-300">Bottle Size</h3>
+            <div className="flex flex-wrap gap-2">
+              {sizes.map((size) => (
+                <button
+                  key={size}
+                  onClick={() => setSelectedSize(size)}
+                  className={`px-3 py-2 rounded-lg text-sm transition-all ${selectedSize === size 
+                    ? 'bg-orange-600 text-white font-bold' 
+                    : 'bg-[#3a1a0a] hover:bg-[#4a2a1a] text-gray-200'}`}
+                >
+                  {size}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
 
-        {/* Size Filter */}
-        <div className="mb-8">
-          <h3 className="mb-3 text-lg font-bold text-orange-300">Bottle Size</h3>
-          <div className="flex flex-wrap gap-2">
-            {sizes.map((size) => (
-              <button
-                key={size}
-                onClick={() => setSelectedSize(size)}
-                className={`px-3 py-2 rounded-lg text-sm transition-all ${selectedSize === size 
-                  ? 'bg-orange-600 text-white font-bold' 
-                  : 'bg-[#3a1a0a] hover:bg-[#4a2a1a] text-gray-200'}`}
-              >
-                {size}
-              </button>
-            ))}
+          {/* ABV Filter */}
+          <div>
+            <h3 className="mb-3 text-lg font-bold text-orange-300">Alcohol Content</h3>
+            <div className="flex flex-wrap gap-2">
+              {abvLevels.map((abv) => (
+                <button
+                  key={abv}
+                  onClick={() => setSelectedAbv(abv)}
+                  className={`px-3 py-2 rounded-lg text-sm transition-all ${selectedAbv === abv 
+                    ? 'bg-orange-600 text-white font-bold' 
+                    : 'bg-[#3a1a0a] hover:bg-[#4a2a1a] text-gray-200'}`}
+                >
+                  {abv}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
 
-        {/* ABV Filter */}
-        <div className="mb-4">
-          <h3 className="mb-3 text-lg font-bold text-orange-300">Alcohol Content</h3>
-          <div className="flex flex-wrap gap-2">
-            {abvLevels.map((abv) => (
-              <button
-                key={abv}
-                onClick={() => setSelectedAbv(abv)}
-                className={`px-3 py-2 rounded-lg text-sm transition-all ${selectedAbv === abv 
-                  ? 'bg-orange-600 text-white font-bold' 
-                  : 'bg-[#3a1a0a] hover:bg-[#4a2a1a] text-gray-200'}`}
-              >
-                {abv}
-              </button>
-            ))}
-          </div>
+          {/* Reset Filters */}
+          <button 
+            onClick={() => {
+              setPriceRange(9050);
+              setSelectedBrand("Any Brand");
+              setSelectedCategory("Any Category");
+              setSelectedSize("Any Size");
+              setSelectedAbv("Any ABV");
+            }}
+            className="w-full py-2 text-orange-400 transition-colors bg-transparent border border-orange-600 rounded-lg hover:bg-orange-900"
+          >
+            Reset All Filters
+          </button>
         </div>
-
-        {/* Reset Filters */}
-        <button 
-          onClick={() => {
-            setPriceRange(9050);
-            setSelectedBrand("Any Brand");
-            setSelectedSize("Any Size");
-            setSelectedAbv("Any ABV");
-          }}
-          className="w-full py-2 mt-6 text-orange-400 transition-colors bg-transparent border border-orange-600 rounded-lg hover:bg-orange-900"
-        >
-          Reset All Filters
-        </button>
       </div>
 
       {/* Main Content */}
       <div className="flex-1">
-        {/* Hero Section */}
-        <div className="relative w-full mb-8 overflow-hidden rounded-xl">
+        {/* Hero Section - Hidden on mobile */}
+        <div className="relative hidden w-full mb-8 overflow-hidden rounded-xl md:block">
           <div className="absolute inset-0 z-10 bg-gradient-to-r from-black to-transparent"></div>
           <img 
             src="/winebanner.webp" 
@@ -236,18 +252,18 @@ const FilterableProductList = () => {
         </div>
 
         {/* Results Count */}
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-light text-gray-300">
+        <div className="flex flex-col items-start justify-between mb-6 md:flex-row">
+          <h2 className="text-xl font-light text-gray-300 md:text-2xl">
             Showing <span className="font-bold text-orange-400">{filteredProducts.length}</span> wines
           </h2>
-          <div className="text-sm text-gray-400">
+          <div className="flex flex-wrap gap-2 mt-2 text-sm text-gray-400 md:mt-0">
             {selectedBrand !== "Any Brand" && (
-              <span className="bg-[#3a1a0a] px-3 py-1 rounded-full mr-2">
+              <span className="bg-[#3a1a0a] px-3 py-1 rounded-full">
                 Brand: {selectedBrand} ×
               </span>
             )}
             {selectedSize !== "Any Size" && (
-              <span className="bg-[#3a1a0a] px-3 py-1 rounded-full mr-2">
+              <span className="bg-[#3a1a0a] px-3 py-1 rounded-full">
                 Size: {selectedSize} ×
               </span>
             )}
@@ -260,11 +276,11 @@ const FilterableProductList = () => {
         </div>
 
         {/* Product Display Grid */}
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {filteredProducts.map((product, index) => (
             <div
               key={product._id || product.id}
-              className="relative flex flex-col items-center p-6 text-center bg-gray-200 border border-gray-300 rounded-lg shadow-md"
+              className="relative flex flex-col items-center p-4 text-center bg-gray-200 border border-gray-300 rounded-lg shadow-md sm:p-6"
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
             >
@@ -278,17 +294,17 @@ const FilterableProductList = () => {
                   alt={product.name} 
                   className="object-contain h-48 mx-auto w-41"
                 />
-                <h3 className="mt-2 font-bold text-black">{product.name}</h3>
-                <p className="mt-1 text-lg font-semibold text-black">Rs.{product.price.toFixed(2)}</p>
-                {product.vintage && <p className="text-sm text-gray-600">Vintage: {product.vintage}</p>}
+                <h3 className="mt-2 text-sm font-bold text-black sm:text-base">{product.name}</h3>
+                <p className="mt-1 text-base font-semibold text-black sm:text-lg">Rs.{product.price.toFixed(2)}</p>
+                {product.size && <p className="text-xs text-gray-600 sm:text-sm"> {product.size}</p>}
               </div>
               
               <motion.div
                 animate={{ opacity: hoveredIndex === index ? 1 : 0 }}
                 className="absolute bottom-0 z-20 flex flex-col items-center w-full p-4 text-center transition-opacity duration-300 bg-white border border-gray-400 rounded-lg shadow-lg"
               >
-                <h3 className="font-bold text-black">{product.name}</h3>
-                <p className="text-gray-700">
+                <h3 className="text-sm font-bold text-black sm:text-base">{product.name}</h3>
+                <p className="text-xs text-gray-700 sm:text-sm">
                   <span className="font-semibold">Price</span> <br /> Rs.{product.price.toFixed(2)}
                 </p>
                 <div className="flex items-center p-2 mt-2 space-x-2 bg-gray-100 rounded">
