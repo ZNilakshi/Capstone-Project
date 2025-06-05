@@ -39,7 +39,14 @@ const AdminProductPanel = () => {
  const [salesData, setSalesData] = useState(null);
  const [categoryData, setCategoryData] = useState(null);
  const [timeSeriesData, setTimeSeriesData] = useState(null);
-
+ const [searchTerm, setSearchTerm] = useState("");
+ const [filter, setFilter] = useState({
+   product: "",
+   brand: "",
+   size: "",
+   abv: "",
+   category: ""
+ });
 
  const updateOrderStatus = async (orderId, newStatus) => {
    try {
@@ -1085,97 +1092,220 @@ useEffect(() => {
 
         {/* Product List */}
         {products.length > 0 && view !== "profile" && view !== "orders" && (
-          <div className="bg-white rounded-xl shadow-md overflow-hidden mt-6">
-            <div className="p-6">
-              <h2 className="text-2xl font-bold text-gray-800 mb-6">Product Inventory</h2>
-            
-              <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
-                      {view === "addProduct" && (
-                        <>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Brand</th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Size</th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ABV</th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
-                        </>
-                      )}
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Image</th>
-                      {view === "addProduct" && (
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                      )}
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    {products.map((product, index) => (
-                      <tr key={index} className="hover:bg-gray-50">
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm font-medium text-gray-900">{product.name}</div>
-                          <div className="text-sm text-gray-500">{product.size}</div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                            product.quantity > 10 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                          }`}>
-                            {product.quantity}
-                          </span>
-                        </td>
-                        {view === "addProduct" && (
-                          <>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                              LKR {product.price}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                              {product.brand}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                              {product.size}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                              {product.abv}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                              {product.category}
-                            </td>
-                          </>
-                        )}
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          {product.photo && (
-                            <img
-                              src={product.photo}
-                              alt={product.name}
-                              className="h-10 w-10 rounded-full object-cover"
-                            />
-                          )}
-                        </td>
-                        {view === "addProduct" && (
-                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <button
-                              onClick={() => editProduct(index)}
-                              className="text-orange-600 hover:text-orange-900 mr-3"
-                            >
-                              <FaEdit />
-                            </button>
-                            <button
-                              onClick={() => removeProduct(index)}
-                              className="text-red-600 hover:text-red-900"
-                            >
-                              <FaTrash />
-                            </button>
-                          </td>
-                        )}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
+  <div className="bg-white rounded-xl shadow-md overflow-hidden mt-6">
+    <div className="p-6">
+      <h2 className="text-2xl font-bold text-gray-800 mb-6">Product Inventory</h2>
+      
+      {/* Search and Filter Section */}
+<div className="mb-6 grid grid-cols-1 md:grid-cols-6 gap-4">
+<div className="relative col-span-1 md:col-span-2">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Search Products
+          </label>
+          <input
+            type="text"
+            placeholder="Type product name..."
+            className="appearance-none block w-full px-4 py-2.5 text-base text-gray-900 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+
+  {/* Brand Filter */}
+  <div className="relative">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Brand
+          </label>
+          <div className="relative">
+            <select
+              value={filter.brand || "BRAND"}
+              onChange={(e) => setFilter({ ...filter, brand: e.target.value === "BRAND" ? "" : e.target.value })}
+              className="appearance-none block w-full pl-4 pr-10 py-2.5 text-base text-gray-900 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
+            >
+              <option value="BRAND" className="text-gray-400">Select brand</option>
+              {brands.filter(b => b !== "BRAND").map((brand, index) => (
+                <option key={index} value={brand}>{brand}</option>
+              ))}
+            </select>
+            <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+            <svg className="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+  <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+</svg>      </div>
           </div>
-        )}
+        </div>
+   {/* Size Filter */}
+   <div className="relative">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Size
+          </label>
+          <div className="relative">
+            <select
+              value={filter.size || "SIZE"}
+              onChange={(e) => setFilter({ ...filter, size: e.target.value === "SIZE" ? "" : e.target.value })}
+              className="appearance-none block w-full pl-4 pr-10 py-2.5 text-base text-gray-900 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
+            >
+              <option value="SIZE" className="text-gray-400">Select size</option>
+              {sizes.filter(s => s !== "SIZE").map((size, index) => (
+                <option key={index} value={size}>{size}</option>
+              ))}
+            </select>
+            <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+            <svg className="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+  <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+</svg>     
+</div>
+          </div>
+        </div>
+
+
+  {/* ABV Filter */}
+  <div className="relative">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            ABV
+          </label>
+          <div className="relative">
+            <select
+              value={filter.abv || "ABV"}
+              onChange={(e) => setFilter({ ...filter, abv: e.target.value === "ABV" ? "" : e.target.value })}
+              className="appearance-none block w-full pl-4 pr-10 py-2.5 text-base text-gray-900 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
+            >
+              <option value="ABV" className="text-gray-400">Select ABV</option>
+              {abvLevels.filter(a => a !== "ABV").map((abv, index) => (
+                <option key={index} value={abv}>{abv}</option>
+              ))}
+            </select>
+            <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+            <svg className="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+  <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+</svg>        </div>
+          </div>
+        </div>
+
+
+   {/* Category Filter */}
+   <div className="relative">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Category
+          </label>
+          <div className="relative">
+            <select
+              value={filter.category || "CATEGORY"}
+              onChange={(e) => setFilter({ ...filter, category: e.target.value === "CATEGORY" ? "" : e.target.value })}
+              className="appearance-none block w-full pl-4 pr-10 py-2.5 text-base text-gray-900 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
+            >
+              <option value="CATEGORY" className="text-gray-400">category</option>
+              {categories.filter(c => c !== "CATEGORY").map((category, index) => (
+                <option key={index} value={category}>{category}</option>
+              ))}
+            </select>
+            <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+            <svg className="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+  <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+</svg>     </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div className="overflow-x-auto">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
+              {view === "addProduct" && (
+                <>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Brand</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Size</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ABV</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+                </>
+              )}
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Image</th>
+              {view === "addProduct" && (
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+              )}
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {products
+              .filter(product => {
+                // Search term filter
+                if (searchTerm && !product.name.toLowerCase().includes(searchTerm.toLowerCase())) {
+                  return false;
+                }
+                // Other filters
+                if (filter.product && product.name !== filter.product) return false;
+                if (filter.brand && product.brand !== filter.brand) return false;
+                if (filter.size && product.size !== filter.size) return false;
+                if (filter.category && product.category !== filter.category) return false;
+                return true;
+              })
+              .map((product, index) => (
+                <tr key={index} className="hover:bg-gray-50">
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="text-sm font-medium text-gray-900">{product.name}</div>
+                    <div className="text-sm text-gray-500">{product.size}</div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                      product.quantity > 10 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                    }`}>
+                      {product.quantity}
+                    </span>
+                  </td>
+                  {view === "addProduct" && (
+                    <>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        LKR {product.price}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {product.brand}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {product.size}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {product.abv}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {product.category}
+                      </td>
+                    </>
+                  )}
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {product.photo && (
+                      <img
+                        src={product.photo}
+                        alt={product.name}
+                        className="h-10 w-10 rounded-full object-cover"
+                      />
+                    )}
+                  </td>
+                  {view === "addProduct" && (
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      <button
+                        onClick={() => editProduct(index)}
+                        className="text-orange-600 hover:text-orange-900 mr-3"
+                      >
+                        <FaEdit />
+                      </button>
+                      <button
+                        onClick={() => removeProduct(index)}
+                        className="text-red-600 hover:text-red-900"
+                      >
+                        <FaTrash />
+                      </button>
+                    </td>
+                  )}
+                </tr>
+              ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+)}
       </main>
     </div>
   </div>
