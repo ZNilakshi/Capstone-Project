@@ -1,10 +1,16 @@
 import { useCart } from "../context/CartContext";
 import { FaTrash, FaMinus, FaPlus } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import AuthForm from "../pages/AuthForm";
+import { useState } from "react"; 
 
 const Cart = () => {
   const { cart, updateQuantity, removeFromCart, clearCart } = useCart();
   const navigate = useNavigate();
+  const [showLogin, setShowLogin] = useState(false);
+  const [user, setUser] = useState(() => {
+    return JSON.parse(localStorage.getItem("user")) || null;
+  });
 
   if (!cart || !cart.items || cart.items.length === 0) {
     return (
@@ -13,7 +19,7 @@ const Cart = () => {
         <p className="mb-6 text-xl text-gray-400">Looks like you haven't added any items yet.</p>
         <button
           onClick={() => navigate("/")}
-          className="bg-orange-600  text-white px-6 py-3 rounded-lg font-bold hover:bg-orange-400 transition"
+          className="bg-orange-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-orange-400 transition"
         >
           CONTINUE SHOPPING
         </button>
@@ -26,6 +32,35 @@ const Cart = () => {
     const quantity = item?.quantity || 0;
     return sum + (price * quantity);
   }, 0);
+
+  const handleCheckout = () => {
+    if (user) {
+      navigate("/checkout");
+    } else {
+      setShowLogin(true);
+    }
+  };
+
+  const handleLoginSuccess = () => {
+    setUser(JSON.parse(localStorage.getItem("user")));
+    setShowLogin(false);
+  };
+
+  if (showLogin) {
+    return (
+      <div className="min-h-screen bg-black pt-20">
+        <div className="max-w-md mx-auto">
+          <button 
+            onClick={() => setShowLogin(false)}
+            className="mb-4 text-white hover:text-orange-500"
+          >
+            &larr; Back to Cart
+          </button>
+          <AuthForm isSignIn={true} onLoginSuccess={handleLoginSuccess} />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-white text-gray-100 px-6 pt-28 pb-16">
@@ -125,15 +160,13 @@ const Cart = () => {
           <h2 className="text-gray-800 text-xl font-bold mb-6">CART TOTAL</h2>
 
           <div className="border-t border-gray-300 pt-6">
-           
-          
             <div className="text-gray-800 flex justify-between py-4 border-t border-gray-200 font-bold text-lg">
               <span>Total</span>
               <span>Rs.{subtotal.toFixed(2)}</span>
             </div>
 
             <button
-              onClick={() => navigate("/checkout")}
+              onClick={handleCheckout}
               className="w-full bg-orange-500 text-white py-3 rounded-lg font-bold hover:bg-gray-700 transition mt-4">
               PROCEED TO CHECKOUT
             </button>
