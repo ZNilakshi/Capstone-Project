@@ -11,7 +11,7 @@ A **MERN stack** (MongoDB, Express.js, React.js, Node.js) based web application 
 ## 🛍️ Key Features
 
 - 🔍 **Browse Products by Category**
-  - 🥃 Sprits
+  - 🥃 Spirits
   - 🍺 Beer
   - 🍷 Wine
 
