@@ -1,7 +1,7 @@
 # 🍷 De Silva Wine Store – Welimada
 
 <p align="center">
-  <img src="frontend/public/4.png" alt="Kuda Kusum Pre School Website Banner" width="100%" />
+  <img src="frontend/public/4.png" alt="de silva Website Banner" width="100%" />
 </p>
 
 A **MERN stack** (MongoDB, Express.js, React.js, Node.js) based web application designed for **De Silva Wine Stores – Welimada**, enabling customers to browse and order products online with a smooth, modern experience.
