@@ -18,6 +18,7 @@ import PrivacyPolicy from "./pages/privacy-policy";
 import ScrollToTop from "./components/ScrollToTop"; // Import the ScrollToTop component
 import Checkout from "./pages/Checkout";
 import BrandPage from "./pages/BrandPage";
+import SearchResults from "./pages/SearchResults";
 
 function App() {
   return (
@@ -40,8 +41,8 @@ function App() {
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/brand/:brandName" element={<BrandPage />} />
-  
-            </Routes>
+          <Route path="/search" element={<SearchResults />} />
+          </Routes>
         <Footer />
       </CartProvider>
     </Router>

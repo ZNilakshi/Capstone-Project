@@ -1,112 +1,94 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { FaMinus, FaPlus, FaCheck } from "react-icons/fa";
 import { motion } from "framer-motion";
 import { useCart } from "../context/CartContext";
 
-const SearchPage = () => {
-  const [searchResults, setSearchResults] = useState([]);
+const SearchResults = () => {
+  const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [hoveredIndex, setHoveredIndex] = useState(null);
   const location = useLocation();
   const navigate = useNavigate();
   const { addToCart } = useCart();
-  const [query, setQuery] = useState("");
+  const [quantities, setQuantities] = useState({});
+  const [addedItems, setAddedItems] = useState({});
+  const [hoveredIndex, setHoveredIndex] = useState(null);
 
   useEffect(() => {
-    const searchParams = new URLSearchParams(location.search);
-    const searchQuery = searchParams.get("q") || "";
-    setQuery(searchQuery);
-
-    if (!searchQuery) {
-      navigate("/");
-      return;
-    }
-   
-    const fetchSearchResults = async () => {
+    const searchProducts = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('/api/products/search', {
-          params: { q: query },
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        });
+        const query = new URLSearchParams(location.search).get("q");
         
-        if (response.status !== 200) {
-          throw new Error(`Request failed with status ${response.status}`);
+        if (!query) {
+          navigate("/");
+          return;
         }
+
+        const response = await fetch(`/api/products/search?q=${encodeURIComponent(query)}`);
+        const data = await response.json();
         
-        setSearchResults(response.data);
-        setError(null);
+        if (response.ok) {
+          setResults(data);
+          // Initialize quantities
+          const initialQuantities = {};
+          data.forEach(product => {
+            initialQuantities[product._id] = 1;
+          });
+          setQuantities(initialQuantities);
+        } else {
+          setError(data.message || "Failed to fetch results");
+        }
       } catch (err) {
-        console.error("Search error details:", {
-          message: err.message,
-          config: err.config,
-          response: err.response?.data
-        });
-        
-        setError(err.response?.data?.message || 
-                "Failed to perform search. Please try again.");
-        setSearchResults([]);
+        setError(err.message);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchSearchResults();
+    searchProducts();
   }, [location.search, navigate]);
 
-  return (
-    <div className="container min-h-screen px-4 py-24 mx-auto">
-      <div className="mb-8">
-        <form 
-          onSubmit={(e) => {
-            e.preventDefault();
-            navigate(`/search?q=${encodeURIComponent(query)}`);
-          }}
-          className="mb-6"
-        >
-          <div className="relative max-w-xl mx-auto">
-            <input
-              type="text"
-              placeholder="Search for products..."
-              className="w-full py-3 pl-4 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 text-black"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-            />
-            <button 
-              type="submit"
-              className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500 hover:text-orange-500"
-            >
-              <FaSearch className="text-xl" />
-            </button>
-          </div>
-        </form>
-        <h1 className="text-2xl font-bold text-gray-800">
-          Search Results for:{" "}
-          <span className="text-orange-500">
-            {new URLSearchParams(location.search).get("q")}
-          </span>
-        </h1>
-        {searchResults.length === 0 && !loading && (
-          <p className="mt-2 text-gray-600">No products found</p>
-        )}
-      </div>
+  const handleQuantityChange = (productId, newQuantity) => {
+    if (newQuantity < 1) return;
+    setQuantities(prev => ({
+      ...prev,
+      [productId]: newQuantity
+    }));
+  };
 
-      {loading ? (
-        <div className="flex items-center justify-center h-64">
-          <div className="w-12 h-12 border-t-2 border-b-2 border-orange-500 rounded-full animate-spin"></div>
-        </div>
-      ) : error ? (
-        <div className="text-center text-red-500">{error}</div>
+  const handleAddToCart = (productId) => {
+    const product = results.find(p => p._id === productId);
+    if (product) {
+      addToCart({
+        ...product,
+        quantity: quantities[productId]
+      });
+      setAddedItems(prev => ({
+        ...prev,
+        [productId]: true
+      }));
+    }
+  };
+
+  if (loading) return <div className="container mx-auto py-8">Loading...</div>;
+  if (error) return <div className="container mx-auto py-8 text-red-500">{error}</div>;
+
+  return (
+    <div className="container mx-auto py-8">
+      <h1 className="text-2xl font-bold mb-6">
+        Search Results for "{new URLSearchParams(location.search).get("q")}"
+      </h1>
+      
+      {results.length === 0 ? (
+        <p>No products found. Try a different search term.</p>
       ) : (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
-          {searchResults.map((product, index) => (
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {results.map((product, index) => (
             <div
               key={product._id || product.id}
-              className="relative flex flex-col items-center p-6 text-center bg-gray-200 border border-gray-300 rounded-lg shadow-md"
+              className="relative flex flex-col items-center p-4 text-center bg-gray-200 border border-gray-300 rounded-lg shadow-md sm:p-6"
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
             >
@@ -120,39 +102,53 @@ const SearchPage = () => {
                   alt={product.name} 
                   className="object-contain h-48 mx-auto w-41"
                 />
-                <h3 className="mt-2 font-bold text-black">{product.name}</h3>
-                <p className="mt-1 text-lg font-semibold text-black">
-                  Rs.{product.price.toFixed(2)}
-                </p>
-                {product.vintage && (
-                  <p className="text-sm text-gray-600">Vintage: {product.vintage}</p>
-                )}
+                <h3 className="mt-2 text-sm font-bold text-black sm:text-base">{product.name}</h3>
+                <p className="mt-1 text-base font-semibold text-black sm:text-lg">Rs.{product.price.toFixed(2)}</p>
+                {product.size && <p className="text-xs text-gray-600 sm:text-sm"> {product.size}</p>}
               </div>
               
               <motion.div
                 animate={{ opacity: hoveredIndex === index ? 1 : 0 }}
                 className="absolute bottom-0 z-20 flex flex-col items-center w-full p-4 text-center transition-opacity duration-300 bg-white border border-gray-400 rounded-lg shadow-lg"
               >
-                <h3 className="font-bold text-black">{product.name}</h3>
-                <p className="text-gray-700">
-                  <span className="font-semibold">Price</span> <br /> 
-                  Rs.{product.price.toFixed(2)}
+                <h3 className="text-sm font-bold text-black sm:text-base">{product.name}</h3>
+                <p className="text-xs text-gray-700 sm:text-sm">
+                  <span className="font-semibold">Price</span> <br /> Rs.{product.price.toFixed(2)}
                 </p>
                 <div className="flex items-center p-2 mt-2 space-x-2 bg-gray-100 rounded">
-                  <button className="px-2 py-1 text-black bg-gray-200 border border-gray-400 rounded hover:bg-gray-300">
-                    -
+                  <button
+                    onClick={() => handleQuantityChange(product._id, quantities[product._id] - 1)}
+                    className="px-3 py-1 text-gray-800 rounded hover:bg-gray-300"
+                  >
+                    <FaMinus size={12} />
                   </button>
-                  <span className="px-4 font-semibold text-black">1</span>
-                  <button className="px-2 py-1 text-black bg-gray-200 border border-gray-400 rounded hover:bg-gray-300">
-                    +
+                  <span className="px-4 py-1 font-normal text-gray-800 border-gray-300 border-x">
+                    {quantities[product._id]}
+                  </span>
+                  <button
+                    onClick={() => handleQuantityChange(product._id, quantities[product._id] + 1)}
+                    className="px-3 py-1 text-gray-600 rounded hover:bg-gray-300"
+                  >
+                    <FaPlus size={12} />
                   </button>
                   <span className="ml-2 text-black">Qty</span>
                 </div>
                 <button 
-                  className="w-full py-2 mt-2 text-white bg-orange-500 rounded"
-                  onClick={() => addToCart(product._id, 1)}
+                  className={`mt-2 w-full py-2 rounded flex items-center justify-center gap-2 ${
+                    addedItems[product._id] 
+                      ? 'bg-gray-500 text-white' 
+                      : 'bg-orange-500 text-white hover:bg-orange-600'
+                  }`}
+                  onClick={() => handleAddToCart(product._id)}
+                  disabled={addedItems[product._id]}
                 >
-                  ADD TO CART
+                  {addedItems[product._id] ? (
+                    <>
+                      <FaCheck /> Added
+                    </>
+                  ) : (
+                    "ADD TO CART"
+                  )}
                 </button>
               </motion.div>
             </div>
@@ -163,4 +159,4 @@ const SearchPage = () => {
   );
 };
 
-export default SearchPage;
+export default SearchResults;

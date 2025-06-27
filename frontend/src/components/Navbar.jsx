@@ -14,7 +14,8 @@ const Navbar = () => {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
   const { cart } = useCart();
-
+  const [searchQuery, setSearchQuery] = useState("");
+  
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
@@ -25,7 +26,7 @@ const Navbar = () => {
   const handleLogout = () => {
     localStorage.removeItem("user");
     setUser(null);
-    navigate("/auth"); // redirect to login
+    navigate("/auth");
   };
 
   const handleProfileClick = () => {
@@ -36,15 +37,24 @@ const Navbar = () => {
     }
   };
 
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
+      setSearchQuery("");
+      setIsMenuOpen(false);
+    }
+  };
+
   return (
     <nav className="bg-black text-white py-1 px-6 fixed top-0 left-0 w-full z-50 shadow-md">
       <div className="container mx-auto flex justify-between items-center">
-      <img
-  src="/logo.png" 
-  alt="Company Logo"
-  className="h-[66px] cursor-pointer" // Adjust height as needed
-  onClick={() => navigate("/")}
-/>
+        <img
+          src="/logo.png" 
+          alt="Company Logo"
+          className="h-[66px] cursor-pointer"
+          onClick={() => navigate("/")}
+        />
 
         {/* Desktop Menu */}
         <ul className="hidden md:flex space-x-6 text-lg font-semibold">
@@ -68,15 +78,22 @@ const Navbar = () => {
           </li>
         </ul>
 
-        {/* Search */}
-        <div className="relative hidden md:block w-72">
+        {/* Desktop Search - Now a proper form */}
+        <form onSubmit={handleSearch} className="hidden md:block relative w-72">
           <input
             type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="What are you looking for today?"
             className="w-full py-2 pl-4 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-400 text-black"
           />
-          <FaSearch className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500 cursor-pointer" />
-        </div>
+          <button 
+            type="submit"
+            className="absolute top-1/2 right-3 transform -translate-y-1/2"
+          >
+            <FaSearch className="text-gray-500 hover:text-orange-500" />
+          </button>
+        </form>
 
         {/* User Controls */}
         <div className="hidden md:flex space-x-10 text-lg items-center">
@@ -98,12 +115,14 @@ const Navbar = () => {
               {user ? (
                 <>
                   <button
+                    type="button"
                     className="block px-4 py-2 w-full text-left hover:bg-gray-200"
                     onClick={handleProfileClick}
                   >
                     Profile
                   </button>
                   <button
+                    type="button"
                     className="block px-4 py-2 w-full text-left hover:bg-gray-200"
                     onClick={handleLogout}
                   >
@@ -113,12 +132,14 @@ const Navbar = () => {
               ) : (
                 <>
                   <button
+                    type="button"
                     className="block px-4 py-2 w-full text-left hover:bg-gray-200"
                     onClick={() => navigate("/auth")}
                   >
                     Login
                   </button>
                   <button
+                    type="button"
                     className="block px-4 py-2 w-full text-left hover:bg-gray-200"
                     onClick={() => navigate("/auth")}
                   >
@@ -132,6 +153,7 @@ const Navbar = () => {
 
         {/* Mobile Menu Button */}
         <button
+          type="button"
           className="md:hidden text-2xl focus:outline-none"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
@@ -172,14 +194,22 @@ const Navbar = () => {
             </li>
           </ul>
 
-          <div className="relative w-3/4 mx-auto mb-4">
+          {/* Mobile Search Form - Removed hidden class */}
+          <form onSubmit={handleSearch} className="relative w-3/4 mx-auto mb-4">
             <input
               type="text"
-              placeholder="Search..."
-              className="w-full py-2 pl-4 pr-10 border border-gray-300 rounded-lg text-black"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="What are you looking for today?"
+              className="w-full py-2 pl-4 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-400 text-black"
             />
-            <FaSearch className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500 cursor-pointer" />
-          </div>
+            <button 
+              type="submit"
+              className="absolute top-1/2 right-3 transform -translate-y-1/2"
+            >
+              <FaSearch className="text-gray-500 hover:text-orange-500" />
+            </button>
+          </form>
 
           <div className="flex justify-center space-x-6 text-lg pb-4">
             <FaShoppingCart
@@ -195,6 +225,7 @@ const Navbar = () => {
                 {user ? (
                   <>
                     <button
+                      type="button"
                       className="block px-4 py-2 w-full text-left hover:bg-gray-200"
                       onClick={() => {
                         handleProfileClick();
@@ -204,6 +235,7 @@ const Navbar = () => {
                       Profile
                     </button>
                     <button
+                      type="button"
                       className="block px-4 py-2 w-full text-left hover:bg-gray-200"
                       onClick={() => {
                         handleLogout();
@@ -216,6 +248,7 @@ const Navbar = () => {
                 ) : (
                   <>
                     <button
+                      type="button"
                       className="block px-4 py-2 w-full text-left hover:bg-gray-200"
                       onClick={() => {
                         navigate("/auth");
@@ -225,6 +258,7 @@ const Navbar = () => {
                       Login
                     </button>
                     <button
+                      type="button"
                       className="block px-4 py-2 w-full text-left hover:bg-gray-200"
                       onClick={() => {
                         navigate("/register");

@@ -46,8 +46,7 @@ const AuthForm = () => {
           } catch (err) {
             console.error("Error:", err.response?.data?.message || err.message);
             alert(err.response?.data?.message || "Something went wrong");
-          }
-          
+          }   
     };
 
     return (
